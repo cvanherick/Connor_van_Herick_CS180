@@ -254,6 +254,49 @@ a:focus-visible {
   border-top: 1px solid var(--border);
 }
 
+.project-hero {
+  background: var(--ink);
+  color: #fffaf3;
+  padding: 9rem clamp(1rem, 5vw, 5rem) 4rem;
+}
+
+.project-hero h1 {
+  margin-bottom: 0;
+}
+
+.project-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.media-pair {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.media-slot {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0;
+  overflow: hidden;
+}
+
+.media-placeholder {
+  align-items: center;
+  aspect-ratio: 4 / 3;
+  color: var(--muted);
+  display: flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 220px;
+  padding: 1rem;
+}
+
+.media-slot-wide .media-placeholder {
+  aspect-ratio: 16 / 9;
+}
+
 @media (max-width: 900px) {
   .project-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -288,6 +331,10 @@ a:focus-visible {
   }
 
   .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media-pair {
     grid-template-columns: 1fr;
   }
 

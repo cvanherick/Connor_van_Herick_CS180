@@ -201,6 +201,11 @@ a:focus-visible {
   margin-bottom: 2rem;
 }
 
+.about-blank {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
 .project-grid {
   display: grid;
   gap: 1rem;

@@ -282,6 +282,12 @@ a:focus-visible {
   overflow: hidden;
 }
 
+.media-slot img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
 .media-placeholder {
   align-items: center;
   aspect-ratio: 4 / 3;
@@ -295,6 +301,10 @@ a:focus-visible {
 
 .media-slot-wide .media-placeholder {
   aspect-ratio: 16 / 9;
+}
+
+.media-slot-wide {
+  max-width: 780px;
 }
 
 @media (max-width: 900px) {

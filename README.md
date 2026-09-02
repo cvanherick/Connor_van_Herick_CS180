@@ -1,6 +1,6 @@
-# CS 180 GitHub Pages Site
+# Connor van Herick CS 180
 
-Static portfolio site for CS 180 project writeups.
+Static GitHub Pages portfolio for CS 180: Intro to Computer Vision and Computational Photography.
 
 ## Local preview
 
@@ -12,18 +12,12 @@ python3 -m http.server 8000
 
 Then visit `http://localhost:8000`.
 
-## Publish to GitHub Pages
-
-1. Create a new repository on GitHub.
-2. Push this folder to the repository's `main` branch.
-3. In GitHub, open `Settings` -> `Pages`.
-4. Under `Build and deployment`, choose `GitHub Actions`.
-5. Push to `main`; the workflow in `.github/workflows/pages.yml` will deploy the site.
-
-Your published URL will usually be:
+## Live site
 
 ```text
-https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/
+https://cvanherick.github.io/Connor_van_Herick_CS180/
 ```
 
-For a user site, name the repository `YOUR-USERNAME.github.io`.
+## Deploy
+
+Pushing to `main` runs `.github/workflows/pages.yml`, which prepares a clean static artifact and deploys it with GitHub Pages.

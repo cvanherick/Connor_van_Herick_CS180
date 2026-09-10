@@ -235,7 +235,8 @@ a:focus-visible {
   height: 2.35rem;
   justify-content: center;
   margin-bottom: 1.4rem;
-  width: 2.35rem;
+  padding: 0 0.85rem;
+  width: fit-content;
 }
 
 .project-card p {

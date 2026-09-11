@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Project 1: Images of the Russian Empire">
+    <title>Project 1: Images of the Russian Empire | CS 180 Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../">CS 180</a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="../../#projects">Projects</a>
+        <a href="#approach">Approach</a>
+        <a href="#results">Results</a>
+        <a href="#bells">Bells &amp; Whistles</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="project-hero project1-hero">
+        <p class="eyebrow">Project 1</p>
+        <h1>Images of the Russian Empire</h1>
+        <p class="project-hero-copy">
+          Reconstructing color photographs from Prokudin-Gorskii glass plate scans by aligning the red and green exposures to the blue channel.
+        </p>
+      </section>
+
+      <section class="section writeup-section" id="approach" aria-labelledby="approach-title">
+        <div class="section-heading">
+          <p class="eyebrow">Approach</p>
+          <h2 id="approach-title">From Three Plates to One Color Image</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            Each source image stores the blue, green, and red exposures stacked vertically. I split the image into thirds, used the blue exposure as the reference channel, and searched for the displacement that maximized normalized cross-correlation. To keep borders from dominating the score, the metric is computed on the interior of each candidate alignment.
+          </p>
+          <p>
+            For large TIFFs, I use an image pyramid: align small versions first, double that displacement at each larger level, then refine around the estimate. This keeps the search fast while still finding large offsets. The baseline results below use raw pixel NCC; the final section shows bells and whistles that improve difficult cases.
+          </p>
+        </div>
+      </section>
+
+      <section class="section writeup-section" aria-labelledby="single-title">
+        <div class="section-heading">
+          <p class="eyebrow">Single-Scale</p>
+          <h2 id="single-title">Low-Resolution JPEGs</h2>
+        </div>
+        <div class="result-grid result-grid-three">
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Aligned color result for cathedral">
+            <figcaption><strong>Cathedral</strong><span>G: (1, -1), R: (7, -1)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Aligned color result for monastery">
+            <figcaption><strong>Monastery</strong><span>G: (-6, 0), R: (9, 1)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Aligned color result for tobolsk">
+            <figcaption><strong>Tobolsk</strong><span>G: (3, 2), R: (6, 3)</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section writeup-section" id="results" aria-labelledby="results-title">
+        <div class="section-heading">
+          <p class="eyebrow">Multi-Scale Pyramid</p>
+          <h2 id="results-title">Provided Example Images</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            The pyramid version uses the same NCC score, but avoids a huge full-resolution search by moving from coarse to fine image scales. These baseline results use RGB pixel values without edge scoring, final cropping, or contrast stretching. The offsets below are listed as <code>(dy, dx)</code>.
+          </p>
+        </div>
+        <div class="result-grid">
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Aligned color result for cathedral">
+            <figcaption><strong>Cathedral</strong><span>G: (1, -1), R: (7, -1)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Aligned color result for church">
+            <figcaption><strong>Church</strong><span>G: (0, -5), R: (52, -6)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Aligned color result for emir">
+            <figcaption><strong>Emir</strong><span>G: (-3, 7), R: (107, 17)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Aligned color result for harvesters">
+            <figcaption><strong>Harvesters</strong><span>G: (118, -3), R: (120, 7)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Aligned color result for icon">
+            <figcaption><strong>Icon</strong><span>G: (42, 16), R: (89, 22)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Aligned color result for ilemselga">
+            <figcaption><strong>Ilemselga</strong><span>G: (39, -4), R: (129, -7)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Aligned color result for melons">
+            <figcaption><strong>Melons</strong><span>G: (83, 4), R: (176, 7)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Aligned color result for monastery">
+            <figcaption><strong>Monastery</strong><span>G: (-6, 0), R: (9, 1)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Aligned color result for religious painting">
+            <figcaption><strong>Religious Painting</strong><span>G: (25, 3), R: (69, 7)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Aligned color result for self portrait">
+            <figcaption><strong>Self Portrait</strong><span>G: (50, -2), R: (130, -5)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Aligned color result for siren">
+            <figcaption><strong>Siren</strong><span>G: (48, -7), R: (96, -21)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Aligned color result for three generations">
+            <figcaption><strong>Three Generations</strong><span>G: (52, 5), R: (108, 7)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Aligned color result for tobolsk">
+            <figcaption><strong>Tobolsk</strong><span>G: (3, 2), R: (6, 3)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Aligned color result for wharf">
+            <figcaption><strong>Wharf</strong><span>G: (15, -7), R: (83, -17)</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section writeup-section" aria-labelledby="chosen-title">
+        <div class="section-heading">
+          <p class="eyebrow">Additional Examples</p>
+          <h2 id="chosen-title">Images I Chose from the Collection</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            I also ran the same pyramid alignment on three additional Prokudin-Gorskii scans. These use the baseline raw pixel NCC pipeline so they are directly comparable to the provided examples.
+          </p>
+        </div>
+        <div class="result-grid result-grid-three">
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/Capri_extra_out.jpg" alt="Aligned color result for Capri">
+            <figcaption><strong>Capri</strong><span>G: (31, -13), R: (176, -18)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/sacks_extra_out.jpg" alt="Aligned color result for sacks">
+            <figcaption><strong>Sacks</strong><span>G: (48, -4), R: (82, -13)</span></figcaption>
+          </figure>
+          <figure class="result-card">
+            <img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Aligned color result for sunset">
+            <figcaption><strong>Sunset</strong><span>G: (0, -11), R: (237, -22)</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section writeup-section" id="bells" aria-labelledby="bells-title">
+        <div class="section-heading">
+          <p class="eyebrow">Bells &amp; Whistles</p>
+          <h2 id="bells-title">Edges, Cropping, and Contrast</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            Raw RGB intensities are not always comparable across channels. The Emir portrait is the best example: the blue exposure differs enough that plain pixel matching can choose a visibly wrong offset. As a bell and whistle, I scored alignments using simple gradient magnitude edges, then applied an interior crop and percentile contrast stretch after stacking.
+          </p>
+        </div>
+        <div class="comparison-grid">
+          <figure class="comparison-card">
+            <img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Baseline pyramid result for emir">
+            <figcaption><strong>Emir, Baseline</strong><span>Raw NCC: G (-3, 7), R (107, 17)</span></figcaption>
+          </figure>
+          <figure class="comparison-card">
+            <img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Improved edge alignment result for emir">
+            <figcaption><strong>Emir, Improved</strong><span>Edges: G (49, 24), R (107, 40)</span></figcaption>
+          </figure>
+          <figure class="comparison-card">
+            <img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Baseline pyramid result for church">
+            <figcaption><strong>Church, Baseline</strong><span>Raw NCC: G (0, -5), R (52, -6)</span></figcaption>
+          </figure>
+          <figure class="comparison-card">
+            <img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Improved edge alignment result for church">
+            <figcaption><strong>Church, Improved</strong><span>Edges: G (25, 4), R (58, -4)</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section writeup-section" aria-labelledby="notes-title">
+        <div class="section-heading">
+          <p class="eyebrow">Notes</p>
+          <h2 id="notes-title">Failures and Tradeoffs</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            The largest failure mode was relying only on raw channel brightness. Some scenes contain strong color-dependent differences, so the NCC score can prefer a displacement that matches intensity patterns but leaves colored ghosts around important edges. Edge-based scoring helps because it compares structure rather than brightness, while final cropping removes the wraparound artifacts introduced by circular shifts.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

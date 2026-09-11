@@ -270,8 +270,92 @@ a:focus-visible {
   margin-bottom: 0;
 }
 
+.project-hero-copy {
+  color: rgba(255, 250, 243, 0.82);
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  margin: 1.25rem 0 0;
+  max-width: 780px;
+}
+
+.project1-hero {
+  background:
+    linear-gradient(90deg, rgba(17, 24, 33, 0.92), rgba(17, 24, 33, 0.48)),
+    url("projects/project1/CS180_fa2026_merged_photos/wharf_out.jpg") center / cover;
+  min-height: 640px;
+}
+
 .project-section {
   border-bottom: 1px solid var(--border);
+}
+
+.writeup-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.writeup-copy {
+  color: var(--muted);
+  display: grid;
+  font-size: 1.04rem;
+  gap: 1rem;
+  max-width: 860px;
+}
+
+.writeup-copy p {
+  margin-bottom: 0;
+}
+
+.result-grid,
+.comparison-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.result-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.result-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.comparison-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.result-card,
+.comparison-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(25, 31, 38, 0.08);
+  margin: 0;
+  overflow: hidden;
+}
+
+.result-card img,
+.comparison-card img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.result-card figcaption,
+.comparison-card figcaption {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.9rem 1rem;
+}
+
+.result-card figcaption strong,
+.comparison-card figcaption strong {
+  font-size: 0.95rem;
+}
+
+.result-card figcaption span,
+.comparison-card figcaption span {
+  color: var(--muted);
+  font-size: 0.84rem;
 }
 
 .media-pair {
@@ -351,6 +435,12 @@ a:focus-visible {
   }
 
   .media-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .result-grid,
+  .comparison-grid,
+  .result-grid-three {
     grid-template-columns: 1fr;
   }
 

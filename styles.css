@@ -281,7 +281,7 @@ a:focus-visible {
   background:
     linear-gradient(90deg, rgba(17, 24, 33, 0.92), rgba(17, 24, 33, 0.48)),
     url("projects/project1/CS180_fa2026_merged_photos/wharf_out.jpg") center / cover;
-  min-height: 640px;
+  min-height: 560px;
 }
 
 .project-section {
@@ -302,6 +302,39 @@ a:focus-visible {
 
 .writeup-copy p {
   margin-bottom: 0;
+}
+
+.method-strip {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2rem;
+}
+
+.method-strip div {
+  background: #fffaf3;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.method-strip strong {
+  align-items: center;
+  background: var(--ink);
+  border-radius: 999px;
+  color: #fffaf3;
+  display: inline-flex;
+  font-size: 0.82rem;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.method-strip span {
+  color: var(--muted);
+  font-size: 0.94rem;
 }
 
 .result-grid,
@@ -338,6 +371,58 @@ a:focus-visible {
   display: block;
   object-fit: cover;
   width: 100%;
+}
+
+.project1-page .section {
+  max-width: 1280px;
+  padding-bottom: clamp(3rem, 6vw, 5.5rem);
+  padding-top: clamp(3rem, 6vw, 5.5rem);
+}
+
+.project1-page .section-heading {
+  max-width: 900px;
+}
+
+.project1-page h2 {
+  font-size: clamp(1.9rem, 4vw, 3.2rem);
+}
+
+.project1-page .result-grid {
+  gap: 1.15rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: 2rem;
+}
+
+.project1-page .result-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 300px));
+}
+
+.project1-page .comparison-grid {
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 2rem;
+  max-width: 980px;
+}
+
+.project1-page .result-card img {
+  height: clamp(150px, 16vw, 220px);
+  object-fit: cover;
+}
+
+.project1-page .comparison-card img {
+  height: clamp(220px, 28vw, 340px);
+  object-fit: cover;
+}
+
+.project1-page .result-card,
+.project1-page .comparison-card {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.project1-page .result-card:hover,
+.project1-page .comparison-card:hover {
+  box-shadow: 0 18px 38px rgba(25, 31, 38, 0.12);
+  transform: translateY(-2px);
 }
 
 .result-card figcaption,
@@ -438,9 +523,19 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .method-strip {
+    grid-template-columns: 1fr;
+  }
+
   .result-grid,
   .comparison-grid,
   .result-grid-three {
+    grid-template-columns: 1fr;
+  }
+
+  .project1-page .result-grid,
+  .project1-page .result-grid-three,
+  .project1-page .comparison-grid {
     grid-template-columns: 1fr;
   }
 

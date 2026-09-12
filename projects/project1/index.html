@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
   </head>
-  <body>
+  <body class="project1-page">
     <header class="site-header">
       <a class="brand" href="../../">CS 180</a>
       <nav class="nav" aria-label="Primary navigation">
@@ -42,6 +42,20 @@
           <p>
             For large TIFFs, I use an image pyramid: align small versions first, double that displacement at each larger level, then refine around the estimate. This keeps the search fast while still finding large offsets. The baseline results below use raw pixel NCC; the final section shows bells and whistles that improve difficult cases.
           </p>
+        </div>
+        <div class="method-strip" aria-label="Project pipeline summary">
+          <div>
+            <strong>1</strong>
+            <span>Split the stacked glass plate into B, G, and R channels.</span>
+          </div>
+          <div>
+            <strong>2</strong>
+            <span>Search for the shift with the best normalized cross-correlation.</span>
+          </div>
+          <div>
+            <strong>3</strong>
+            <span>Use a coarse-to-fine pyramid for high-resolution TIFF scans.</span>
+          </div>
         </div>
       </section>
 

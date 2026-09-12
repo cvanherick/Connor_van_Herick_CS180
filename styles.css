@@ -389,28 +389,29 @@ a:focus-visible {
 
 .project1-page .result-grid {
   gap: 1.15rem;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   margin-top: 2rem;
+  max-width: 960px;
 }
 
 .project1-page .result-grid-three {
-  grid-template-columns: repeat(3, minmax(0, 300px));
+  grid-template-columns: repeat(3, minmax(0, 220px));
 }
 
 .project1-page .comparison-grid {
   gap: 1.25rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-top: 2rem;
-  max-width: 980px;
+  max-width: 760px;
 }
 
 .project1-page .result-card img {
-  height: clamp(150px, 16vw, 220px);
+  height: clamp(110px, 12vw, 150px);
   object-fit: cover;
 }
 
 .project1-page .comparison-card img {
-  height: clamp(220px, 28vw, 340px);
+  height: clamp(160px, 22vw, 240px);
   object-fit: cover;
 }
 

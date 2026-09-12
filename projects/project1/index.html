@@ -42,6 +42,9 @@
           <p>
             For large TIFFs, I use an image pyramid: align small versions first, double that displacement at each larger level, then refine around the estimate. This keeps the search fast while still finding large offsets. The baseline results below use raw pixel NCC; the final section shows bells and whistles that improve difficult cases.
           </p>
+          <p>
+            In code, <code>process_image</code> handles reading, splitting, stacking, and saving. <code>align</code> calls a recursive <code>pyramid_helper</code>, and the base case performs the same local exhaustive search used for single-scale alignment. My enhanced version keeps the same pyramid structure, but scores simple gradient-magnitude edge images, crops the final frame, and applies a small percentile contrast stretch.
+          </p>
         </div>
         <div class="method-strip" aria-label="Project pipeline summary">
           <div>
@@ -57,6 +60,24 @@
             <span>Use a coarse-to-fine pyramid for high-resolution TIFF scans.</span>
           </div>
         </div>
+        <div class="implementation-notes">
+          <article>
+            <h3>NCC Search</h3>
+            <p>For each candidate shift, I subtract each channel's mean and divide by its norm, then choose the displacement with the highest normalized cross-correlation score.</p>
+          </article>
+          <article>
+            <h3>Pyramid Alignment</h3>
+            <p>The recursive helper downsamples until the image is small, solves a local search there, doubles the shift at the next level, and searches a small window around that estimate.</p>
+          </article>
+          <article>
+            <h3>Cleanup Pass</h3>
+            <p>The enhanced run scores edge images, ignores the outer border during matching, crops the final composite, and uses percentile contrast to make the final JPG easier to read.</p>
+          </article>
+          <article>
+            <h3>Outputs</h3>
+            <p>I save raw NCC pyramid results separately from enhanced results, then log the green and red offsets for each source image so the webpage can report them directly.</p>
+          </article>
+        </div>
       </section>
 
       <section class="section writeup-section" aria-labelledby="single-title">
@@ -64,19 +85,54 @@
           <p class="eyebrow">Single-Scale</p>
           <h2 id="single-title">Low-Resolution JPEGs</h2>
         </div>
-        <div class="result-grid result-grid-three">
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Aligned color result for cathedral">
-            <figcaption><strong>Cathedral</strong><span>G: (1, -1), R: (7, -1)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Aligned color result for monastery">
-            <figcaption><strong>Monastery</strong><span>G: (-6, 0), R: (9, 1)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Aligned color result for tobolsk">
-            <figcaption><strong>Tobolsk</strong><span>G: (3, 2), R: (6, 3)</span></figcaption>
-          </figure>
+        <div class="writeup-copy">
+          <p>
+            These three JPEGs are small enough that the exhaustive search at the pyramid base case is already sufficient. I show the raw NCC baseline beside the enhanced output so the effect of cropping and contrast is visible.
+          </p>
+        </div>
+        <div class="comparison-list compact-comparisons">
+          <article class="compare-row">
+            <div class="compare-heading">
+              <h3>Cathedral</h3>
+              <p>Baseline G: (1, -1), R: (7, -1) · Enhanced G: (5, 2), R: (12, 3)</p>
+            </div>
+            <figure>
+              <img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Baseline aligned cathedral">
+              <figcaption>Raw NCC</figcaption>
+            </figure>
+            <figure>
+              <img src="CS180_fa2026_merged_photos/cathedral_out.jpg" alt="Enhanced aligned cathedral">
+              <figcaption>Enhanced</figcaption>
+            </figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading">
+              <h3>Monastery</h3>
+              <p>Baseline G: (-6, 0), R: (9, 1) · Enhanced G: (-3, 2), R: (3, 2)</p>
+            </div>
+            <figure>
+              <img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Baseline aligned monastery">
+              <figcaption>Raw NCC</figcaption>
+            </figure>
+            <figure>
+              <img src="CS180_fa2026_merged_photos/monastery_out.jpg" alt="Enhanced aligned monastery">
+              <figcaption>Enhanced</figcaption>
+            </figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading">
+              <h3>Tobolsk</h3>
+              <p>Baseline G: (3, 2), R: (6, 3) · Enhanced G: (3, 3), R: (7, 3)</p>
+            </div>
+            <figure>
+              <img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Baseline aligned tobolsk">
+              <figcaption>Raw NCC</figcaption>
+            </figure>
+            <figure>
+              <img src="CS180_fa2026_merged_photos/tobolsk_out.jpg" alt="Enhanced aligned tobolsk">
+              <figcaption>Enhanced</figcaption>
+            </figure>
+          </article>
         </div>
       </section>
 
@@ -90,63 +146,77 @@
             The pyramid version uses the same NCC score, but avoids a huge full-resolution search by moving from coarse to fine image scales. These baseline results use RGB pixel values without edge scoring, final cropping, or contrast stretching. The offsets below are listed as <code>(dy, dx)</code>.
           </p>
         </div>
-        <div class="result-grid">
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Aligned color result for cathedral">
-            <figcaption><strong>Cathedral</strong><span>G: (1, -1), R: (7, -1)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Aligned color result for church">
-            <figcaption><strong>Church</strong><span>G: (0, -5), R: (52, -6)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Aligned color result for emir">
-            <figcaption><strong>Emir</strong><span>G: (-3, 7), R: (107, 17)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Aligned color result for harvesters">
-            <figcaption><strong>Harvesters</strong><span>G: (118, -3), R: (120, 7)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Aligned color result for icon">
-            <figcaption><strong>Icon</strong><span>G: (42, 16), R: (89, 22)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Aligned color result for ilemselga">
-            <figcaption><strong>Ilemselga</strong><span>G: (39, -4), R: (129, -7)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Aligned color result for melons">
-            <figcaption><strong>Melons</strong><span>G: (83, 4), R: (176, 7)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Aligned color result for monastery">
-            <figcaption><strong>Monastery</strong><span>G: (-6, 0), R: (9, 1)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Aligned color result for religious painting">
-            <figcaption><strong>Religious Painting</strong><span>G: (25, 3), R: (69, 7)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Aligned color result for self portrait">
-            <figcaption><strong>Self Portrait</strong><span>G: (50, -2), R: (130, -5)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Aligned color result for siren">
-            <figcaption><strong>Siren</strong><span>G: (48, -7), R: (96, -21)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Aligned color result for three generations">
-            <figcaption><strong>Three Generations</strong><span>G: (52, 5), R: (108, 7)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Aligned color result for tobolsk">
-            <figcaption><strong>Tobolsk</strong><span>G: (3, 2), R: (6, 3)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Aligned color result for wharf">
-            <figcaption><strong>Wharf</strong><span>G: (15, -7), R: (83, -17)</span></figcaption>
-          </figure>
+        <div class="comparison-list">
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Cathedral</h3><p>Baseline G: (1, -1), R: (7, -1) · Enhanced G: (5, 2), R: (12, 3)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Baseline aligned cathedral"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/cathedral_out.jpg" alt="Enhanced aligned cathedral"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Church</h3><p>Baseline G: (0, -5), R: (52, -6) · Enhanced G: (25, 4), R: (58, -4)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Baseline aligned church"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Enhanced aligned church"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Emir</h3><p>Baseline G: (-3, 7), R: (107, 17) · Enhanced G: (49, 24), R: (107, 40)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Baseline aligned emir"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Enhanced aligned emir"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Harvesters</h3><p>Baseline G: (118, -3), R: (120, 7) · Enhanced G: (60, 18), R: (124, 14)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Baseline aligned harvesters"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Enhanced aligned harvesters"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Icon</h3><p>Baseline G: (42, 16), R: (89, 22) · Enhanced G: (41, 17), R: (90, 23)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Baseline aligned icon"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/icon_out.jpg" alt="Enhanced aligned icon"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Ilemselga</h3><p>Baseline G: (39, -4), R: (129, -7) · Enhanced G: (40, 7), R: (132, 11)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Baseline aligned ilemselga"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/ilemselga_out.jpg" alt="Enhanced aligned ilemselga"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Melons</h3><p>Baseline G: (83, 4), R: (176, 7) · Enhanced G: (80, 10), R: (177, 14)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Baseline aligned melons"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/melons_out.jpg" alt="Enhanced aligned melons"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Monastery</h3><p>Baseline G: (-6, 0), R: (9, 1) · Enhanced G: (-3, 2), R: (3, 2)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Baseline aligned monastery"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/monastery_out.jpg" alt="Enhanced aligned monastery"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Religious Painting</h3><p>Baseline G: (25, 3), R: (69, 7) · Enhanced G: (29, 4), R: (69, 7)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Baseline aligned religious painting"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/religous_painting_out.jpg" alt="Enhanced aligned religious painting"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Self Portrait</h3><p>Baseline G: (50, -2), R: (130, -5) · Enhanced G: (78, 29), R: (175, 37)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Baseline aligned self portrait"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/self_portrait_out.jpg" alt="Enhanced aligned self portrait"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Siren</h3><p>Baseline G: (48, -7), R: (96, -21) · Enhanced G: (49, -5), R: (97, -24)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Baseline aligned siren"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/siren_out.jpg" alt="Enhanced aligned siren"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Three Generations</h3><p>Baseline G: (52, 5), R: (108, 7) · Enhanced G: (53, 13), R: (111, 9)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Baseline aligned three generations"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/three_generations_out.jpg" alt="Enhanced aligned three generations"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Tobolsk</h3><p>Baseline G: (3, 2), R: (6, 3) · Enhanced G: (3, 3), R: (7, 3)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Baseline aligned tobolsk"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/tobolsk_out.jpg" alt="Enhanced aligned tobolsk"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Wharf</h3><p>Baseline G: (15, -7), R: (83, -17) · Enhanced G: (15, -6), R: (82, -16)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Baseline aligned wharf"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/wharf_out.jpg" alt="Enhanced aligned wharf"><figcaption>Enhanced</figcaption></figure>
+          </article>
         </div>
       </section>
 
@@ -160,19 +230,22 @@
             I also ran the same pyramid alignment on three additional Prokudin-Gorskii scans. These use the baseline raw pixel NCC pipeline so they are directly comparable to the provided examples.
           </p>
         </div>
-        <div class="result-grid result-grid-three">
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/Capri_extra_out.jpg" alt="Aligned color result for Capri">
-            <figcaption><strong>Capri</strong><span>G: (31, -13), R: (176, -18)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/sacks_extra_out.jpg" alt="Aligned color result for sacks">
-            <figcaption><strong>Sacks</strong><span>G: (48, -4), R: (82, -13)</span></figcaption>
-          </figure>
-          <figure class="result-card">
-            <img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Aligned color result for sunset">
-            <figcaption><strong>Sunset</strong><span>G: (0, -11), R: (237, -22)</span></figcaption>
-          </figure>
+        <div class="comparison-list compact-comparisons">
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Capri</h3><p>Baseline G: (31, -13), R: (176, -18) · Enhanced G: (32, -16), R: (78, -25)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/Capri_extra_out.jpg" alt="Baseline aligned Capri"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/Capri_extra_out.jpg" alt="Enhanced aligned Capri"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Sacks</h3><p>Baseline G: (48, -4), R: (82, -13) · Enhanced G: (53, 27), R: (126, 19)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/sacks_extra_out.jpg" alt="Baseline aligned sacks"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/sacks_extra_out.jpg" alt="Enhanced aligned sacks"><figcaption>Enhanced</figcaption></figure>
+          </article>
+          <article class="compare-row">
+            <div class="compare-heading"><h3>Sunset</h3><p>Baseline G: (0, -11), R: (237, -22) · Enhanced G: (52, -9), R: (116, 253)</p></div>
+            <figure><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Baseline aligned sunset"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Enhanced aligned sunset"><figcaption>Enhanced</figcaption></figure>
+          </article>
         </div>
       </section>
 
@@ -186,23 +259,8 @@
             Raw RGB intensities are not always comparable across channels. The Emir portrait is the best example: the blue exposure differs enough that plain pixel matching can choose a visibly wrong offset. As a bell and whistle, I scored alignments using simple gradient magnitude edges, then applied an interior crop and percentile contrast stretch after stacking.
           </p>
         </div>
-        <div class="comparison-grid">
-          <figure class="comparison-card">
-            <img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Baseline pyramid result for emir">
-            <figcaption><strong>Emir, Baseline</strong><span>Raw NCC: G (-3, 7), R (107, 17)</span></figcaption>
-          </figure>
-          <figure class="comparison-card">
-            <img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Improved edge alignment result for emir">
-            <figcaption><strong>Emir, Improved</strong><span>Edges: G (49, 24), R (107, 40)</span></figcaption>
-          </figure>
-          <figure class="comparison-card">
-            <img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Baseline pyramid result for church">
-            <figcaption><strong>Church, Baseline</strong><span>Raw NCC: G (0, -5), R (52, -6)</span></figcaption>
-          </figure>
-          <figure class="comparison-card">
-            <img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Improved edge alignment result for church">
-            <figcaption><strong>Church, Improved</strong><span>Edges: G (25, 4), R (58, -4)</span></figcaption>
-          </figure>
+        <div class="callout-note">
+          The side-by-side results above are the main before-and-after comparison for every image. The raw NCC image is the required baseline; the enhanced image shows the effect of edge scoring, final cropping, and automatic contrast.
         </div>
       </section>
 

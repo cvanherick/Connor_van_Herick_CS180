@@ -337,6 +337,96 @@ a:focus-visible {
   font-size: 0.94rem;
 }
 
+.implementation-notes {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.implementation-notes article {
+  border-top: 3px solid var(--gold);
+  padding-top: 0.9rem;
+}
+
+.implementation-notes h3 {
+  font-size: 0.98rem;
+  margin-bottom: 0.45rem;
+}
+
+.implementation-notes p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.comparison-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  max-width: 1040px;
+}
+
+.compact-comparisons {
+  max-width: 860px;
+}
+
+.compare-row {
+  align-items: start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(25, 31, 38, 0.08);
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(170px, 0.9fr) repeat(2, minmax(140px, 1fr));
+  padding: 0.85rem;
+}
+
+.compare-heading h3 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.compare-heading p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-bottom: 0;
+}
+
+.compare-row figure {
+  margin: 0;
+  overflow: hidden;
+}
+
+.compare-row img {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: block;
+  height: 132px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.compare-row figcaption {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-top: 0.45rem;
+  text-transform: uppercase;
+}
+
+.callout-note {
+  background: #fffaf3;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 1rem;
+  margin-top: 2rem;
+  max-width: 860px;
+  padding: 1rem;
+}
+
 .result-grid,
 .comparison-grid {
   display: grid;
@@ -526,6 +616,22 @@ a:focus-visible {
 
   .method-strip {
     grid-template-columns: 1fr;
+  }
+
+  .implementation-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .compare-heading {
+    grid-column: 1 / -1;
+  }
+
+  .compare-row img {
+    height: 120px;
   }
 
   .result-grid,

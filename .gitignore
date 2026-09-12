@@ -1,0 +1,5 @@
+projects/project1/CS180_fa2026_proj1_data/
+.DS_Store
+__pycache__/
+*.pyc
+

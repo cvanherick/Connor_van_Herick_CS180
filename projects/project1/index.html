@@ -17,7 +17,6 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#overview">Overview</a>
         <a href="#approach">Approach</a>
-        <a href="#plates">Source Plates</a>
         <a href="#small">Small Images</a>
         <a href="#raw-pyramid">Raw NCC</a>
         <a href="#results">Final Results</a>
@@ -100,59 +99,8 @@
             I first implemented the required coarse-to-fine pyramid using raw-pixel NCC. Several channels failed because of border interference and differences in brightness structure. I retained the same pyramid and NCC search, replaced raw intensities with gradient magnitudes, and restricted scoring to the image interior.
           </p>
           <p>
-            The baseline results below cover all 14 provided images. The three JPEGs reach the base case directly, giving <code>Single-Scale Raw NCC</code>: two nested loops test every integer shift in [-15, 15] along each axis (961 candidates per channel). Larger inputs use <code>Multi-Scale Raw NCC</code>. Offsets throughout this page follow the code's <code>(dy, dx)</code> order; for the assignment's <code>(x, y)</code> convention, reverse the two entries.
+            The three JPEGs reach the base case directly, giving <code>Single-Scale Raw NCC</code>: two nested loops test every integer shift in [-15, 15] along each axis (961 candidates per channel). Larger inputs use <code>Multi-Scale Raw NCC</code>. I kept the raw-NCC outputs for comparison during development, but the main results below show the cleaner final pipeline: each grayscale source plate next to its final color reconstruction. Offsets throughout this page follow the code's <code>(dy, dx)</code> order; for the assignment's <code>(x, y)</code> convention, reverse the two entries.
           </p>
-        </div>
-        <details class="baseline-gallery" open>
-          <summary>Raw-NCC results and computed offsets: all 14 provided images</summary>
-          <div class="final-results-grid baseline-results">
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/cathedral_bw.png" alt="Black-and-white source plate for Cathedral"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Raw NCC result for Cathedral"><span>Raw NCC Result</span></div></div><figcaption><strong>Cathedral</strong><span>Single-Scale Raw NCC</span><span>G: (1, -1) · R: (7, -1)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/church_bw.png" alt="Black-and-white source plate for Church"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC result for Church"><span>Raw NCC Result</span></div></div><figcaption><strong>Church</strong><span>Multi-Scale Raw NCC</span><span>G: (0, -5) · R: (52, -6)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/emir_bw.png" alt="Black-and-white source plate for Emir"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC result for Emir"><span>Raw NCC Result</span></div></div><figcaption><strong>Emir</strong><span>Multi-Scale Raw NCC</span><span>G: (-3, 7) · R: (107, 17)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/harvesters_bw.png" alt="Black-and-white source plate for Harvesters"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC result for Harvesters"><span>Raw NCC Result</span></div></div><figcaption><strong>Harvesters</strong><span>Multi-Scale Raw NCC</span><span>G: (118, -3) · R: (120, 7)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/icon_bw.png" alt="Black-and-white source plate for Icon"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Raw NCC result for Icon"><span>Raw NCC Result</span></div></div><figcaption><strong>Icon</strong><span>Multi-Scale Raw NCC</span><span>G: (42, 16) · R: (89, 22)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/ilemselga_bw.png" alt="Black-and-white source plate for Ilemselga"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Raw NCC result for Ilemselga"><span>Raw NCC Result</span></div></div><figcaption><strong>Ilemselga</strong><span>Multi-Scale Raw NCC</span><span>G: (39, -4) · R: (129, -7)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/melons_bw.png" alt="Black-and-white source plate for Melons"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Raw NCC result for Melons"><span>Raw NCC Result</span></div></div><figcaption><strong>Melons</strong><span>Multi-Scale Raw NCC</span><span>G: (83, 4) · R: (176, 7)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/monastery_bw.png" alt="Black-and-white source plate for Monastery"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Raw NCC result for Monastery"><span>Raw NCC Result</span></div></div><figcaption><strong>Monastery</strong><span>Single-Scale Raw NCC</span><span>G: (-6, 0) · R: (9, 1)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/religous_painting_bw.png" alt="Black-and-white source plate for Religious Painting"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Raw NCC result for Religious Painting"><span>Raw NCC Result</span></div></div><figcaption><strong>Religious Painting</strong><span>Multi-Scale Raw NCC</span><span>G: (25, 3) · R: (69, 7)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/self_portrait_bw.png" alt="Black-and-white source plate for Self Portrait"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Raw NCC result for Self Portrait"><span>Raw NCC Result</span></div></div><figcaption><strong>Self Portrait</strong><span>Multi-Scale Raw NCC</span><span>G: (50, -2) · R: (130, -5)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/siren_bw.png" alt="Black-and-white source plate for Siren"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Raw NCC result for Siren"><span>Raw NCC Result</span></div></div><figcaption><strong>Siren</strong><span>Multi-Scale Raw NCC</span><span>G: (48, -7) · R: (96, -21)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/three_generations_bw.png" alt="Black-and-white source plate for Three Generations"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Raw NCC result for Three Generations"><span>Raw NCC Result</span></div></div><figcaption><strong>Three Generations</strong><span>Multi-Scale Raw NCC</span><span>G: (52, 5) · R: (108, 7)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/tobolsk_bw.png" alt="Black-and-white source plate for Tobolsk"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Raw NCC result for Tobolsk"><span>Raw NCC Result</span></div></div><figcaption><strong>Tobolsk</strong><span>Single-Scale Raw NCC</span><span>G: (3, 2) · R: (6, 3)</span></figcaption></figure>
-            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/wharf_bw.png" alt="Black-and-white source plate for Wharf"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Raw NCC result for Wharf"><span>Raw NCC Result</span></div></div><figcaption><strong>Wharf</strong><span>Multi-Scale Raw NCC</span><span>G: (15, -7) · R: (83, -17)</span></figcaption></figure>
-          </div>
-        </details>
-      </section>
-
-      <section class="section writeup-section" id="plates" aria-labelledby="plates-title">
-        <div class="section-heading">
-          <p class="eyebrow">Source Plates</p>
-          <h2 id="plates-title">Black-and-White Inputs</h2>
-        </div>
-        <div class="writeup-copy">
-          <p>
-            The original scans are large TIFF and JPEG files, so I generated lightweight PNG previews of the stacked black-and-white plates for the webpage. These previews show the raw input format without committing the full-resolution source data.
-          </p>
-        </div>
-        <div class="source-plate-grid">
-          <figure><img src="CS180_fa2026_bw_pngs/cathedral_bw.png" alt="Black-and-white source plate for cathedral"><figcaption>Cathedral</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/church_bw.png" alt="Black-and-white source plate for church"><figcaption>Church</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/emir_bw.png" alt="Black-and-white source plate for emir"><figcaption>Emir</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/harvesters_bw.png" alt="Black-and-white source plate for harvesters"><figcaption>Harvesters</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/icon_bw.png" alt="Black-and-white source plate for icon"><figcaption>Icon</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/ilemselga_bw.png" alt="Black-and-white source plate for ilemselga"><figcaption>Ilemselga</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/melons_bw.png" alt="Black-and-white source plate for melons"><figcaption>Melons</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/monastery_bw.png" alt="Black-and-white source plate for monastery"><figcaption>Monastery</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/religous_painting_bw.png" alt="Black-and-white source plate for religious painting"><figcaption>Religious Painting</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/self_portrait_bw.png" alt="Black-and-white source plate for self portrait"><figcaption>Self Portrait</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/siren_bw.png" alt="Black-and-white source plate for siren"><figcaption>Siren</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/three_generations_bw.png" alt="Black-and-white source plate for three generations"><figcaption>Three Generations</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/tobolsk_bw.png" alt="Black-and-white source plate for tobolsk"><figcaption>Tobolsk</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/wharf_bw.png" alt="Black-and-white source plate for wharf"><figcaption>Wharf</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/Capri_extra_bw.png" alt="Black-and-white source plate for Capri"><figcaption>Capri</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/sacks_extra_bw.png" alt="Black-and-white source plate for sacks"><figcaption>Sacks</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/prisoners_extra_bw.png" alt="Black-and-white source plate for prisoners"><figcaption>Prisoners</figcaption></figure>
-          <figure><img src="CS180_fa2026_bw_pngs/sunset_extra_bw.png" alt="Black-and-white source plate for sunset"><figcaption>Sunset</figcaption></figure>
         </div>
       </section>
 

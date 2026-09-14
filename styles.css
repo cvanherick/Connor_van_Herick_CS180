@@ -879,6 +879,10 @@ html[data-theme="dark"] {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
+.project1-page .primary-results {
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
 .project1-page .final-card {
   background: var(--panel);
   border: 1px solid color-mix(in srgb, var(--border) 82%, var(--paper));
@@ -895,6 +899,10 @@ html[data-theme="dark"] {
   height: clamp(230px, 24vw, 320px);
   object-fit: contain;
   width: 100%;
+}
+
+.project1-page .primary-results .final-card img {
+  height: clamp(320px, 34vw, 460px);
 }
 
 .project1-page .final-card figcaption {

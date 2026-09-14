@@ -19,7 +19,8 @@
         <a href="#approach">Approach</a>
         <a href="#plates">Source Plates</a>
         <a href="#small">Small Images</a>
-        <a href="#results">Image Pyramid</a>
+        <a href="#raw-pyramid">Raw NCC</a>
+        <a href="#results">Final Results</a>
         <a href="#selected">Selected</a>
         <a href="#bells">Bells &amp; Whistles</a>
         <a href="#challenges">Challenges</a>
@@ -47,24 +48,24 @@
             Each source image stores the blue, green, and red exposures stacked vertically. I split the image into thirds, aligned the green and red channels to blue, and report every displacement as <code>(dy, dx)</code>: positive <code>dy</code> moves a channel downward and positive <code>dx</code> moves it right.
           </p>
           <p>
-            My final algorithm uses a multi-scale coarse-to-fine image pyramid with normalized cross-correlation applied to gradient-magnitude images. Scoring on edges made the alignment more robust when the three exposures had different brightness or color responses, especially on portraits like Emir.
+            I implemented three alignment pipelines: <code>Single-Scale Raw NCC</code> for the small JPEGs, <code>Multi-Scale Raw NCC</code> for the required pyramid baseline, and <code>Final Edge-NCC Pyramid</code> for the submitted results. The final version keeps the same pyramid search but scores gradient-magnitude images instead of raw intensities.
           </p>
           <p>
-            To avoid border artifacts influencing the metric, each candidate shift is scored on the center crop of the image. After alignment, I automatically crop away the outer frame and apply a light contrast stretch before saving the final result.
+            To avoid border artifacts influencing the metric, each candidate shift is scored on the center crop of the image. Border cropping and contrast stretching are postprocessing steps after alignment: I crop away the outer frame and apply a light contrast stretch before saving the final result.
           </p>
         </div>
         <div class="method-strip" aria-label="Project pipeline summary">
           <div>
             <strong>1</strong>
-            <span>Split the stacked glass plate into B, G, and R channels.</span>
+            <span><b>Single-Scale Raw NCC</b> splits B, G, and R, then exhaustively searches shifts for small JPEGs.</span>
           </div>
           <div>
             <strong>2</strong>
-            <span>Convert each channel to a gradient-magnitude image for scoring.</span>
+            <span><b>Multi-Scale Raw NCC</b> adds a coarse-to-fine pyramid for large TIFF files.</span>
           </div>
           <div>
             <strong>3</strong>
-            <span>Search coarse-to-fine, stack the shifted channels, crop, and contrast stretch.</span>
+            <span><b>Final Edge-NCC Pyramid</b> uses the same pyramid, but scores gradient magnitudes.</span>
           </div>
         </div>
         <div class="implementation-notes">
@@ -74,16 +75,31 @@
           </article>
           <article>
             <h3>Pyramid Alignment</h3>
-            <p>The pyramid downsamples by 0.5 until the smaller side is at most 300px, searches radius 15, doubles the offset, then refines with radius 5.</p>
+            <p>The pyramid downsamples by 0.5 with anti-aliasing until the smaller side is at most 300px, searches radius 15 at the base, doubles the displacement at each finer level, then refines within radius 5.</p>
           </article>
           <article>
-            <h3>Cropping</h3>
-            <p>During alignment, NCC uses the middle 50% of each dimension. After stacking, I crop 7% off each side to remove rolled borders.</p>
+            <h3>Crop and Postprocessing</h3>
+            <p>During alignment, NCC uses the middle 50% of each dimension. After stacking, I crop 7% off each side and stretch intensities from the 1st to 99th percentile.</p>
           </article>
           <article>
             <h3>Runtime</h3>
-            <p>The full batch of 17 images runs automatically with one fixed parameter set and takes roughly a few minutes on my laptop.</p>
+            <p>The full batch of 17 images runs automatically with one fixed parameter set in about 3 minutes on my laptop; Prisoners alone took about 23 seconds.</p>
           </article>
+        </div>
+      </section>
+
+      <section class="section writeup-section" id="raw-pyramid" aria-labelledby="raw-pyramid-title">
+        <div class="section-heading">
+          <p class="eyebrow">Required Baseline</p>
+          <h2 id="raw-pyramid-title">Multi-Scale Raw NCC</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            I first implemented the required coarse-to-fine pyramid using raw-pixel NCC. It successfully aligned most images but failed on several channels whose brightness structures differed substantially. I then retained the same pyramid and NCC search while replacing raw intensities with gradient magnitudes.
+          </p>
+          <p>
+            This makes <code>Multi-Scale Raw NCC</code> the required baseline and <code>Final Edge-NCC Pyramid</code> the improved alignment method. Cropping and contrast stretching are separate postprocessing steps applied only after the channel shifts are chosen.
+          </p>
         </div>
       </section>
 
@@ -125,7 +141,7 @@
         </div>
         <div class="writeup-copy">
           <p>
-            Cathedral, Monastery, and Tobolsk are small enough that they reach the pyramid base case immediately, so the same recursive alignment code behaves like a single-scale exhaustive search. Every image below was still processed by the same final pipeline: G and R aligned to B, edge-based NCC on the interior crop, final border cropping, and contrast stretching.
+            Cathedral, Monastery, and Tobolsk are small enough that they reach the pyramid base case immediately, so the same recursive alignment code behaves like <code>Single-Scale Raw NCC</code> when run without edge scoring. The images below use the <code>Final Edge-NCC Pyramid</code> output with the same postprocessing as the TIFF results.
           </p>
         </div>
         <div class="final-results-grid small-results">
@@ -146,30 +162,30 @@
 
       <section class="section writeup-section" id="results" aria-labelledby="results-title">
         <div class="section-heading">
-          <p class="eyebrow">Multi-Scale Pyramid</p>
-          <h2 id="results-title">High-Resolution TIFF Results</h2>
+          <p class="eyebrow">Final Edge-NCC Pyramid</p>
+          <h2 id="results-title">Final Results for High-Resolution TIFFs</h2>
         </div>
         <div class="writeup-copy">
           <p>
-            For the larger TIFF files, exhaustive search at full resolution would be slow because the true displacements can be dozens or hundreds of pixels. The pyramid first solves a smaller version of the problem, scales that guess upward, and refines locally at each level. All required images were processed automatically with the same final algorithm and fixed parameters.
+            For the larger TIFF files, exhaustive search at full resolution would be slow because the true displacements can be dozens or hundreds of pixels. The pyramid first solves a smaller version of the problem, doubles that displacement at each finer level, and refines locally. The large images below are the visually primary final outputs: one <code>Final Result</code> per provided TIFF with final green and red offsets.
           </p>
         </div>
-        <div class="final-results-grid">
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final aligned church"><figcaption><strong>Church</strong><span>G: (25, 4) · R: (58, -4)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final aligned emir"><figcaption><strong>Emir</strong><span>G: (49, 24) · R: (107, 40)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final aligned harvesters"><figcaption><strong>Harvesters</strong><span>G: (60, 18) · R: (124, 14)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/icon_out.jpg" alt="Final aligned icon"><figcaption><strong>Icon</strong><span>G: (41, 17) · R: (90, 23)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/ilemselga_out.jpg" alt="Final aligned ilemselga"><figcaption><strong>Ilemselga</strong><span>G: (40, 7) · R: (132, 11)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/melons_out.jpg" alt="Final aligned melons"><figcaption><strong>Melons</strong><span>G: (80, 10) · R: (177, 14)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/religous_painting_out.jpg" alt="Final aligned religious painting"><figcaption><strong>Religious Painting</strong><span>G: (29, 4) · R: (69, 7)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/self_portrait_out.jpg" alt="Final aligned self portrait"><figcaption><strong>Self Portrait</strong><span>G: (78, 29) · R: (175, 37)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/siren_out.jpg" alt="Final aligned siren"><figcaption><strong>Siren</strong><span>G: (49, -5) · R: (97, -24)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/three_generations_out.jpg" alt="Final aligned three generations"><figcaption><strong>Three Generations</strong><span>G: (53, 13) · R: (111, 9)</span></figcaption></figure>
-          <figure class="final-card"><img src="CS180_fa2026_merged_photos/wharf_out.jpg" alt="Final aligned wharf"><figcaption><strong>Wharf</strong><span>G: (15, -6) · R: (82, -16)</span></figcaption></figure>
+        <div class="final-results-grid primary-results">
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final aligned church"><figcaption><strong>Church</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (25, 4) · R: (58, -4)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final aligned emir"><figcaption><strong>Emir</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (49, 24) · R: (107, 40)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final aligned harvesters"><figcaption><strong>Harvesters</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (60, 18) · R: (124, 14)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/icon_out.jpg" alt="Final aligned icon"><figcaption><strong>Icon</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (41, 17) · R: (90, 23)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/ilemselga_out.jpg" alt="Final aligned ilemselga"><figcaption><strong>Ilemselga</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (40, 7) · R: (132, 11)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/melons_out.jpg" alt="Final aligned melons"><figcaption><strong>Melons</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (80, 10) · R: (177, 14)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/religous_painting_out.jpg" alt="Final aligned religious painting"><figcaption><strong>Religious Painting</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (29, 4) · R: (69, 7)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/self_portrait_out.jpg" alt="Final aligned self portrait"><figcaption><strong>Self Portrait</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (78, 29) · R: (175, 37)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/siren_out.jpg" alt="Final aligned siren"><figcaption><strong>Siren</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (49, -5) · R: (97, -24)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/three_generations_out.jpg" alt="Final aligned three generations"><figcaption><strong>Three Generations</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (53, 13) · R: (111, 9)</span></figcaption></figure>
+          <figure class="final-card"><img src="CS180_fa2026_merged_photos/wharf_out.jpg" alt="Final aligned wharf"><figcaption><strong>Wharf</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (15, -6) · R: (82, -16)</span></figcaption></figure>
         </div>
         <div class="offset-table-wrap" aria-labelledby="offset-table-title">
-          <h3 id="offset-table-title">Displacement Table</h3>
-          <p>Offsets are <code>(dy, dx)</code>; green and red are aligned to blue.</p>
+          <h3 id="offset-table-title">Final Displacement Table</h3>
+          <p>Offsets are <code>(dy, dx)</code>; green and red are aligned to blue using the <code>Final Edge-NCC Pyramid</code>.</p>
           <table class="offset-table">
             <thead><tr><th>Image</th><th>G to B</th><th>R to B</th></tr></thead>
             <tbody>
@@ -199,21 +215,22 @@
         </div>
         <div class="writeup-copy">
           <p>
-            I also ran the same final pyramid alignment on additional Prokudin-Gorskii scans. Capri and Sacks aligned well with the fixed parameter set; Sunset is discussed separately as a failure case because its result was not reliable enough to present as a successful selected image.
+            I also ran the same final pyramid alignment on additional Prokudin-Gorskii scans. Capri, Sacks, and Prisoners aligned well with the fixed parameter set; Sunset is discussed separately as a failure case because its result was not reliable enough to present as a successful selected image.
           </p>
         </div>
         <div class="final-results-grid small-results">
           <figure class="final-card">
             <img src="CS180_fa2026_merged_photos/Capri_extra_out.jpg" alt="Final aligned Capri">
-            <figcaption><strong>Capri</strong><span>G: (32, -16) · R: (78, -25)</span></figcaption>
+            <figcaption><strong>Capri</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (32, -16) · R: (78, -25)</span></figcaption>
           </figure>
           <figure class="final-card">
             <img src="CS180_fa2026_merged_photos/sacks_extra_out.jpg" alt="Final aligned sacks">
-            <figcaption><strong>Sacks</strong><span>G: (53, 27) · R: (126, 19)</span></figcaption>
+            <figcaption><strong>Sacks</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (53, 27) · R: (126, 19)</span></figcaption>
           </figure>
-        </div>
-        <div class="callout-note">
-          I should add one more correctly aligned collection image before final submission so this section has three successful selected examples. Sunset is kept below only as an explicitly labeled failure case.
+          <figure class="final-card">
+            <img src="CS180_fa2026_merged_photos/prisoners_extra_out.jpg" alt="Final aligned prisoners">
+            <figcaption><strong>Prisoners</strong><span>Final Result · Edge-NCC pyramid</span><span>G: (2, -1) · R: (7, -2)</span></figcaption>
+          </figure>
         </div>
       </section>
 
@@ -233,26 +250,26 @@
         <div class="comparison-list comparison-samples">
           <article class="compare-row">
             <div class="compare-heading"><h3>Emir</h3><p>Raw pixel NCC struggles with cross-channel brightness differences; edge NCC lines up the face and clothing structure much better.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC aligned emir"><figcaption>Raw Pixel NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final aligned emir"><figcaption>Final Result</figcaption></figure>
+            <figure><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Multi-scale raw NCC aligned emir"><figcaption>Multi-Scale Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final Edge-NCC pyramid aligned emir"><figcaption>Final Edge-NCC Pyramid</figcaption></figure>
           </article>
           <article class="compare-row">
             <div class="compare-heading"><h3>Harvesters</h3><p>The baseline locks onto misleading color/intensity regions, while the final result uses edges and interior scoring to align the people and field rows.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC aligned harvesters"><figcaption>Raw Pixel NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final aligned harvesters"><figcaption>Final Result</figcaption></figure>
+            <figure><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Multi-scale raw NCC aligned harvesters"><figcaption>Multi-Scale Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final Edge-NCC pyramid aligned harvesters"><figcaption>Final Edge-NCC Pyramid</figcaption></figure>
           </article>
           <article class="compare-row">
             <div class="compare-heading"><h3>Church</h3><p>Border and brightness artifacts are reduced by scoring only the interior during alignment and cropping the final composite afterward.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC aligned church"><figcaption>Raw Pixel NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final aligned church"><figcaption>Final Result</figcaption></figure>
+            <figure><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Multi-scale raw NCC aligned church"><figcaption>Multi-Scale Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final Edge-NCC pyramid aligned church"><figcaption>Final Edge-NCC Pyramid</figcaption></figure>
           </article>
         </div>
       </section>
 
       <section class="section writeup-section challenge-section" id="challenges" aria-labelledby="challenges-title">
         <div class="section-heading">
-          <p class="eyebrow">Challenge Case</p>
-          <h2 id="challenges-title">What Happened with Sunset</h2>
+          <p class="eyebrow">Failure Analysis</p>
+          <h2 id="challenges-title">Repeated Horizons and Low-Texture Regions</h2>
         </div>
         <div class="writeup-copy">
           <p>
@@ -264,8 +281,8 @@
         </div>
         <article class="compare-row challenge-compare">
           <div class="compare-heading"><h3>Sunset</h3><p>Baseline G: (0, -11), R: (237, -22) · Final G: (52, -9), R: (116, 253)</p></div>
-          <figure><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Baseline aligned sunset"><figcaption>Raw NCC</figcaption></figure>
-          <figure><img src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Final aligned sunset"><figcaption>Final Result</figcaption></figure>
+          <figure><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Baseline aligned sunset"><figcaption>Multi-Scale Raw NCC</figcaption></figure>
+          <figure><img src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Final aligned sunset"><figcaption>Final Edge-NCC Pyramid</figcaption></figure>
         </article>
       </section>
 

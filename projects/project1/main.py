@@ -70,6 +70,8 @@ def process_image(imname, out_dir, cleanup=True):
 
     # convert to double (might want to do this later on to save memory)
     im = sk.img_as_float(im)
+    if im.ndim == 3:
+        im = im[:, :, 0]
 
     # compute the height of each part (just 1/3 of total)
     height = np.floor(im.shape[0] / 3.0).astype(int)
@@ -101,6 +103,6 @@ def process_image(imname, out_dir, cleanup=True):
 
 OFFSETS_FILE.write_text("")
 for image_path in DATA_DIR.iterdir():
-    if image_path.suffix.lower() in [".jpg", ".tif"]:
+    if image_path.suffix.lower() in [".jpg", ".tif", ".png"]:
         process_image(image_path.name, OUT_DIR)
         process_image(image_path.name, BASELINE_OUT_DIR, cleanup=False)

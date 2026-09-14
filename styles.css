@@ -905,6 +905,40 @@ html[data-theme="dark"] {
   height: clamp(320px, 34vw, 460px);
 }
 
+.project1-page .result-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project1-page .result-pair > div {
+  background: color-mix(in srgb, var(--ink) 92%, #000);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-width: 0;
+}
+
+.project1-page .result-pair > div + div {
+  border-left: 1px solid var(--border);
+}
+
+.project1-page .result-pair img {
+  height: clamp(230px, 22vw, 330px);
+}
+
+.project1-page .primary-results .result-pair img {
+  height: clamp(300px, 31vw, 430px);
+}
+
+.project1-page .result-pair span {
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 0.45rem 0.6rem;
+  text-transform: uppercase;
+}
+
 .project1-page .final-card figcaption {
   border-top: 1px solid var(--border);
   display: grid;

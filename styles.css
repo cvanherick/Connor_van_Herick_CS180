@@ -869,6 +869,11 @@ html[data-theme="dark"] {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
 }
 
+.project1-page .results-subhead {
+  margin: 2rem auto 0;
+  max-width: 1120px;
+}
+
 .project1-page .final-card {
   background: var(--panel);
   border: 1px solid color-mix(in srgb, var(--border) 82%, var(--paper));

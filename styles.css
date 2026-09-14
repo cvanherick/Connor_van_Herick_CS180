@@ -867,6 +867,95 @@ html[data-theme="dark"] {
   height: 260px;
 }
 
+.project1-page .final-results-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  margin-top: 2rem;
+  max-width: 1120px;
+}
+
+.project1-page .small-results {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.project1-page .final-card {
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--border) 82%, var(--paper));
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin: 0;
+  overflow: hidden;
+}
+
+.project1-page .final-card img {
+  background: color-mix(in srgb, var(--ink) 92%, #000);
+  cursor: zoom-in;
+  display: block;
+  height: clamp(230px, 24vw, 320px);
+  object-fit: contain;
+  width: 100%;
+}
+
+.project1-page .final-card figcaption {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.95rem 1rem;
+}
+
+.project1-page .final-card strong {
+  font-size: 0.98rem;
+}
+
+.project1-page .final-card span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.project1-page .offset-table-wrap {
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--border) 82%, var(--paper));
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-top: 1rem;
+  max-width: 760px;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.project1-page .offset-table-wrap h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+
+.project1-page .offset-table-wrap p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.project1-page .offset-table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 520px;
+  width: 100%;
+}
+
+.project1-page .offset-table th,
+.project1-page .offset-table td {
+  border-top: 1px solid var(--border);
+  padding: 0.55rem 0.45rem;
+  text-align: left;
+}
+
+.project1-page .offset-table th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
 .project-footer {
   align-items: center;
   border-top: 1px solid var(--border);
@@ -1078,6 +1167,10 @@ html[data-theme="dark"] .project1-page {
   box-shadow: var(--shadow);
 }
 
+.project1-page code {
+  overflow-wrap: anywhere;
+}
+
 .project1-page .compare-row {
   background: var(--panel);
   border-color: color-mix(in srgb, var(--border) 82%, var(--paper));
@@ -1085,7 +1178,7 @@ html[data-theme="dark"] .project1-page {
 
 .project1-page .compare-row img {
   background: color-mix(in srgb, var(--ink) 92%, #000);
-  height: clamp(300px, 34vw, 500px);
+  height: clamp(260px, 28vw, 420px);
 }
 
 .project1-page .challenge-section {
@@ -1110,10 +1203,19 @@ html[data-theme="dark"] .project1-page {
   .project1-page .compare-row img {
     height: clamp(240px, 46vw, 380px);
   }
+
+  .project1-page .final-card img {
+    height: clamp(220px, 46vw, 330px);
+  }
 }
 
 @media (max-width: 560px) {
   .project1-page .compare-row img {
     height: clamp(260px, 74vw, 360px);
+  }
+
+  .project1-page .final-results-grid,
+  .project1-page .small-results {
+    grid-template-columns: 1fr;
   }
 }

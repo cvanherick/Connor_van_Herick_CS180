@@ -62,7 +62,7 @@
   const lightboxImage = lightbox?.querySelector("img");
   const lightboxCaption = lightbox?.querySelector("p");
   const closeButton = lightbox?.querySelector(".lightbox-close");
-  const previewImages = document.querySelectorAll(".compare-row img, .source-plate-grid img");
+  const previewImages = document.querySelectorAll(".final-card img, .compare-row img, .source-plate-grid img");
 
   function closeLightbox() {
     if (!lightbox || !lightboxImage || !lightboxCaption) {

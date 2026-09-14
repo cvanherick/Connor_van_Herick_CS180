@@ -8,23 +8,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../styles.css?v=project1-comparison-layout">
+    <link rel="stylesheet" href="../../styles.css?v=project1-polished-layout">
+    <script src="../../assets/project1.js" defer></script>
   </head>
   <body class="project1-page">
     <header class="site-header">
       <a class="brand" href="../../">CS 180</a>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="../../#projects">Projects</a>
+        <a href="#overview">Overview</a>
         <a href="#approach">Approach</a>
-        <a href="#results">Results</a>
+        <a href="#small">Small Images</a>
+        <a href="#results">Image Pyramid</a>
         <a href="#bells">Bells &amp; Whistles</a>
+        <a href="#selected">Selected</a>
       </nav>
+      <button class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">Dark</button>
     </header>
 
     <main>
-      <section class="project-hero project1-hero">
+      <section class="project-hero project1-hero" id="overview" aria-labelledby="project-title">
         <p class="eyebrow">Project 1</p>
-        <h1>Images of the Russian Empire</h1>
+        <h1 id="project-title">Images of the Russian Empire</h1>
+        <p class="project-meta">Connor van Herick · CS180 Computational Photography</p>
         <p class="project-hero-copy">
           Reconstructing color photographs from Prokudin-Gorskii glass plate scans by aligning the red and green exposures to the blue channel.
         </p>
@@ -80,7 +85,38 @@
         </div>
       </section>
 
-      <section class="section writeup-section" aria-labelledby="single-title">
+      <section class="section writeup-section" id="plates" aria-labelledby="plates-title">
+        <div class="section-heading">
+          <p class="eyebrow">Source Plates</p>
+          <h2 id="plates-title">Black-and-White Inputs</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            The original scans are large TIFF and JPEG files, so I generated lightweight PNG previews of the stacked black-and-white plates for the webpage. These previews show the raw input format without committing the full-resolution source data.
+          </p>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="CS180_fa2026_bw_pngs/cathedral_bw.png" alt="Black-and-white source plate for cathedral"><figcaption>Cathedral</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/church_bw.png" alt="Black-and-white source plate for church"><figcaption>Church</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/emir_bw.png" alt="Black-and-white source plate for emir"><figcaption>Emir</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/harvesters_bw.png" alt="Black-and-white source plate for harvesters"><figcaption>Harvesters</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/icon_bw.png" alt="Black-and-white source plate for icon"><figcaption>Icon</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/ilemselga_bw.png" alt="Black-and-white source plate for ilemselga"><figcaption>Ilemselga</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/melons_bw.png" alt="Black-and-white source plate for melons"><figcaption>Melons</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/monastery_bw.png" alt="Black-and-white source plate for monastery"><figcaption>Monastery</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/religous_painting_bw.png" alt="Black-and-white source plate for religious painting"><figcaption>Religious Painting</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/self_portrait_bw.png" alt="Black-and-white source plate for self portrait"><figcaption>Self Portrait</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/siren_bw.png" alt="Black-and-white source plate for siren"><figcaption>Siren</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/three_generations_bw.png" alt="Black-and-white source plate for three generations"><figcaption>Three Generations</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/tobolsk_bw.png" alt="Black-and-white source plate for tobolsk"><figcaption>Tobolsk</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/wharf_bw.png" alt="Black-and-white source plate for wharf"><figcaption>Wharf</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/Capri_extra_bw.png" alt="Black-and-white source plate for Capri"><figcaption>Capri</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/sacks_extra_bw.png" alt="Black-and-white source plate for sacks"><figcaption>Sacks</figcaption></figure>
+          <figure><img src="CS180_fa2026_bw_pngs/sunset_extra_bw.png" alt="Black-and-white source plate for sunset"><figcaption>Sunset</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="section writeup-section" id="small" aria-labelledby="single-title">
         <div class="section-heading">
           <p class="eyebrow">Single-Scale</p>
           <h2 id="single-title">Low-Resolution JPEGs</h2>
@@ -220,7 +256,7 @@
         </div>
       </section>
 
-      <section class="section writeup-section" aria-labelledby="chosen-title">
+      <section class="section writeup-section" id="selected" aria-labelledby="chosen-title">
         <div class="section-heading">
           <p class="eyebrow">Additional Examples</p>
           <h2 id="chosen-title">Images I Chose from the Collection</h2>
@@ -276,5 +312,15 @@
         </div>
       </section>
     </main>
+    <footer class="project-footer">
+      <p>CS180 Project 1 · Colorizing the Prokudin-Gorskii collection with image alignment.</p>
+      <a href="../../#projects">Back to all projects</a>
+    </footer>
+    <button class="back-to-top" type="button" aria-label="Back to top">Top</button>
+    <div class="lightbox" hidden>
+      <button class="lightbox-close" type="button" aria-label="Close image preview">Close</button>
+      <img src="" alt="">
+      <p></p>
+    </div>
   </body>
 </html>

@@ -36,6 +36,7 @@
         <p class="project-hero-copy">
           Reconstructing color photographs from Prokudin-Gorskii glass plate scans by aligning the red and green exposures to the blue channel.
         </p>
+        <p><a href="https://cal-cs180.github.io/fa26/hw/proj1/index.html">CS180 Project 1 assignment</a> · 14 provided images and 3 selected examples</p>
       </section>
 
       <section class="section writeup-section" id="approach" aria-labelledby="approach-title">
@@ -51,7 +52,7 @@
             I implemented three alignment pipelines: <code>Single-Scale Raw NCC</code> for the small JPEGs, <code>Multi-Scale Raw NCC</code> for the required pyramid baseline, and <code>Final Edge-NCC Pyramid</code> for the submitted results. The final version keeps the same pyramid search but scores gradient-magnitude images instead of raw intensities.
           </p>
           <p>
-            To avoid border artifacts influencing the metric, each candidate shift is scored on the center crop of the image. Border cropping and contrast stretching are postprocessing steps after alignment: I crop away the outer frame and apply a light contrast stretch before saving the final result.
+            The raw-NCC baseline scores the whole shifted channel, including borders. The final method instead scores gradient magnitudes on the center crop to reduce border interference. After alignment, I stack the channels in RGB order, crop the outer frame, and apply a contrast stretch. These last two operations are postprocessing.
           </p>
         </div>
         <div class="method-strip" aria-label="Project pipeline summary">
@@ -72,6 +73,7 @@
           <article>
             <h3>NCC Formula</h3>
             <p>I score candidates with <code>sum((a-mean(a))*(b-mean(b))) / (||a-mean(a)||*||b-mean(b)||)</code>.</p>
+            <p>Here <code>a</code> is the candidate shifted channel and <code>b</code> is blue. Mean subtraction removes a constant brightness offset; normalization removes an overall scale difference. I maximize this score over integer translations, independently for green and red.</p>
           </article>
           <article>
             <h3>Pyramid Alignment</h3>
@@ -79,11 +81,11 @@
           </article>
           <article>
             <h3>Crop and Postprocessing</h3>
-            <p>During alignment, NCC uses the middle 50% of each dimension. After stacking, I crop 7% off each side and stretch intensities from the 1st to 99th percentile.</p>
+            <p>Final edge scoring uses the middle 50% of each dimension; raw scoring uses the full channel. After stacking, the final pipeline crops 7% off each side and stretches intensities from the global 1st to 99th percentile.</p>
           </article>
           <article>
             <h3>Runtime</h3>
-            <p>The full batch of 17 images runs automatically with one fixed parameter set in about 3 minutes on my laptop; Prisoners alone took about 23 seconds.</p>
+            <p>A previous individual Prisoners run took about 23 seconds. This is an observed run time, not a per-image benchmark for the full collection. Both pipelines use a fixed parameter set, with no image-specific tuning.</p>
           </article>
         </div>
       </section>
@@ -95,12 +97,31 @@
         </div>
         <div class="writeup-copy">
           <p>
-            I first implemented the required coarse-to-fine pyramid using raw-pixel NCC. It successfully aligned most images but failed on several channels whose brightness structures differed substantially. I then retained the same pyramid and NCC search while replacing raw intensities with gradient magnitudes.
+            I first implemented the required coarse-to-fine pyramid using raw-pixel NCC. Several channels failed because of border interference and differences in brightness structure. I retained the same pyramid and NCC search, replaced raw intensities with gradient magnitudes, and restricted scoring to the image interior.
           </p>
           <p>
-            This makes <code>Multi-Scale Raw NCC</code> the required baseline and <code>Final Edge-NCC Pyramid</code> the improved alignment method. Cropping and contrast stretching are separate postprocessing steps applied only after the channel shifts are chosen.
+            The baseline results below cover all 14 provided images. The three JPEGs reach the base case directly, giving <code>Single-Scale Raw NCC</code>: two nested loops test every integer shift in [-15, 15] along each axis (961 candidates per channel). Larger inputs use <code>Multi-Scale Raw NCC</code>. Offsets throughout this page follow the code's <code>(dy, dx)</code> order; for the assignment's <code>(x, y)</code> convention, reverse the two entries.
           </p>
         </div>
+        <details class="baseline-gallery" open>
+          <summary>Raw-NCC results and computed offsets: all 14 provided images</summary>
+          <div class="final-results-grid baseline-results">
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/cathedral_bw.png" alt="Black-and-white source plate for Cathedral"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Raw NCC result for Cathedral"><span>Raw NCC Result</span></div></div><figcaption><strong>Cathedral</strong><span>Single-Scale Raw NCC</span><span>G: (1, -1) · R: (7, -1)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/church_bw.png" alt="Black-and-white source plate for Church"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC result for Church"><span>Raw NCC Result</span></div></div><figcaption><strong>Church</strong><span>Multi-Scale Raw NCC</span><span>G: (0, -5) · R: (52, -6)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/emir_bw.png" alt="Black-and-white source plate for Emir"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC result for Emir"><span>Raw NCC Result</span></div></div><figcaption><strong>Emir</strong><span>Multi-Scale Raw NCC</span><span>G: (-3, 7) · R: (107, 17)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/harvesters_bw.png" alt="Black-and-white source plate for Harvesters"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC result for Harvesters"><span>Raw NCC Result</span></div></div><figcaption><strong>Harvesters</strong><span>Multi-Scale Raw NCC</span><span>G: (118, -3) · R: (120, 7)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/icon_bw.png" alt="Black-and-white source plate for Icon"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Raw NCC result for Icon"><span>Raw NCC Result</span></div></div><figcaption><strong>Icon</strong><span>Multi-Scale Raw NCC</span><span>G: (42, 16) · R: (89, 22)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/ilemselga_bw.png" alt="Black-and-white source plate for Ilemselga"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Raw NCC result for Ilemselga"><span>Raw NCC Result</span></div></div><figcaption><strong>Ilemselga</strong><span>Multi-Scale Raw NCC</span><span>G: (39, -4) · R: (129, -7)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/melons_bw.png" alt="Black-and-white source plate for Melons"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Raw NCC result for Melons"><span>Raw NCC Result</span></div></div><figcaption><strong>Melons</strong><span>Multi-Scale Raw NCC</span><span>G: (83, 4) · R: (176, 7)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/monastery_bw.png" alt="Black-and-white source plate for Monastery"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Raw NCC result for Monastery"><span>Raw NCC Result</span></div></div><figcaption><strong>Monastery</strong><span>Single-Scale Raw NCC</span><span>G: (-6, 0) · R: (9, 1)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/religous_painting_bw.png" alt="Black-and-white source plate for Religious Painting"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Raw NCC result for Religious Painting"><span>Raw NCC Result</span></div></div><figcaption><strong>Religious Painting</strong><span>Multi-Scale Raw NCC</span><span>G: (25, 3) · R: (69, 7)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/self_portrait_bw.png" alt="Black-and-white source plate for Self Portrait"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Raw NCC result for Self Portrait"><span>Raw NCC Result</span></div></div><figcaption><strong>Self Portrait</strong><span>Multi-Scale Raw NCC</span><span>G: (50, -2) · R: (130, -5)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/siren_bw.png" alt="Black-and-white source plate for Siren"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Raw NCC result for Siren"><span>Raw NCC Result</span></div></div><figcaption><strong>Siren</strong><span>Multi-Scale Raw NCC</span><span>G: (48, -7) · R: (96, -21)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/three_generations_bw.png" alt="Black-and-white source plate for Three Generations"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Raw NCC result for Three Generations"><span>Raw NCC Result</span></div></div><figcaption><strong>Three Generations</strong><span>Multi-Scale Raw NCC</span><span>G: (52, 5) · R: (108, 7)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/tobolsk_bw.png" alt="Black-and-white source plate for Tobolsk"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Raw NCC result for Tobolsk"><span>Raw NCC Result</span></div></div><figcaption><strong>Tobolsk</strong><span>Single-Scale Raw NCC</span><span>G: (3, 2) · R: (6, 3)</span></figcaption></figure>
+            <figure class="final-card"><div class="result-pair"><div><img loading="lazy" src="CS180_fa2026_bw_pngs/wharf_bw.png" alt="Black-and-white source plate for Wharf"><span>B&amp;W Plate</span></div><div><img loading="lazy" src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Raw NCC result for Wharf"><span>Raw NCC Result</span></div></div><figcaption><strong>Wharf</strong><span>Multi-Scale Raw NCC</span><span>G: (15, -7) · R: (83, -17)</span></figcaption></figure>
+          </div>
+        </details>
       </section>
 
       <section class="section writeup-section" id="plates" aria-labelledby="plates-title">
@@ -177,7 +198,7 @@
         </div>
         <div class="writeup-copy">
           <p>
-            For the larger TIFF files, exhaustive search at full resolution would be slow because the true displacements can be dozens or hundreds of pixels. The pyramid first solves a smaller version of the problem, doubles that displacement at each finer level, and refines locally. The large images below are the visually primary final outputs: one <code>Final Result</code> per provided TIFF with final green and red offsets.
+            For the larger TIFF files, exhaustive search at full resolution would be slow because the true displacements can be dozens or hundreds of pixels. The pyramid first solves a smaller version of the problem, doubles that displacement at each finer level, and refines locally. These final reconstructions use edge NCC and postprocessing, with green and red aligned to blue.
           </p>
         </div>
         <div class="final-results-grid primary-results">
@@ -213,6 +234,9 @@
               <tr><td>Siren</td><td>(49, -5)</td><td>(97, -24)</td></tr>
               <tr><td>Three Generations</td><td>(53, 13)</td><td>(111, 9)</td></tr>
               <tr><td>Wharf</td><td>(15, -6)</td><td>(82, -16)</td></tr>
+              <tr><td>Capri</td><td>(32, -16)</td><td>(78, -25)</td></tr>
+              <tr><td>Sacks</td><td>(53, 27)</td><td>(126, 19)</td></tr>
+              <tr><td>Prisoners</td><td>(2, -1)</td><td>(7, -2)</td></tr>
             </tbody>
           </table>
         </div>
@@ -263,8 +287,9 @@
             Raw RGB intensities are not always comparable across channels. The Emir portrait is the clearest example: the blue channel's brightness pattern differs from red and green, so raw pixel NCC can choose a displacement that looks numerically good but visually wrong. Edge-based NCC helps because it compares structural changes rather than absolute brightness.
           </p>
           <p>
-            I separate the improvements into two groups. The alignment improvement is gradient-magnitude NCC plus interior-crop scoring. The postprocessing improvement happens after alignment: a 7% border crop removes rolled edges, then a 1st-to-99th percentile contrast stretch makes the saved JPG easier to read.
+            For better features, I approximate horizontal and vertical derivatives with forward differences and compute <code>sqrt(dx*dx + dy*dy)</code>. NCC then compares these edge magnitudes on the image interior. The before-and-after examples combine this feature change with interior scoring and postprocessing, so they do not isolate the effect of edges alone.
           </p>
+          <p>Automatic contrast uses the global 1st and 99th intensity percentiles of the stacked image: <code>clip((I - p1) / (p99 - p1), 0, 1)</code>. This expands the useful intensity range while clipping extreme values. The fixed 7% border crop is a simple cleanup step, not the assignment's automatic border-detection extension. I did not implement white balance, color remapping, or rotation/scale estimation.</p>
         </div>
         <div class="comparison-list comparison-samples">
           <article class="compare-row">
@@ -295,7 +320,7 @@
             Sunset was the hardest image I tried from the larger collection. Its sky and water contain broad smooth regions, while the channels differ strongly in brightness and color. Because NCC rewards similar intensity structure, both raw pixels and edge scoring can latch onto the wrong repeated horizon or border features instead of the true scene alignment.
           </p>
           <p>
-            The offsets reflect that instability: the baseline red shift is very large, and the final red shift is also suspicious because it wraps horizontally. This is a good example of a case where simple translation-only alignment is probably not enough; a more robust version would mask borders more aggressively, search on sharper interior features, or use a better reference/metric for scenes with heavy color-channel exposure differences.
+            The large red displacement and remaining artifacts suggest that the search found an incorrect match. This does not by itself establish that a translation model is insufficient. Stronger border masks or matching sharper interior features could improve the estimate. Sunset is an additional failure study and is not one of the three selected examples.
           </p>
         </div>
         <article class="compare-row challenge-compare">

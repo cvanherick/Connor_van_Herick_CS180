@@ -880,7 +880,21 @@ html[data-theme="dark"] {
 }
 
 .project1-page .primary-results {
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+}
+
+.project1-page .baseline-gallery {
+  margin-top: 1.5rem;
+}
+
+.project1-page .baseline-gallery summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75rem 0;
+}
+
+.project1-page .baseline-results {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 
 .project1-page .final-card {

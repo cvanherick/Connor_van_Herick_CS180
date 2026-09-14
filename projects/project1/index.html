@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../styles.css?v=project1-polished-layout">
+    <link rel="stylesheet" href="../../styles.css?v=project1-scroll-color-challenges">
     <script src="../../assets/project1.js" defer></script>
   </head>
   <body class="project1-page">
@@ -17,10 +17,12 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#overview">Overview</a>
         <a href="#approach">Approach</a>
+        <a href="#plates">Source Plates</a>
         <a href="#small">Small Images</a>
         <a href="#results">Image Pyramid</a>
-        <a href="#bells">Bells &amp; Whistles</a>
         <a href="#selected">Selected</a>
+        <a href="#bells">Bells &amp; Whistles</a>
+        <a href="#challenges">Challenges</a>
       </nav>
       <button class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">Dark</button>
     </header>
@@ -298,6 +300,26 @@
         <div class="callout-note">
           The side-by-side results above are the main before-and-after comparison for every image. The raw NCC image is the required baseline; the enhanced image shows the effect of edge scoring, final cropping, and automatic contrast.
         </div>
+      </section>
+
+      <section class="section writeup-section challenge-section" id="challenges" aria-labelledby="challenges-title">
+        <div class="section-heading">
+          <p class="eyebrow">Challenge Case</p>
+          <h2 id="challenges-title">What Happened with Sunset</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>
+            Sunset was the hardest image I tried from the larger collection. Its sky and water contain broad smooth regions, while the channels differ strongly in brightness and color. Because NCC rewards similar intensity structure, both raw pixels and edge scoring can latch onto the wrong repeated horizon or border features instead of the true scene alignment.
+          </p>
+          <p>
+            The offsets reflect that instability: the baseline red shift is very large, and the enhanced red shift is also suspicious because it wraps horizontally. This is a good example of a case where simple translation-only alignment is probably not enough; a more robust version would mask borders more aggressively, search on sharper interior features, or use a better reference/metric for scenes with heavy color-channel exposure differences.
+          </p>
+        </div>
+        <article class="compare-row challenge-compare">
+          <div class="compare-heading"><h3>Sunset</h3><p>Baseline G: (0, -11), R: (237, -22) · Enhanced G: (52, -9), R: (116, 253)</p></div>
+          <figure><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Baseline aligned sunset"><figcaption>Raw NCC</figcaption></figure>
+          <figure><img src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Enhanced aligned sunset"><figcaption>Enhanced</figcaption></figure>
+        </article>
       </section>
 
       <section class="section writeup-section" aria-labelledby="notes-title">

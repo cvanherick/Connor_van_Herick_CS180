@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../styles.css?v=project1-interactions-2">
-    <script src="../../assets/project1.js?v=project1-interactions-2" defer></script>
+    <link rel="stylesheet" href="../../styles.css?v=project1-comparisons-3">
+    <script src="../../assets/project1.js?v=project1-comparisons-3" defer></script>
   </head>
   <body class="project1-page">
     <header class="site-header">
@@ -156,14 +156,8 @@
         </div>
         <article class="compare-row challenge-compare">
           <div class="compare-heading"><h3>Sunset</h3><p>The repeated horizontal bands and smooth sky/water regions made this image much less reliable than the successful selected examples.</p></div>
-          <div class="comparison-slider" data-title="Sunset" data-method="Raw NCC compared with Final Edge-NCC Pyramid" data-before="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" data-after="CS180_fa2026_merged_photos/sunset_extra_out.jpg">
-            <img class="comparison-after" src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Final Edge-NCC aligned sunset">
-            <div class="comparison-before"><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Raw NCC aligned sunset"></div>
-            <span class="comparison-label comparison-label-before">Raw NCC</span>
-            <span class="comparison-label comparison-label-after">Final Edge-NCC</span>
-            <span class="comparison-handle" aria-hidden="true"></span>
-            <input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare raw NCC and final Edge-NCC alignment for Sunset">
-          </div>
+          <figure><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Raw NCC aligned sunset"><figcaption>Raw NCC</figcaption></figure>
+          <figure><img src="CS180_fa2026_merged_photos/sunset_extra_out.jpg" alt="Final Edge-NCC aligned sunset"><figcaption>Final Edge-NCC</figcaption></figure>
         </article>
       </section>
 
@@ -180,36 +174,18 @@
         <div class="comparison-list comparison-samples">
           <article class="compare-row">
             <div class="compare-heading"><h3>Emir</h3><p>Raw intensity matching struggles because the channels have different brightness patterns. Edge matching aligns the face and clothing more cleanly.</p></div>
-            <div class="comparison-slider" data-title="Emir" data-method="Final Edge-NCC Pyramid" data-offsets="G: (49, 24) · R: (107, 40)" data-before="CS180_fa2026_baseline_photos/emir_out.jpg" data-after="CS180_fa2026_merged_photos/emir_out.jpg">
-              <img class="comparison-after" src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final Edge-NCC aligned Emir">
-              <div class="comparison-before"><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC aligned Emir"></div>
-              <span class="comparison-label comparison-label-before">Raw NCC</span>
-              <span class="comparison-label comparison-label-after">Final Edge-NCC</span>
-              <span class="comparison-handle" aria-hidden="true"></span>
-              <input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare raw NCC and final Edge-NCC alignment for Emir">
-            </div>
+            <figure><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC aligned Emir"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final Edge-NCC aligned Emir"><figcaption>Final Edge-NCC · G: (49, 24) · R: (107, 40)</figcaption></figure>
           </article>
           <article class="compare-row">
             <div class="compare-heading"><h3>Harvesters</h3><p>The final version reduces colored ghosting by matching structure inside the image instead of letting borders and brightness dominate.</p></div>
-            <div class="comparison-slider" data-title="Harvesters" data-method="Final Edge-NCC Pyramid" data-offsets="G: (60, 18) · R: (124, 14)" data-before="CS180_fa2026_baseline_photos/harvesters_out.jpg" data-after="CS180_fa2026_merged_photos/harvesters_out.jpg">
-              <img class="comparison-after" src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final Edge-NCC aligned Harvesters">
-              <div class="comparison-before"><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC aligned Harvesters"></div>
-              <span class="comparison-label comparison-label-before">Raw NCC</span>
-              <span class="comparison-label comparison-label-after">Final Edge-NCC</span>
-              <span class="comparison-handle" aria-hidden="true"></span>
-              <input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare raw NCC and final Edge-NCC alignment for Harvesters">
-            </div>
+            <figure><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC aligned Harvesters"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final Edge-NCC aligned Harvesters"><figcaption>Final Edge-NCC · G: (60, 18) · R: (124, 14)</figcaption></figure>
           </article>
           <article class="compare-row">
             <div class="compare-heading"><h3>Church</h3><p>Interior scoring and postprocessing remove much of the distracting border behavior from the baseline result.</p></div>
-            <div class="comparison-slider" data-title="Church" data-method="Final Edge-NCC Pyramid" data-offsets="G: (25, 4) · R: (58, -4)" data-before="CS180_fa2026_baseline_photos/church_out.jpg" data-after="CS180_fa2026_merged_photos/church_out.jpg">
-              <img class="comparison-after" src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final Edge-NCC aligned Church">
-              <div class="comparison-before"><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC aligned Church"></div>
-              <span class="comparison-label comparison-label-before">Raw NCC</span>
-              <span class="comparison-label comparison-label-after">Final Edge-NCC</span>
-              <span class="comparison-handle" aria-hidden="true"></span>
-              <input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare raw NCC and final Edge-NCC alignment for Church">
-            </div>
+            <figure><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC aligned Church"><figcaption>Raw NCC</figcaption></figure>
+            <figure><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final Edge-NCC aligned Church"><figcaption>Final Edge-NCC · G: (25, 4) · R: (58, -4)</figcaption></figure>
           </article>
         </div>
       </section>

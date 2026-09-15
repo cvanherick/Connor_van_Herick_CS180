@@ -40,33 +40,6 @@
     sections.forEach((section) => observer.observe(section));
   }
 
-  const comparisonSliders = Array.from(document.querySelectorAll(".comparison-slider"));
-  comparisonSliders.forEach((slider) => {
-    const range = slider.querySelector(".comparison-range");
-    const before = slider.querySelector(".comparison-before");
-    const handle = slider.querySelector(".comparison-handle");
-    const updateComparison = () => {
-      const position = `${range.value}%`;
-      before.style.width = position;
-      handle.style.left = position;
-    };
-    range.addEventListener("input", updateComparison);
-    const updateFromPointer = (event) => {
-      const bounds = slider.getBoundingClientRect();
-      const value = Math.round(Math.max(0, Math.min(100, ((event.clientX - bounds.left) / bounds.width) * 100)));
-      range.value = value;
-      updateComparison();
-    };
-    range.addEventListener("pointerdown", (event) => {
-      range.setPointerCapture?.(event.pointerId);
-      updateFromPointer(event);
-    });
-    range.addEventListener("pointermove", (event) => {
-      if (event.buttons || event.pointerType === "touch") updateFromPointer(event);
-    });
-    updateComparison();
-  });
-
   const canvas = document.querySelector(".alignment-canvas");
   const alignmentStatus = document.querySelector(".alignment-demo-status");
   const resetAlignment = document.querySelector(".reset-alignment");
@@ -156,21 +129,10 @@
     };
   }
 
-  const galleryItems = Array.from(document.querySelectorAll(".final-card img, .comparison-slider")).map((element) => {
-    if (element.classList.contains("comparison-slider")) {
-      return {
-        after: element.dataset.after,
-        alt: element.querySelector(".comparison-after")?.alt || element.dataset.title,
-        before: element.dataset.before,
-        beforeAlt: element.querySelector(".comparison-before img")?.alt || "Raw NCC result",
-        element,
-        method: element.dataset.method || "",
-        offsets: element.dataset.offsets || "",
-        title: element.dataset.title || "Comparison",
-      };
-    }
-    return { ...metadataForImage(element), element };
-  });
+  const galleryItems = Array.from(document.querySelectorAll(".final-card img, .compare-row img")).map((image) => ({
+    ...metadataForImage(image),
+    element: image,
+  }));
 
   const lightbox = document.querySelector(".lightbox");
   const lightboxImage = lightbox?.querySelector("img");
@@ -226,28 +188,14 @@
   }
 
   galleryItems.forEach((item, index) => {
-    if (item.element instanceof HTMLImageElement) {
-      item.element.setAttribute("role", "button");
-      item.element.tabIndex = 0;
-      item.element.setAttribute("aria-label", `Open ${item.title} image`);
-      item.element.addEventListener("click", () => openLightbox(index, item.element));
-      item.element.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          openLightbox(index, item.element);
-        }
-      });
-      return;
-    }
-
-    const range = item.element.querySelector(".comparison-range");
-    item.element.addEventListener("click", (event) => {
-      if (event.target !== range) openLightbox(index, item.element);
-    });
-    range?.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+    item.element.setAttribute("role", "button");
+    item.element.tabIndex = 0;
+    item.element.setAttribute("aria-label", `Open ${item.title} image`);
+    item.element.addEventListener("click", () => openLightbox(index, item.element));
+    item.element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        openLightbox(index, range);
+        openLightbox(index, item.element);
       }
     });
   });

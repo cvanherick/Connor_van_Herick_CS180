@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=homepage-previews-1">
+    <script src="assets/home.js?v=homepage-previews-1" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -42,17 +43,31 @@
         </div>
 
         <div class="project-grid">
-          <article class="project-card">
-            <div class="project-number">Project 0</div>
-            <h3>Becoming Friends with Your Camera</h3>
-            <p>Photo perspective comparisons and a dolly zoom GIF.</p>
-            <a href="projects/project0/" aria-label="Open Project 0: Becoming Friends with Your Camera">Open project</a>
+          <article class="project-card project-card-demo">
+            <div class="project-card-preview dolly-preview" aria-hidden="true">
+              <img class="preview-still" src="assets/project0/architecture/walked-forward.jpeg" alt="">
+              <img class="preview-motion" data-src="assets/project0/dolly-zoom/photos-0.4s.gif" alt="">
+            </div>
+            <div class="project-card-body">
+              <div class="project-number">Project 0</div>
+              <h3>Becoming Friends with Your Camera</h3>
+              <p>Photo perspective comparisons and a dolly zoom.</p>
+              <a href="projects/project0/" aria-label="Open Project 0: Becoming Friends with Your Camera">Open project</a>
+            </div>
           </article>
-          <article class="project-card">
-            <div class="project-number">Project 1</div>
-            <h3>Images of the Russian Empire</h3>
-            <p>Glass plate colorization with single-scale and pyramid alignment.</p>
-            <a href="projects/project1/" aria-label="Open Project 1: Images of the Russian Empire">Open project</a>
+          <article class="project-card project-card-demo">
+            <div class="project-card-preview project1-preview" aria-hidden="true">
+              <img class="preview-final" src="projects/project1/CS180_fa2026_merged_photos/church_out.jpg" alt="">
+              <img class="rgb-layer rgb-red" src="projects/project1/CS180_fa2026_merged_photos/church_out.jpg" alt="">
+              <img class="rgb-layer rgb-green" src="projects/project1/CS180_fa2026_merged_photos/church_out.jpg" alt="">
+              <img class="rgb-layer rgb-blue" src="projects/project1/CS180_fa2026_merged_photos/church_out.jpg" alt="">
+            </div>
+            <div class="project-card-body">
+              <div class="project-number">Project 1</div>
+              <h3>Images of the Russian Empire</h3>
+              <p>Glass plate colorization with single-scale and pyramid alignment.</p>
+              <a href="projects/project1/" aria-label="Open Project 1: Images of the Russian Empire">Open project</a>
+            </div>
           </article>
         </div>
       </section>

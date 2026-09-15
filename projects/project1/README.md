@@ -1,18 +1,19 @@
-# Project 1 Backend
+# Project 1: Image Alignment
 
-This folder is for the Python image-processing code for CS180 Project 1.
+This folder contains the Python code for CS180 Project 1.
 
-## Setup
+## Run
 
-Install the suggested starter dependencies:
+Install the dependencies:
 
 ```sh
 python3 -m pip install -r requirements.txt
 ```
 
-Put source images such as `cathedral.jpg` in this folder, then run:
+Put input images in `CS180_fa2026_proj1_data/`, then run:
 
 ```sh
-python3 starter.py
+python3 main.py
 ```
 
+The script writes final images to `CS180_fa2026_merged_photos/`, raw baseline images to `CS180_fa2026_baseline_photos/`, and offsets to `offsets.txt`.

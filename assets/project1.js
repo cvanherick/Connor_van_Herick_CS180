@@ -51,6 +51,19 @@
       handle.style.left = position;
     };
     range.addEventListener("input", updateComparison);
+    const updateFromPointer = (event) => {
+      const bounds = slider.getBoundingClientRect();
+      const value = Math.round(Math.max(0, Math.min(100, ((event.clientX - bounds.left) / bounds.width) * 100)));
+      range.value = value;
+      updateComparison();
+    };
+    range.addEventListener("pointerdown", (event) => {
+      range.setPointerCapture?.(event.pointerId);
+      updateFromPointer(event);
+    });
+    range.addEventListener("pointermove", (event) => {
+      if (event.buttons || event.pointerType === "touch") updateFromPointer(event);
+    });
     updateComparison();
   });
 

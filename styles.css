@@ -986,6 +986,7 @@ html[data-theme="dark"] {
   left: 0;
   position: absolute;
   right: 0;
+  text-align: center;
 }
 
 .project1-page .small-results .result-triplet > div:not(:first-child) img {

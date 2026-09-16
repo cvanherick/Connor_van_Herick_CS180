@@ -944,6 +944,14 @@ html[data-theme="dark"] {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+.project1-page .small-results .result-triplet {
+  grid-template-rows: repeat(2, minmax(150px, 1fr));
+}
+
+.project1-page .primary-results .result-triplet {
+  grid-template-rows: repeat(2, minmax(210px, 1fr));
+}
+
 .project1-page .result-triplet > div:first-child {
   grid-row: 1 / -1;
 }

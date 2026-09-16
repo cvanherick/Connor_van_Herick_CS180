@@ -1574,3 +1574,56 @@ html[data-theme="dark"] .project1-page {
     grid-template-columns: 1fr;
   }
 }
+
+.project1-page .ncc-formula {
+  background: color-mix(in srgb, var(--panel) 74%, var(--paper));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.78rem, 1.55vw, 0.98rem);
+  line-height: 1.7;
+  margin: 0.25rem 0;
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+}
+
+.project1-page .bells-whistles {
+  margin: 2rem auto 0;
+  max-width: 1040px;
+}
+
+.project1-page .bells-whistles h3 {
+  font-size: 1.2rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.project1-page .bells-whistles p:last-child {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.project1-page .raw-results-copy {
+  margin: 0.75rem auto 0;
+  max-width: 1120px;
+}
+
+.project1-page .raw-results {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-top: 1.25rem;
+}
+
+.project1-page .raw-result-card img {
+  height: clamp(150px, 15vw, 205px);
+  object-fit: cover;
+}
+
+.project1-page .raw-result-card figcaption {
+  padding: 0.65rem 0.75rem 0.75rem;
+}
+
+@media (max-width: 560px) {
+  .project1-page .raw-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .project1-page .raw-result-card img { height: 140px; }
+}

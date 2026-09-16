@@ -45,6 +45,9 @@
           <p>
             For alignment, I used normalized cross-correlation (NCC), which measures similarity after mean-centering and normalizing the two images. To make the alignment more accurate, it only looks at the 50% central area of the image. This prevents borders from distorting the calculation.
           </p>
+          <div class="ncc-formula" role="img" aria-label="Normalized cross-correlation of A and B equals the sum of mean-centered pixel products divided by the square root of the product of their squared mean-centered sums.">
+            NCC(A, B) = &Sigma;<sub>i</sub>(A<sub>i</sub> - &mu;<sub>A</sub>)(B<sub>i</sub> - &mu;<sub>B</sub>) / &radic;[&Sigma;<sub>i</sub>(A<sub>i</sub> - &mu;<sub>A</sub>)<sup>2</sup> &Sigma;<sub>i</sub>(B<sub>i</sub> - &mu;<sub>B</sub>)<sup>2</sup>]
+          </div>
           <p>
             I used a coarse-to-fine image pyramid to efficiently align large images. The algorithm repeatedly downsamples by a factor of two until the smallest dimension is at most 300 pixels. At the base case, it searches displacements within &plusmn;15 pixels. At each finer level, it doubles the previous displacement and searches within a five-pixel radius. The direct exhaustive search at the bottom of the pyramid acts as the single-scale base case.
           </p>
@@ -52,6 +55,11 @@
             After alignment, I combined the shifted red and green channels with the original blue channel to produce an RGB image. For presentation, I removed a fixed 7% border from each side and applied a contrast stretch that maps the 1st and 99th intensity percentiles to black and white. I report displacements as <code>(dy, dx)</code>, where positive <code>dy</code> moves a channel downward and positive <code>dx</code> moves it to the right.
           </p>
         </div>
+        <aside class="callout-note bells-whistles" aria-labelledby="bells-title">
+          <p class="eyebrow">Bells and Whistles</p>
+          <h3 id="bells-title">Final Edge-NCC Pyramid</h3>
+          <p>I first implemented the required raw-pixel NCC pyramid. The final version keeps the same search but compares gradient magnitudes, which makes the score rely on image structure instead of brightness differences between exposures. It scores only the central 50% of each image, Gaussian-filters before each 0.5 downsample, crops the wrapped 7% border after alignment, and contrast-stretches the final RGB image. The crop and contrast stretch are postprocessing steps, not alignment steps.</p>
+        </aside>
         <section class="alignment-demo" aria-labelledby="alignment-demo-title">
           <div class="alignment-demo-copy">
             <p class="eyebrow">Interactive Demo</p>
@@ -98,6 +106,30 @@
           <p>
             The first three images are small enough for single-scale alignment. The rest use the pyramid method, which is the same search procedure applied from coarse to fine; at the smallest pyramid level, it is effectively single-scale alignment.
           </p>
+        </div>
+        <h3 class="results-subhead">Raw NCC Baseline Results</h3>
+        <div class="writeup-copy raw-results-copy">
+          <p>These are the required raw-pixel NCC outputs. They use the same pyramid search but score raw intensities over the full image, before edge magnitudes, center cropping, border cropping, and contrast stretching are applied.</p>
+        </div>
+        <div class="final-results-grid raw-results">
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/cathedral_out.jpg" alt="Raw NCC baseline result for Cathedral"><figcaption><strong>Cathedral</strong><span>Single-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/monastery_out.jpg" alt="Raw NCC baseline result for Monastery"><figcaption><strong>Monastery</strong><span>Single-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/tobolsk_out.jpg" alt="Raw NCC baseline result for Tobolsk"><figcaption><strong>Tobolsk</strong><span>Single-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC baseline result for Church"><figcaption><strong>Church</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC baseline result for Emir"><figcaption><strong>Emir</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC baseline result for Harvesters"><figcaption><strong>Harvesters</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/icon_out.jpg" alt="Raw NCC baseline result for Icon"><figcaption><strong>Icon</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/ilemselga_out.jpg" alt="Raw NCC baseline result for Ilemselga"><figcaption><strong>Ilemselga</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/melons_out.jpg" alt="Raw NCC baseline result for Melons"><figcaption><strong>Melons</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/religous_painting_out.jpg" alt="Raw NCC baseline result for Religious Painting"><figcaption><strong>Religious Painting</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/self_portrait_out.jpg" alt="Raw NCC baseline result for Self Portrait"><figcaption><strong>Self Portrait</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/siren_out.jpg" alt="Raw NCC baseline result for Siren"><figcaption><strong>Siren</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/three_generations_out.jpg" alt="Raw NCC baseline result for Three Generations"><figcaption><strong>Three Generations</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/wharf_out.jpg" alt="Raw NCC baseline result for Wharf"><figcaption><strong>Wharf</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/Capri_extra_out.jpg" alt="Raw NCC baseline result for Capri"><figcaption><strong>Capri</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/sacks_extra_out.jpg" alt="Raw NCC baseline result for Sacks"><figcaption><strong>Sacks</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/prisoners_extra_out.jpg" alt="Raw NCC baseline result for Prisoners"><figcaption><strong>Prisoners</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
+          <figure class="final-card raw-result-card"><img src="CS180_fa2026_baseline_photos/sunset_extra_out.jpg" alt="Raw NCC baseline result for Sunset"><figcaption><strong>Sunset</strong><span>Multi-Scale Raw NCC</span></figcaption></figure>
         </div>
         <h3 class="results-subhead">Single-Scale Results</h3>
         <div class="final-results-grid small-results">

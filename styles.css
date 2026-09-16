@@ -965,19 +965,35 @@ html[data-theme="dark"] {
   height: 100%;
 }
 
+.project1-page .result-triplet > div:not(:first-child) {
+  display: block;
+  position: relative;
+}
+
 .project1-page .result-triplet > div:not(:first-child) img {
-  align-self: center;
-  justify-self: center;
+  height: auto;
+  left: 50%;
+  max-height: calc(100% - 2.4rem);
   max-width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: auto;
 }
 
+.project1-page .result-triplet > div:not(:first-child) span {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
 .project1-page .small-results .result-triplet > div:not(:first-child) img {
-  height: clamp(115px, 11vw, 165px);
+  height: auto;
 }
 
 .project1-page .primary-results .result-triplet > div:not(:first-child) img {
-  height: clamp(150px, 15vw, 215px);
+  height: auto;
 }
 
 .project1-page .final-card figcaption {

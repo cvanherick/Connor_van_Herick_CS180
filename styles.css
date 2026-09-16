@@ -966,6 +966,7 @@ html[data-theme="dark"] {
 }
 
 .project1-page .result-triplet > div:not(:first-child) {
+  background: var(--panel);
   display: block;
   position: relative;
 }
@@ -982,7 +983,10 @@ html[data-theme="dark"] {
 }
 
 .project1-page .result-triplet > div:not(:first-child) span {
+  align-items: center;
   bottom: 0;
+  display: flex;
+  justify-content: center;
   left: 0;
   position: absolute;
   right: 0;

@@ -41,13 +41,16 @@
         </div>
         <div class="writeup-copy">
           <p>
-            Each image starts as one black-and-white glass plate with the blue, green, and red exposures stacked vertically. I split the plate into three equal channels, used the blue channel as the reference, and searched for the green and red shifts that best aligned to it.
+            The images start as black-and-white with the blue, green, and red exposures stacked vertically on top of each other. Then, I separated the stack into three separate images, and aligned the green and red with blue as the reference.
           </p>
           <p>
-            For alignment, I used normalized cross-correlation (NCC). The small JPEGs can be aligned with a direct single-scale search. For larger TIFFs, I used an image pyramid: the algorithm first aligns a downsampled version, doubles that displacement at each finer level, and then refines nearby. The pyramid still has the same single-scale search at its base case; it just avoids doing a huge exhaustive search at full resolution.
+            For alignment, I used normalized cross-correlation (NCC), which measures similarity after mean-centering and normalizing the two images. To make the alignment more accurate, it only looks at the 50% central area of the image. This prevents borders from distorting the calculation.
           </p>
           <p>
-            After alignment, I stacked the channels into an RGB image, cropped the border, and applied a simple contrast stretch. I report displacements as <code>(dy, dx)</code>, where positive <code>dy</code> moves a channel downward and positive <code>dx</code> moves it right.
+            I used a coarse-to-fine image pyramid to efficiently align large images. The algorithm repeatedly downsamples by a factor of two until the smallest dimension is at most 300 pixels. At the base case, it searches displacements within &plusmn;15 pixels. At each finer level, it doubles the previous displacement and searches within a five-pixel radius. The direct exhaustive search at the bottom of the pyramid acts as the single-scale base case.
+          </p>
+          <p>
+            After alignment, I combined the shifted red and green channels with the original blue channel to produce an RGB image. For presentation, I removed a fixed 7% border from each side and applied a contrast stretch that maps the 1st and 99th intensity percentiles to black and white. I report displacements as <code>(dy, dx)</code>, where positive <code>dy</code> moves a channel downward and positive <code>dx</code> moves it to the right.
           </p>
         </div>
         <section class="alignment-demo" aria-labelledby="alignment-demo-title">

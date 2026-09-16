@@ -957,6 +957,13 @@ html[data-theme="dark"] {
   height: 100%;
 }
 
+.project1-page .result-triplet > div:not(:first-child) img {
+  align-self: center;
+  justify-self: center;
+  max-width: 100%;
+  width: auto;
+}
+
 .project1-page .small-results .result-triplet > div:not(:first-child) img {
   height: clamp(115px, 11vw, 165px);
 }

@@ -930,6 +930,41 @@ html[data-theme="dark"] {
   text-transform: uppercase;
 }
 
+.project1-page #approach {
+  display: flex;
+  flex-direction: column;
+}
+
+.project1-page #approach .section-heading { order: 0; }
+.project1-page #approach .alignment-demo { order: 1; }
+.project1-page #approach .writeup-copy { order: 2; }
+.project1-page #approach .bells-whistles { order: 3; }
+
+.project1-page .result-pair.result-triplet {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.project1-page .result-triplet > div:first-child {
+  grid-row: 1 / -1;
+}
+
+.project1-page .result-triplet > div:nth-child(3) {
+  border-left: 0;
+  border-top: 1px solid var(--border);
+}
+
+.project1-page .result-triplet > div:first-child img {
+  height: 100%;
+}
+
+.project1-page .small-results .result-triplet > div:not(:first-child) img {
+  height: clamp(115px, 11vw, 165px);
+}
+
+.project1-page .primary-results .result-triplet > div:not(:first-child) img {
+  height: clamp(150px, 15vw, 215px);
+}
+
 .project1-page .final-card figcaption {
   border-top: 1px solid var(--border);
   display: grid;
@@ -1220,7 +1255,7 @@ html[data-theme="dark"] {
 }
 
 .project1-page .alignment-demo-copy h3 {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   margin-top: 0.25rem;
 }
 

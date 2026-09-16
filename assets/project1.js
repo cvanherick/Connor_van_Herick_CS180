@@ -114,6 +114,30 @@
     });
   }
 
+  function addRawNccResultsToCards() {
+    document.querySelectorAll(".result-pair").forEach((pair) => {
+      const finalPanel = pair.lastElementChild;
+      const finalImage = finalPanel?.querySelector("img");
+      const finalLabel = finalPanel?.querySelector("span");
+      const finalSource = finalImage?.getAttribute("src");
+
+      if (!finalSource || !finalSource.includes("CS180_fa2026_merged_photos")) return;
+
+      const rawPanel = document.createElement("div");
+      const rawImage = document.createElement("img");
+      const rawLabel = document.createElement("span");
+      rawImage.src = finalSource.replace("CS180_fa2026_merged_photos", "CS180_fa2026_baseline_photos");
+      rawImage.alt = `Raw NCC baseline for ${finalImage.alt.replace("Final aligned ", "")}`;
+      rawLabel.textContent = "Raw NCC";
+      rawPanel.append(rawImage, rawLabel);
+      pair.insertBefore(rawPanel, finalPanel);
+      finalLabel.textContent = "Final Edge-NCC";
+      pair.classList.add("result-triplet");
+    });
+  }
+
+  addRawNccResultsToCards();
+
   function metadataForImage(image) {
     const card = image.closest(".final-card");
     const caption = card?.querySelector("figcaption");

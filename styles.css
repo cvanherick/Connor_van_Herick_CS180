@@ -935,8 +935,8 @@ html[data-theme="dark"] {
   flex-direction: column;
 }
 
-.project1-page #approach .section-heading { order: 0; }
-.project1-page #approach .alignment-demo { order: 1; }
+.project1-page #approach .alignment-demo { order: 0; }
+.project1-page #approach .section-heading { order: 1; }
 .project1-page #approach .writeup-copy { order: 2; }
 .project1-page #approach .bells-whistles { order: 3; }
 

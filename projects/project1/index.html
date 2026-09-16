@@ -19,7 +19,6 @@
         <a href="#approach">Approach</a>
         <a href="#results">Results</a>
         <a href="#challenges">Challenges</a>
-        <a href="#improvements">Improvements</a>
       </nav>
       <button class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">Dark</button>
     </header>
@@ -164,34 +163,6 @@
         </article>
       </section>
 
-      <section class="section writeup-section" id="improvements" aria-labelledby="improvements-title">
-        <div class="section-heading">
-          <p class="eyebrow">Improvements</p>
-          <h2 id="improvements-title">Raw NCC vs. Final Edge-Based Alignment</h2>
-        </div>
-        <div class="writeup-copy">
-          <p>
-            I improved the basic NCC pipeline by comparing edge magnitudes instead of raw intensities, scoring only the image interior, cropping the final borders, and applying a contrast stretch. The examples below show the raw pyramid output next to the final output.
-          </p>
-        </div>
-        <div class="comparison-list comparison-samples">
-          <article class="compare-row">
-            <div class="compare-heading"><h3>Emir</h3><p>Raw intensity matching struggles because the channels have different brightness patterns. Edge matching aligns the face and clothing more cleanly.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/emir_out.jpg" alt="Raw NCC aligned Emir"><figcaption>Raw NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/emir_out.jpg" alt="Final Edge-NCC aligned Emir"><figcaption>Final Edge-NCC · G: (49, 24) · R: (107, 40)</figcaption></figure>
-          </article>
-          <article class="compare-row">
-            <div class="compare-heading"><h3>Harvesters</h3><p>The final version reduces colored ghosting by matching structure inside the image instead of letting borders and brightness dominate.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/harvesters_out.jpg" alt="Raw NCC aligned Harvesters"><figcaption>Raw NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/harvesters_out.jpg" alt="Final Edge-NCC aligned Harvesters"><figcaption>Final Edge-NCC · G: (60, 18) · R: (124, 14)</figcaption></figure>
-          </article>
-          <article class="compare-row">
-            <div class="compare-heading"><h3>Church</h3><p>Interior scoring and postprocessing remove much of the distracting border behavior from the baseline result.</p></div>
-            <figure><img src="CS180_fa2026_baseline_photos/church_out.jpg" alt="Raw NCC aligned Church"><figcaption>Raw NCC</figcaption></figure>
-            <figure><img src="CS180_fa2026_merged_photos/church_out.jpg" alt="Final Edge-NCC aligned Church"><figcaption>Final Edge-NCC · G: (25, 4) · R: (58, -4)</figcaption></figure>
-          </article>
-        </div>
-      </section>
     </main>
     <footer class="project-footer">
       <p>CS180 Project 1 · Colorizing the Prokudin-Gorskii collection with image alignment.</p>

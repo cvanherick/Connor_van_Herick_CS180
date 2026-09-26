@@ -5,8 +5,9 @@
   --paper: #f8f4ee;
   --panel: #ffffff;
   --teal: #0f7d7e;
-  --coral: #d95d4f;
+  --coral: #a9443b;
   --gold: #d59f3f;
+  --focus: #075f68;
   --border: #ddd6cc;
   --shadow: 0 18px 45px rgba(25, 31, 38, 0.12);
 }
@@ -171,8 +172,9 @@ h3 {
 }
 
 .button:focus-visible,
+button:focus-visible,
 a:focus-visible {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 
@@ -624,6 +626,18 @@ a:focus-visible {
     gap: 0.55rem;
   }
 
+  .nav {
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
   .hero {
     min-height: 88vh;
     padding-bottom: 3rem;
@@ -706,6 +720,7 @@ html[data-theme="dark"] {
   --teal: #6ed7cf;
   --coral: #ff907f;
   --gold: #f0bd68;
+  --focus: #f0bd68;
   --border: #31404d;
   --shadow: 0 18px 45px rgba(0, 0, 0, 0.34);
 }
@@ -720,6 +735,7 @@ html[data-theme="dark"] {
     --teal: #6ed7cf;
     --coral: #ff907f;
     --gold: #f0bd68;
+    --focus: #f0bd68;
     --border: #31404d;
     --shadow: 0 18px 45px rgba(0, 0, 0, 0.34);
   }
@@ -1176,9 +1192,9 @@ html[data-theme="dark"] {
 }
 
 /* Homepage project previews. */
-.project-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: 920px;
+.homepage-project-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: none;
 }
 
 .project-card-demo {
@@ -1212,6 +1228,24 @@ html[data-theme="dark"] {
 
 .project-card-body .project-number {
   margin-bottom: 1rem;
+}
+
+.homepage-project-grid .project-card {
+  min-height: 390px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.homepage-project-grid .project-card-preview {
+  aspect-ratio: 16 / 8;
+}
+
+.homepage-project-grid .project-card-body {
+  min-height: 190px;
+}
+
+.dolly-preview .preview-still {
+  object-position: center 34%;
 }
 
 .preview-motion {
@@ -1267,6 +1301,10 @@ html[data-theme="dark"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .preview-motion,
   .project1-preview .preview-final,
   .project1-preview .rgb-layer {
@@ -1275,7 +1313,25 @@ html[data-theme="dark"] {
 }
 
 @media (max-width: 680px) {
-  .project-grid { grid-template-columns: 1fr; }
+  .homepage-project-grid { grid-template-columns: 1fr; }
+  .homepage-project-grid > :last-child { grid-column: auto; width: auto; }
+}
+
+@media (min-width: 681px) and (max-width: 900px) {
+  .homepage-project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .homepage-project-grid > :last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc((100% - 1rem) / 2);
+  }
+}
+
+section[id],
+.project-hero {
+  scroll-margin-top: 92px;
 }
 
 /* Project 1 interactive alignment tool and before/after comparisons. */
@@ -1697,4 +1753,60 @@ html[data-theme="dark"] .project1-page {
 @media (max-width: 560px) {
   .project1-page .raw-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project1-page .raw-result-card img { height: 140px; }
+}
+
+/* Shared shell refinements across the project pages. */
+.project1-page {
+  --ink: #111821;
+  --muted: #596675;
+  --paper: #f8f4ee;
+  --panel: #ffffff;
+  --teal: #0f7d7e;
+  --coral: #a9443b;
+  --gold: #d59f3f;
+  --focus: #075f68;
+  --border: #ddd6cc;
+  --shadow: 0 18px 45px rgba(25, 31, 38, 0.12);
+}
+
+html[data-theme="dark"] .project1-page {
+  --ink: #f4efe7;
+  --muted: #b5c0ca;
+  --paper: #11161c;
+  --panel: #18212a;
+  --teal: #6ed7cf;
+  --coral: #ff907f;
+  --gold: #f0bd68;
+  --focus: #f0bd68;
+  --border: #31404d;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.34);
+}
+
+.project1-page .site-header {
+  background: rgba(248, 244, 238, 0.86);
+  border-bottom: 1px solid rgba(221, 214, 204, 0.82);
+  box-shadow: none;
+  display: flex;
+  position: fixed;
+}
+
+html[data-theme="dark"] .project1-page .site-header {
+  background: rgba(17, 22, 28, 0.86);
+  border-bottom-color: #31404d;
+}
+
+.project1-page .nav {
+  flex-wrap: wrap;
+  justify-content: initial;
+  overflow: visible;
+  white-space: normal;
+}
+
+@media (max-width: 680px) {
+  .project1-page .nav {
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }

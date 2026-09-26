@@ -38,7 +38,7 @@
             <div class="project-card-body">
               <div class="project-number">10 points</div>
               <h3>Part 1.1: Convolutions from Scratch!</h3>
-              <p>Visualization below; writeup to be added.</p>
+              <p>Implementation notes and visualization below; full writeup to be added.</p>
             </div>
           </article>
           <article class="project-card">
@@ -62,6 +62,62 @@
             <img src="convolution_comparison.png" alt="Comparison of the input, two-loop box filter, SciPy box filter, Dx, and Dy results">
             <figcaption>Input, box-filter comparison, and finite-difference outputs</figcaption>
           </figure>
+        </div>
+        <div class="writeup-copy">
+          <h3>Implementations</h3>
+          <p>Both implementations perform same-sized 2D convolution using NumPy. The kernel is flipped before multiplying so the operation is true convolution rather than correlation.</p>
+          <pre><code>def convolve_four_for_loops(image, kernel):
+    image_height, image_width = image.shape
+    filter_height, filter_width = kernel.shape
+
+    pad_h = filter_height // 2
+    pad_w = filter_width // 2
+    padded_image = np.pad(
+        image,
+        ((pad_h, pad_h), (pad_w, pad_w)),
+        mode="constant",
+        constant_values=0
+    )
+
+    output = np.zeros((image_height, image_width))
+    kernel = np.flip(kernel)
+
+    for i in range(image_height):
+        for j in range(image_width):
+            total = 0
+            for u in range(filter_height):
+                for v in range(filter_width):
+                    total += padded_image[i + u, j + v] * kernel[u, v]
+            output[i, j] = total
+
+    return output</code></pre>
+          <pre><code>def convolve_two_for_loops(image, kernel):
+    filter_height, filter_width = kernel.shape
+    image_height, image_width = image.shape
+
+    pad_h = filter_height // 2
+    pad_w = filter_width // 2
+    padded_image = np.pad(
+        image,
+        ((pad_h, pad_h), (pad_w, pad_w)),
+        mode="constant",
+        constant_values=0
+    )
+
+    output = np.zeros((image_height, image_width))
+    kernel = np.flip(kernel)
+
+    for i in range(image_height):
+        for j in range(image_width):
+            patch = padded_image[i:i + filter_height, j:j + filter_width]
+            output[i, j] = np.sum(patch * kernel)
+
+    return output</code></pre>
+          <h3>Comparison and runtime</h3>
+          <p>The NumPy result is compared with <code>scipy.signal.convolve2d</code> using <code>mode="same"</code>, <code>boundary="fill"</code>, and <code>fillvalue=0</code>. The comparison uses <code>np.allclose</code> to verify that the outputs agree.</p>
+          <p>Both scratch implementations have runtime <code>O(HWkhkw)</code>. The four-loop version performs every multiplication and addition in Python, while the two-loop version lets NumPy handle each patch operation in optimized compiled code, making it faster in practice. SciPy is generally faster still because its convolution implementation is optimized compiled code.</p>
+          <h3>Boundary handling</h3>
+          <p>The image is padded with zeros before filtering. Padding by half the kernel height and width preserves the original image dimensions, which corresponds to SciPy’s <code>same</code> mode with zero-filled boundaries.</p>
         </div>
         <h3>Part 1.2: Finite Difference Results</h3>
         <div class="source-plate-grid">

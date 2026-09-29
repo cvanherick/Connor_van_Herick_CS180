@@ -30,7 +30,7 @@ def recenter(im: np.ndarray, r: float, c: float) -> np.ndarray:
                  (0 if c > (C-1)/2 else cpad, 0 if c < (C-1)/2 else cpad)]
     if im.ndim == 3:
         pad_width.append((0, 0))
-    return np.pad(im, pad_width, 'constant')
+    return np.pad(im, pad_width, mode='edge')
 
 
 def find_centers(p1: tuple, p2: tuple) -> tuple:
@@ -68,7 +68,7 @@ def rotate_im1(im1: np.ndarray, pts: tuple) -> tuple:
     theta1 = math.atan2(-(p2[1] - p1[1]), (p2[0] - p1[0]))
     theta2 = math.atan2(-(p4[1] - p3[1]), (p4[0] - p3[0]))
     dtheta = theta2 - theta1
-    im1 = sktr.rotate(im1, dtheta*180/np.pi)
+    im1 = sktr.rotate(im1, dtheta*180/np.pi, mode='edge', preserve_range=True)
     return im1, dtheta
 
 

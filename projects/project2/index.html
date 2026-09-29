@@ -40,6 +40,27 @@
           </figure>
         </div>
         <div class="writeup-copy">
+          <h4>Box filter and finite-difference filters</h4>
+          <pre><code>box_filter = np.ones((9, 9)) / 81
+
+Dx = np.array([[1, 0, -1]])
+Dy = np.array([
+    [1], [0],
+    [-1]
+])
+
+personal_box_filtered = convolve_two_for_loops(personal_image, box_filter)
+personal_dx = convolve_two_for_loops(personal_image, Dx)
+personal_dy = convolve_two_for_loops(personal_image, Dy)</code></pre>
+          <p>I converted my personal photo to grayscale, then applied the 9 × 9 box filter and the finite-difference filters. The results are shown below.</p>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="personal_grayscale.png" alt="Personal photo converted to grayscale"><figcaption>My grayscale photo</figcaption></figure>
+          <figure><img src="personal_box_filter.png" alt="Personal grayscale photo convolved with a 9 by 9 box filter"><figcaption>My photo with 9 × 9 box filter</figcaption></figure>
+          <figure><img src="personal_dx.png" alt="Dx result from the personal grayscale photo"><figcaption>My photo convolved with D<sub>x</sub></figcaption></figure>
+          <figure><img src="personal_dy.png" alt="Dy result from the personal grayscale photo"><figcaption>My photo convolved with D<sub>y</sub></figcaption></figure>
+        </div>
+        <div class="writeup-copy">
           <h4>Four nested loops</h4>
           <pre><code>def convolve_four_for_loops(image, kernel):
     image_height, image_width = image.shape

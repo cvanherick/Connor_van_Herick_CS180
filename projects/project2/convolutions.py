@@ -14,12 +14,12 @@ import cv2
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent
-image = np.array(
+personal_image = np.array(
     Image.open(
         PROJECT_DIR / "color_to_greyscale.jpeg"
     ).convert("L")
 ).astype(float)
-camera_image = image = np.array(
+camera_image = np.array(
     Image.open(
        PROJECT_DIR / "cameraman.png"
     ).convert("L")
@@ -101,11 +101,11 @@ Dy = np.array([
     [1], [0],
     [-1]
 ])
-blurred = convolve_two_for_loops(image, box_filter)
-dx_image = convolve_two_for_loops(image, Dx)
-dy_image = convolve_two_for_loops(image, Dy)
+blurred = convolve_two_for_loops(camera_image, box_filter)
+dx_image = convolve_two_for_loops(camera_image, Dx)
+dy_image = convolve_two_for_loops(camera_image, Dy)
 scipy_blurred = convolve2d(
-    image,
+    camera_image,
     box_filter,
     mode="same",
     boundary="fill",
@@ -113,7 +113,7 @@ scipy_blurred = convolve2d(
 )
 
 fig, axes = plt.subplots(1, 5, figsize=(18, 4))
-comparison_images = [image, blurred, scipy_blurred, dx_image, dy_image]
+comparison_images = [camera_image, blurred, scipy_blurred, dx_image, dy_image]
 comparison_titles = ["Input", "2-Loop Box Filter", "SciPy Box Filter", "Dx", "Dy"]
 for ax, result, title in zip(axes, comparison_images, comparison_titles):
     ax.imshow(result, cmap="gray")
@@ -124,6 +124,15 @@ plt.savefig(PROJECT_DIR / "convolution_comparison.png", dpi=180, bbox_inches="ti
 plt.close(fig)
 
 print(np.allclose(blurred, scipy_blurred))
+
+personal_box_filtered = convolve_two_for_loops(personal_image, box_filter)
+personal_dx = convolve_two_for_loops(personal_image, Dx)
+personal_dy = convolve_two_for_loops(personal_image, Dy)
+save_grayscale(personal_image, "Personal Grayscale Input", "personal_grayscale.png")
+save_grayscale(personal_box_filtered, "Personal Photo: 9x9 Box Filter", "personal_box_filter.png")
+save_grayscale(personal_dx, "Personal Photo: Dx", "personal_dx.png")
+save_grayscale(personal_dy, "Personal Photo: Dy", "personal_dy.png")
+
 dx_camera = convolve_two_for_loops(camera_image, Dx)
 dy_camera = convolve_two_for_loops(camera_image, Dy)
 

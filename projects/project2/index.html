@@ -68,9 +68,9 @@
         object-fit: contain;
       }
 
-      #part-2 .pyramid-large img { width: min(34vw, 340px); }
+      #part-2 .pyramid-large img { width: min(68vw, 680px); }
       #part-2 .pyramid-medium img { width: min(24vw, 240px); }
-      #part-2 .pyramid-small img { width: min(14vw, 140px); }
+      #part-2 .pyramid-small img { width: min(7vw, 70px); }
 
       #part-2 .hybrid-pyramid figcaption {
         color: var(--muted);
@@ -380,13 +380,27 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <figure><img src="lion_low_fourier.png" alt="Log magnitude Fourier transform of the lion low-pass image"><figcaption>Lion low-pass frequencies</figcaption></figure>
           <figure><img src="messi_lion_hybrid_fourier.png" alt="Log magnitude Fourier transform of the Messi and lion hybrid"><figcaption>Hybrid frequencies</figcaption></figure>
         </div>
+        <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
+        <div class="writeup-copy">
+          <p>A stack keeps every level at the original image dimensions. I built the Gaussian stack by repeatedly applying a 9 × 9 Gaussian filter with <code>sigma = 8</code> without downsampling. Each Laplacian level is the difference between two neighboring Gaussian levels, with the final Gaussian level stored as the low-frequency residual.</p>
+          <pre><code>gaussian_levels = gaussian_stack(image, 4)
+laplacian_levels = laplacian_stack(gaussian_levels)
+
+# No pyrDown or pyramid_gaussian is used:
+next_level = blur_image(previous_level)</code></pre>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="gaussian_stacks.png" alt="Gaussian stacks for the orange and apple images"><figcaption>Gaussian stacks: all levels have the original dimensions</figcaption></figure>
+          <figure><img src="laplacian_stacks.png" alt="Laplacian stacks for the orange and apple images"><figcaption>Laplacian stacks: detail levels and low-frequency residual</figcaption></figure>
+        </div>
+        <div class="writeup-copy">
+          <p>For the Oraple, I used a left-half mask for the apple and a right-half mask for the orange. I blurred the mask at every stack level, combined the corresponding Laplacian levels, and summed the combined stack to reconstruct the final image. Blending at multiple frequencies avoids the hard seam produced by directly joining the two originals.</p>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="oraple_laplacian_blend.png" alt="Laplacian-stack contributions and combined levels used to create the Oraple"><figcaption>Oraple blend at each Laplacian level</figcaption></figure>
+          <figure><img src="oraple.png" alt="Final reconstructed Oraple made from an orange and an apple"><figcaption>Final reconstructed Oraple</figcaption></figure>
+        </div>
         <div class="project-grid">
-          <article class="project-card">
-            <div class="project-card-body">
-              <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
-              <p>Writeup and visualizations to be added.</p>
-            </div>
-          </article>
           <article class="project-card">
             <div class="project-card-body">
               <h3>Part 2.4: Multiresolution Blending</h3>

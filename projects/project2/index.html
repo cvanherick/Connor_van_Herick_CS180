@@ -104,16 +104,49 @@ assert np.allclose(convolve_two_for_loops(image, kernel), reference)</code></pre
           <p>For boundary handling, the image is padded with zeros by half the kernel height and width. This keeps the output the same size as the input and matches <code>convolve2d(..., mode="same", boundary="fill", fillvalue=0)</code>.</p>
         </div>
         <h3>Part 1.2: Finite Difference Results</h3>
+        <div class="writeup-copy">
+          <p>The finite-difference filters <code>D_x</code> and <code>D_y</code> reveal horizontal and vertical intensity changes. I used a gradient-magnitude threshold of <strong>65</strong> for the binary edge image. This keeps the strongest object boundaries while removing much of the low-amplitude texture and noise; a lower threshold found more edges but also produced a noisier result.</p>
+          <pre><code>FINITE_DIFFERENCE_THRESHOLD = 65
+binary_edge = gradient_mag_camera &gt; FINITE_DIFFERENCE_THRESHOLD</code></pre>
+        </div>
         <div class="source-plate-grid">
           <figure><img src="partial_derivative_x.png" alt="Partial derivative in x of the cameraman image"><figcaption>Partial derivative in x</figcaption></figure>
           <figure><img src="partial_derivative_y.png" alt="Partial derivative in y of the cameraman image"><figcaption>Partial derivative in y</figcaption></figure>
           <figure><img src="gradient_magnitude.png" alt="Gradient magnitude of the cameraman image"><figcaption>Gradient magnitude</figcaption></figure>
-          <figure><img src="binary_edges.png" alt="Binarized gradient magnitude edge image"><figcaption>Binary edge image</figcaption></figure>
+          <figure><img src="binary_edges.png" alt="Binarized gradient magnitude edge image using threshold 65"><figcaption>Binary edge image (threshold = 65)</figcaption></figure>
         </div>
-        <h3>Part 1.3: Gaussian Filtering Results</h3>
+        <h3>Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
+        <div class="writeup-copy">
+          <p>The finite-difference results contain noticeable noise, so I first smoothed the cameraman image with a 9 × 9 Gaussian filter created from <code>cv2.getGaussianKernel(9, 2)</code> and its transpose. After smoothing, I recomputed the derivatives and gradient magnitude.</p>
+          <p>For the smoothed gradient image, I used a threshold of <strong>20</strong>. Gaussian smoothing suppresses small variations, so a lower threshold recovers meaningful edges that would be missed by the threshold of 65 used on the noisier finite-difference result.</p>
+        </div>
         <div class="source-plate-grid">
           <figure><img src="gaussian_blurred.png" alt="Gaussian-blurred cameraman image"><figcaption>Gaussian-blurred image</figcaption></figure>
-          <figure><img src="gaussian_binary_edges.png" alt="Binary edge image after Gaussian filtering"><figcaption>Filtered binary edge image</figcaption></figure>
+          <figure><img src="gaussian_gradient_magnitude.png" alt="Gradient magnitude after Gaussian smoothing"><figcaption>Gradient magnitude after smoothing</figcaption></figure>
+          <figure><img src="gaussian_binary_edges.png" alt="Binary edge image after Gaussian smoothing using threshold 20"><figcaption>Smoothed binary edge image (threshold = 20)</figcaption></figure>
+        </div>
+        <div class="writeup-copy">
+          <p>Instead of smoothing and then applying two derivative convolutions, I also formed derivative-of-Gaussian filters by convolving the Gaussian with <code>D_x</code> and <code>D_y</code>. The resulting full-support filters are shown below.</p>
+          <pre><code>G_1d = cv2.getGaussianKernel(9, 2)
+G_2d = G_1d @ G_1d.T
+camera_blurred = convolve_two_for_loops(camera_image, G_2d)
+
+DoG_x = convolve2d(G_2d, Dx, mode="full", boundary="fill", fillvalue=0)
+DoG_y = convolve2d(G_2d, Dy, mode="full", boundary="fill", fillvalue=0)
+dog_dx = convolve_two_for_loops(camera_image, DoG_x)
+dog_dy = convolve_two_for_loops(camera_image, DoG_y)</code></pre>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="dog_x_filter.png" alt="Derivative of Gaussian filter in x"><figcaption>DoG filter in x</figcaption></figure>
+          <figure><img src="dog_y_filter.png" alt="Derivative of Gaussian filter in y"><figcaption>DoG filter in y</figcaption></figure>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="dog_gradient_magnitude.png" alt="Gradient magnitude from single-convolution DoG responses"><figcaption>DoG gradient magnitude</figcaption></figure>
+          <figure><img src="dog_binary_edges.png" alt="Binarized DoG gradient magnitude using threshold 20"><figcaption>DoG binary edge image (threshold = 20)</figcaption></figure>
+          <figure><img src="dog_verification.png" alt="Comparison of smoothed finite-difference and single-convolution DoG gradient magnitudes"><figcaption>Verification: smoothed gradient, DoG gradient, and their absolute difference</figcaption></figure>
+        </div>
+        <div class="writeup-copy">
+          <p>The Gaussian-smoothed gradient and the single-convolution DoG gradient agree away from the outer zero-padding boundary. The remaining differences are concentrated at the border because the two-step and one-step versions encounter the image boundary differently. In the interior, the DoG filters reproduce the same edge structure while requiring only one convolution per derivative direction.</p>
         </div>
       </section>
 

@@ -11,16 +11,31 @@ import matplotlib.pyplot as plt
 from scipy.signal import convolve2d
 from PIL import Image
 import cv2
+from pathlib import Path
+
+PROJECT_DIR = Path(__file__).resolve().parent
 image = np.array(
     Image.open(
-        "/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/color_to_greyscale.jpeg"
+        PROJECT_DIR / "color_to_greyscale.jpeg"
     ).convert("L")
 ).astype(float)
 camera_image = image = np.array(
     Image.open(
-       "/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/cameraman.png"
+       PROJECT_DIR / "cameraman.png"
     ).convert("L")
 ).astype(float)
+
+
+def save_grayscale(image, title, filename, vmin=None, vmax=None):
+    fig, ax = plt.subplots(figsize=(5, 4))
+    ax.imshow(image, cmap="gray", vmin=vmin, vmax=vmax)
+    ax.set_title(title)
+    ax.axis("off")
+    fig.tight_layout()
+    fig.savefig(PROJECT_DIR / filename, dpi=180, bbox_inches="tight")
+    plt.close(fig)
+
+
 def convolve_four_for_loops(image, kernel):
     image_height, image_width = image.shape
     filter_height, filter_width = kernel.shape
@@ -105,48 +120,87 @@ for ax, result, title in zip(axes, comparison_images, comparison_titles):
     ax.set_title(title)
     ax.axis("off")
 plt.tight_layout()
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/convolution_comparison.png", dpi=180, bbox_inches="tight")
+plt.savefig(PROJECT_DIR / "convolution_comparison.png", dpi=180, bbox_inches="tight")
 plt.close(fig)
 
 print(np.allclose(blurred, scipy_blurred))
 dx_camera = convolve_two_for_loops(camera_image, Dx)
 dy_camera = convolve_two_for_loops(camera_image, Dy)
-plt.imshow(dx_image, cmap="gray")
-plt.title("Partial Derivative in X")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/partial_derivative_x.png", dpi=180, bbox_inches="tight")
-plt.show()
 
-plt.imshow(dy_image, cmap="gray")
-plt.title("Partial Derivative in Y")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/partial_derivative_y.png", dpi=180, bbox_inches="tight")
-plt.show()
-gradient_mag_camera = np.sqrt(dx_camera ** 2 + dy_camera**2) 
-plt.imshow(gradient_mag_camera, cmap="gray")
-plt.title("Gradient Magnitude")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/gradient_magnitude.png", dpi=180, bbox_inches="tight")
-plt.show()
-binary_edge = gradient_mag_camera > 65
-plt.imshow(binary_edge, cmap="gray")
-plt.title("Binary Edge")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/binary_edges.png", dpi=180, bbox_inches="tight")
-plt.show()
+FINITE_DIFFERENCE_THRESHOLD = 65
+GAUSSIAN_THRESHOLD = 20
+
+save_grayscale(dx_camera, "Partial Derivative in X", "partial_derivative_x.png")
+save_grayscale(dy_camera, "Partial Derivative in Y", "partial_derivative_y.png")
+
+gradient_mag_camera = np.hypot(dx_camera, dy_camera)
+save_grayscale(gradient_mag_camera, "Gradient Magnitude", "gradient_magnitude.png")
+
+binary_edge = gradient_mag_camera > FINITE_DIFFERENCE_THRESHOLD
+save_grayscale(binary_edge, "Binary Edge (threshold = 65)", "binary_edges.png", vmin=0, vmax=1)
+
 G_1d = cv2.getGaussianKernel(9, 2)
-G_2d = G_1d @  G_1d.T
+G_2d = G_1d @ G_1d.T
 camera_blurred = convolve_two_for_loops(camera_image, G_2d)
-plt.imshow(camera_blurred, cmap="gray")
-plt.title("Blurred")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/gaussian_blurred.png", dpi=180, bbox_inches="tight")
-plt.show()
+save_grayscale(camera_blurred, "Gaussian-blurred Cameraman", "gaussian_blurred.png")
+
+# Apply Dx and Dy after Gaussian smoothing, as in the finite-difference method.
 dx_G_camera = convolve_two_for_loops(camera_blurred, Dx)
 dy_G_camera = convolve_two_for_loops(camera_blurred, Dy)
-blurred_binary_edge = np.sqrt(dx_G_camera ** 2 + dy_G_camera**2) > 20
-plt.imshow(blurred_binary_edge, cmap="gray")
-plt.title("Blurred_binary edge")
-plt.axis("off")
-plt.savefig("/Users/revivedbonsai63/Desktop/CS 180/CS180_Website/projects/project2/gaussian_binary_edges.png", dpi=180, bbox_inches="tight")
-plt.show()
+gaussian_gradient_mag = np.hypot(dx_G_camera, dy_G_camera)
+gaussian_binary_edge = gaussian_gradient_mag > GAUSSIAN_THRESHOLD
+save_grayscale(
+    gaussian_gradient_mag,
+    "Gradient Magnitude after Gaussian Smoothing",
+    "gaussian_gradient_magnitude.png",
+)
+save_grayscale(
+    gaussian_binary_edge,
+    "Gaussian-smoothed Binary Edge (threshold = 20)",
+    "gaussian_binary_edges.png",
+    vmin=0,
+    vmax=1,
+)
+
+# Build full derivative-of-Gaussian filters and apply each with one convolution.
+# The full mode preserves the complete 9x9 * 1x3 and 9x9 * 3x1 supports.
+DoG_x = convolve2d(G_2d, Dx, mode="full", boundary="fill", fillvalue=0)
+DoG_y = convolve2d(G_2d, Dy, mode="full", boundary="fill", fillvalue=0)
+save_grayscale(DoG_x, "Derivative of Gaussian: DoG x", "dog_x_filter.png")
+save_grayscale(DoG_y, "Derivative of Gaussian: DoG y", "dog_y_filter.png")
+
+dog_dx_camera = convolve_two_for_loops(camera_image, DoG_x)
+dog_dy_camera = convolve_two_for_loops(camera_image, DoG_y)
+dog_gradient_mag = np.hypot(dog_dx_camera, dog_dy_camera)
+dog_binary_edge = dog_gradient_mag > GAUSSIAN_THRESHOLD
+save_grayscale(dog_gradient_mag, "DoG Gradient Magnitude", "dog_gradient_magnitude.png")
+save_grayscale(
+    dog_binary_edge,
+    "DoG Binary Edge (threshold = 20)",
+    "dog_binary_edges.png",
+    vmin=0,
+    vmax=1,
+)
+
+dog_difference = np.abs(gaussian_gradient_mag - dog_gradient_mag)
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+comparison_images = [gaussian_gradient_mag, dog_gradient_mag, dog_difference]
+comparison_titles = [
+    "Gaussian then Dx/Dy",
+    "Single-convolution DoG",
+    "Absolute difference",
+]
+for ax, result, title in zip(axes, comparison_images, comparison_titles):
+    ax.imshow(result, cmap="gray")
+    ax.set_title(title)
+    ax.axis("off")
+plt.tight_layout()
+plt.savefig(PROJECT_DIR / "dog_verification.png", dpi=180, bbox_inches="tight")
+plt.close(fig)
+
+print("Finite-difference threshold:", FINITE_DIFFERENCE_THRESHOLD)
+print("Gaussian/DoG threshold:", GAUSSIAN_THRESHOLD)
+print("Maximum Gaussian-vs-DoG gradient difference:", dog_difference.max())
+print("DoG matches the smoothed gradient away from the zero-padding boundary:", np.allclose(
+    gaussian_gradient_mag[5:-5, 5:-5], dog_gradient_mag[5:-5, 5:-5], atol=1e-6
+))

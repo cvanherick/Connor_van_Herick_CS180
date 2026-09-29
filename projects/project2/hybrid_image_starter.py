@@ -1,16 +1,18 @@
-from pathlib import Path
 import math
+import os
+from pathlib import Path
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import skimage.transform as sktr
 
-from align_image_code import match_img_size, rescale_images
+from align_image_code import align_images, match_img_size, rescale_images
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
 MAX_IMAGE_SIZE = 700
+INTERACTIVE_FULL_ALIGNMENT = os.environ.get("HYBRID_INTERACTIVE_ALIGNMENT", "1") == "1"
 
 
 def load_image(filename):
@@ -173,13 +175,7 @@ def save_fourier(image, title, filename):
     plt.close(fig)
 
 
-def save_cutoff_experiment(high_image, low_image, high_points, low_points):
-    high_aligned, low_aligned = align_with_points(
-        high_image,
-        low_image,
-        high_points,
-        low_points,
-    )
+def save_cutoff_experiment(high_aligned, low_aligned, filename, title):
     settings = [(4, 6), (6, 8), (8, 10)]
     fig, axes = plt.subplots(1, len(settings), figsize=(15, 4))
     for ax, (sigma_high, sigma_low) in zip(axes, settings):
@@ -192,10 +188,17 @@ def save_cutoff_experiment(high_image, low_image, high_points, low_points):
         ax.imshow(hybrid)
         ax.set_title(f"σhigh={sigma_high}, σlow={sigma_low}")
         ax.axis("off")
-    fig.suptitle("Nutmeg/Derek cutoff experiment")
+    fig.suptitle(title)
     fig.tight_layout()
-    fig.savefig(PROJECT_DIR / "nutmeg_derek_cutoff_experiment.png", dpi=180, bbox_inches="tight")
+    fig.savefig(PROJECT_DIR / filename, dpi=180, bbox_inches="tight")
     plt.close(fig)
+
+
+def align_full_analysis_pair(im1, im2, manual_points):
+    if INTERACTIVE_FULL_ALIGNMENT:
+        print("Click two corresponding points in the first image, then the same two points in the second image.")
+        return align_images(im1, im2)
+    return align_with_points(im1, im2, manual_points[0], manual_points[1])
 
 
 # The point pairs are normalized (x, y) coordinates for the two eyes in each image.
@@ -223,7 +226,12 @@ save_fourier(derek_aligned, "Derek input Fourier magnitude", "derek_input_fourie
 save_fourier(nutmeg_high, "Nutmeg high-pass Fourier magnitude", "nutmeg_high_fourier.png")
 save_fourier(derek_low, "Derek low-pass Fourier magnitude", "derek_low_fourier.png")
 save_fourier(nutmeg_derek_hybrid, "Nutmeg + Derek hybrid Fourier magnitude", "nutmeg_derek_hybrid_fourier.png")
-save_cutoff_experiment(nutmeg, derek, nutmeg_points, derek_points)
+save_cutoff_experiment(
+    nutmeg_aligned,
+    derek_aligned,
+    "nutmeg_derek_cutoff_experiment.png",
+    "Nutmeg/Derek cutoff experiment",
+)
 
 
 # Additional examples: only the originals and final hybrid are displayed on the website.
@@ -252,12 +260,32 @@ tiger_lion, _, _, _, _ = hybrid_image(
 save_image(tiger_lion, "Tiger + Lion hybrid", "tiger_lion_hybrid.png")
 
 messi = load_image("messi.png")
-messi_lion, _, _, _, _ = hybrid_image(
+messi_points = ((0.42, 0.40), (0.53, 0.40))
+lion_points = ((0.39, 0.50), (0.61, 0.50))
+messi_aligned, lion_aligned = align_full_analysis_pair(
     messi,
     lion,
+    (messi_points, lion_points),
+)
+messi_lion, messi_high, lion_low = hybrid_from_aligned(
+    messi_aligned,
+    lion_aligned,
     sigma_high=6,
     sigma_low=8,
-    high_points=((0.42, 0.40), (0.53, 0.40)),
-    low_points=((0.39, 0.50), (0.61, 0.50)),
 )
+save_image(messi_aligned, "Messi aligned", "messi_aligned.png")
+save_image(lion_aligned, "Lion aligned", "lion_aligned.png")
+save_image(messi_high, "Messi high-pass filtered", "messi_high_pass.png", signed=True)
+save_image(lion_low, "Lion low-pass filtered", "lion_low_pass.png")
 save_image(messi_lion, "Messi + Lion hybrid", "messi_lion_hybrid.png")
+save_fourier(messi_aligned, "Messi input Fourier magnitude", "messi_input_fourier.png")
+save_fourier(lion_aligned, "Lion input Fourier magnitude", "lion_input_fourier.png")
+save_fourier(messi_high, "Messi high-pass Fourier magnitude", "messi_high_fourier.png")
+save_fourier(lion_low, "Lion low-pass Fourier magnitude", "lion_low_fourier.png")
+save_fourier(messi_lion, "Messi + Lion hybrid Fourier magnitude", "messi_lion_hybrid_fourier.png")
+save_cutoff_experiment(
+    messi_aligned,
+    lion_aligned,
+    "messi_lion_cutoff_experiment.png",
+    "Messi/Lion cutoff experiment",
+)

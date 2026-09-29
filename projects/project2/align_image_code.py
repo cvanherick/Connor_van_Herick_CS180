@@ -10,11 +10,13 @@ import skimage.transform as sktr
 
 
 def get_points(im1: np.ndarray, im2: np.ndarray) -> tuple:
-    print('Please select 2 points in each image for alignment.')
+    print('Select two corresponding points in each image for alignment.')
     plt.imshow(im1)
+    plt.title('Image 1: click two corresponding points')
     p1, p2 = plt.ginput(2)
     plt.close()
     plt.imshow(im2)
+    plt.title('Image 2: click the same two points')
     p3, p4 = plt.ginput(2)
     plt.close()
     return (p1, p2, p3, p4)

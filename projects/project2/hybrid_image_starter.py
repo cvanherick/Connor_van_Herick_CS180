@@ -151,7 +151,6 @@ def save_image(image, title, filename, signed=False):
         ax.imshow(display_image, cmap="gray", vmin=0, vmax=1)
     else:
         ax.imshow(display_image)
-    ax.set_title(title)
     ax.axis("off")
     fig.tight_layout()
     fig.savefig(PROJECT_DIR / filename, dpi=180, bbox_inches="tight")
@@ -170,7 +169,6 @@ def fourier_magnitude(image):
 def save_fourier(image, title, filename):
     fig, ax = plt.subplots(figsize=(5, 4))
     ax.imshow(fourier_magnitude(image), cmap="gray")
-    ax.set_title(title)
     ax.axis("off")
     fig.tight_layout()
     fig.savefig(PROJECT_DIR / filename, dpi=180, bbox_inches="tight")
@@ -213,10 +211,11 @@ derek_points = ((0.38, 0.33), (0.60, 0.33))
 nutmeg_derek = hybrid_image(
     nutmeg,
     derek,
-    sigma_high=6,
-    sigma_low=8,
+    sigma_high=3,
+    sigma_low=12,
     high_points=nutmeg_points,
     low_points=derek_points,
+    alpha=1.5,
     label="Nutmeg and Derek",
 )
 nutmeg_derek_hybrid, nutmeg_aligned, derek_aligned, nutmeg_high, derek_low = nutmeg_derek

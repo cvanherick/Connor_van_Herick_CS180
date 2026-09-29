@@ -9,6 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css?v=project2-framework-1">
+    <style>
+      #part-2 .final-hybrid-figure {
+        grid-column: 1 / -1;
+        max-width: 720px;
+      }
+
+      #part-2 .final-hybrid-figure img {
+        height: 500px;
+      }
+
+      @media (max-width: 700px) {
+        #part-2 .final-hybrid-figure img {
+          height: 360px;
+        }
+      }
+    </style>
   </head>
   <body>
     <header class="site-header">
@@ -216,6 +232,7 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <figure><img src="nutmeg_derek_hybrid.png" alt="Derek and Nutmeg hybrid image"><figcaption>Derek + Nutmeg hybrid</figcaption></figure>
         </div>
         <h4>Connor + Snow</h4>
+        <p>Everyone has told me I looked like Snow, so I thought it would be fun to try this hybrid, and it turned out really well.</p>
         <div class="source-plate-grid">
           <figure><img src="connor_smiling.png" alt="Original Connor portrait"><figcaption>Connor high-frequency source</figcaption></figure>
           <figure><img src="young_snow.jpeg" alt="Original young Snow portrait"><figcaption>Snow low-frequency source</figcaption></figure>
@@ -228,6 +245,7 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <figure><img src="tiger_lion_hybrid.png" alt="Lion and tiger hybrid image"><figcaption>Lion + Tiger hybrid</figcaption></figure>
         </div>
         <h4>Lionel Messi + Lion: full process</h4>
+        <p>I thought combining Lionel Messi and a lion would be a fun play on words, so I used this pair for the full analysis.</p>
         <div class="source-plate-grid">
           <figure><img src="messi.png" alt="Original Lionel Messi portrait"><figcaption>Original Messi</figcaption></figure>
           <figure><img src="lion.png" alt="Original lion image"><figcaption>Original lion</figcaption></figure>
@@ -235,7 +253,7 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <figure><img src="lion_aligned.png" alt="Aligned lion image"><figcaption>Aligned lion</figcaption></figure>
           <figure><img src="messi_high_pass.png" alt="High-pass filtered Lionel Messi image"><figcaption>Messi high-pass</figcaption></figure>
           <figure><img src="lion_low_pass.png" alt="Low-pass filtered lion image"><figcaption>Lion low-pass</figcaption></figure>
-          <figure><img src="messi_lion_hybrid.png" alt="Final Lionel Messi and lion hybrid image"><figcaption>Final hybrid</figcaption></figure>
+          <figure class="final-hybrid-figure"><img src="messi_lion_hybrid.png" alt="Final Lionel Messi and lion hybrid image"><figcaption>Final hybrid</figcaption></figure>
           <figure><img src="messi_lion_cutoff_experiment.png" alt="Lionel Messi and lion hybrid cutoff experiment"><figcaption>Cutoff experiment</figcaption></figure>
         </div>
         <h4>Fourier analysis</h4>

@@ -40,7 +40,6 @@
           </figure>
         </div>
         <div class="writeup-copy">
-          <p>Both implementations below compute same-sized 2D convolution using only NumPy. Each function flips the kernel before applying it, which makes the operation a true convolution rather than a cross-correlation.</p>
           <h4>Four nested loops</h4>
           <pre><code>def convolve_four_for_loops(image, kernel):
     image_height, image_width = image.shape

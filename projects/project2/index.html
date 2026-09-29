@@ -174,13 +174,33 @@ dog_dy = convolve_two_for_loops(camera_image, DoG_y)</code></pre>
         <div class="section-heading">
           <h2 id="part-2-title">Part 2</h2>
         </div>
+        <h3>Part 2.1: Image “Sharpening”</h3>
+        <div class="writeup-copy">
+          <p>An unsharp mask sharpens an image by emphasizing the high-frequency details that are reduced by blur. I first convolve the grayscale image with a 9 × 9 Gaussian filter to create a blurred, low-frequency version. Subtracting this blurred image from the original isolates the high-frequency residual, which contains edges and fine texture. Adding a scaled version of that residual back to the original produces the sharpened image.</p>
+          <pre><code>blurred = convolve_two_for_loops(image, gaussian_filter)
+high_frequency = image - blurred
+sharpened = np.clip(image + alpha * high_frequency, 0, 255)</code></pre>
+          <p>Equivalently, the code combines the identity impulse filter and the Gaussian filter into one unsharp filter: <code>(1 + alpha)I - alpha G</code>. Here, <code>alpha</code> controls the sharpening strength. I compare <code>alpha = 1</code>, <code>2</code>, and <code>4</code>; larger values increase edge contrast but can also exaggerate noise, halos, and clipping.</p>
+        </div>
+        <h4>Taj Mahal</h4>
+        <div class="source-plate-grid">
+          <figure><img src="taj_original.png" alt="Original grayscale Taj Mahal image"><figcaption>Original</figcaption></figure>
+          <figure><img src="taj_blurred.png" alt="Gaussian-blurred Taj Mahal image"><figcaption>Gaussian blur</figcaption></figure>
+          <figure><img src="taj_high_frequency.png" alt="High-frequency residual from the Taj Mahal image"><figcaption>High-frequency residual</figcaption></figure>
+          <figure><img src="taj_sharpened_1.png" alt="Taj Mahal image sharpened with alpha 1"><figcaption>Sharpened, α = 1</figcaption></figure>
+          <figure><img src="taj_sharpened_2.png" alt="Taj Mahal image sharpened with alpha 2"><figcaption>Sharpened, α = 2</figcaption></figure>
+          <figure><img src="taj_sharpened_4.png" alt="Taj Mahal image sharpened with alpha 4"><figcaption>Sharpened, α = 4</figcaption></figure>
+        </div>
+        <h4>Climber</h4>
+        <div class="source-plate-grid">
+          <figure><img src="climber_original.png" alt="Original grayscale climber image"><figcaption>Original</figcaption></figure>
+          <figure><img src="climber_blurred.png" alt="Gaussian-blurred climber image"><figcaption>Gaussian blur</figcaption></figure>
+          <figure><img src="climber_high_frequency.png" alt="High-frequency residual from the climber image"><figcaption>High-frequency residual</figcaption></figure>
+          <figure><img src="climber_sharpened_1.png" alt="Climber image sharpened with alpha 1"><figcaption>Sharpened, α = 1</figcaption></figure>
+          <figure><img src="climber_sharpened_2.png" alt="Climber image sharpened with alpha 2"><figcaption>Sharpened, α = 2</figcaption></figure>
+          <figure><img src="climber_sharpened_4.png" alt="Climber image sharpened with alpha 4"><figcaption>Sharpened, α = 4</figcaption></figure>
+        </div>
         <div class="project-grid">
-          <article class="project-card">
-            <div class="project-card-body">
-              <h3>Part 2.1: Image “Sharpening”</h3>
-              <p>Writeup and visualizations to be added.</p>
-            </div>
-          </article>
           <article class="project-card">
             <div class="project-card-body">
               <h3>Part 2.2: Hybrid Images</h3>

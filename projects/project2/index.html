@@ -200,13 +200,49 @@ sharpened = np.clip(image + alpha * high_frequency, 0, 255)</code></pre>
           <figure><img src="climber_sharpened_2.png" alt="Climber image sharpened with alpha 2"><figcaption>Sharpened, α = 2</figcaption></figure>
           <figure><img src="climber_sharpened_4.png" alt="Climber image sharpened with alpha 4"><figcaption>Sharpened, α = 4</figcaption></figure>
         </div>
+        <h3>Part 2.2: Hybrid Images</h3>
+        <div class="writeup-copy">
+          <p>A hybrid image combines the low frequencies of one aligned image with the high frequencies of another. I create the low-frequency component by Gaussian-blurring the second image. For the high-frequency component, I subtract a Gaussian-blurred version of the first image from the original. Adding the two filtered components produces an image that changes appearance with viewing distance: nearby, the high-frequency image is more visible; farther away, the low-frequency image dominates.</p>
+          <pre><code>low_frequency = blur_image(low_image, sigma_low)
+high_frequency = high_image - blur_image(high_image, sigma_high)
+hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
+          <p>For the Nutmeg/Derek example, I chose <code>sigma_high = 6</code> and <code>sigma_low = 8</code> after comparing several cutoff pairs. The experiment below compares (4, 6), (6, 8), and (8, 10). The middle setting preserves enough facial detail while keeping the low-frequency face visible.</p>
+        </div>
+        <h4>Nutmeg + Derek: full process</h4>
+        <div class="source-plate-grid">
+          <figure><img src="nutmeg.jpg" alt="Original Nutmeg image"><figcaption>Original Nutmeg</figcaption></figure>
+          <figure><img src="DerekPicture.jpg" alt="Original Derek portrait"><figcaption>Original Derek</figcaption></figure>
+          <figure><img src="nutmeg_aligned.png" alt="Aligned Nutmeg image"><figcaption>Aligned Nutmeg</figcaption></figure>
+          <figure><img src="derek_aligned.png" alt="Aligned Derek image"><figcaption>Aligned Derek</figcaption></figure>
+          <figure><img src="nutmeg_high_pass.png" alt="High-pass filtered Nutmeg image"><figcaption>Nutmeg high-pass</figcaption></figure>
+          <figure><img src="derek_low_pass.png" alt="Low-pass filtered Derek image"><figcaption>Derek low-pass</figcaption></figure>
+          <figure><img src="nutmeg_derek_hybrid.png" alt="Final Nutmeg and Derek hybrid image"><figcaption>Final hybrid</figcaption></figure>
+          <figure><img src="nutmeg_derek_cutoff_experiment.png" alt="Nutmeg and Derek hybrid cutoff experiment"><figcaption>Cutoff experiment</figcaption></figure>
+        </div>
+        <h4>Fourier analysis</h4>
+        <div class="writeup-copy">
+          <p>Each Fourier visualization shows the log magnitude of the centered 2D Fourier transform. The low-pass result concentrates energy near the center of the frequency plot, while the high-pass result emphasizes frequencies farther from the center.</p>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="nutmeg_input_fourier.png" alt="Log magnitude Fourier transform of Nutmeg"><figcaption>Nutmeg input frequencies</figcaption></figure>
+          <figure><img src="derek_input_fourier.png" alt="Log magnitude Fourier transform of Derek"><figcaption>Derek input frequencies</figcaption></figure>
+          <figure><img src="nutmeg_high_fourier.png" alt="Log magnitude Fourier transform of the Nutmeg high-pass image"><figcaption>Nutmeg high-pass frequencies</figcaption></figure>
+          <figure><img src="derek_low_fourier.png" alt="Log magnitude Fourier transform of the Derek low-pass image"><figcaption>Derek low-pass frequencies</figcaption></figure>
+          <figure><img src="nutmeg_derek_hybrid_fourier.png" alt="Log magnitude Fourier transform of the Nutmeg and Derek hybrid"><figcaption>Hybrid frequencies</figcaption></figure>
+        </div>
+        <h4>Additional hybrid examples</h4>
+        <div class="source-plate-grid">
+          <figure><img src="connor_smiling.png" alt="Original Connor portrait"><figcaption>Connor original</figcaption></figure>
+          <figure><img src="young_snow.jpeg" alt="Original young Snow portrait"><figcaption>Snow original</figcaption></figure>
+          <figure><img src="connor_snow_hybrid.png" alt="Connor and Snow hybrid image"><figcaption>Connor + Snow hybrid</figcaption></figure>
+          <figure><img src="tiger.png" alt="Original tiger image"><figcaption>Tiger original</figcaption></figure>
+          <figure><img src="lion.png" alt="Original lion image"><figcaption>Lion original</figcaption></figure>
+          <figure><img src="tiger_lion_hybrid.png" alt="Tiger and lion hybrid image"><figcaption>Tiger + Lion hybrid</figcaption></figure>
+          <figure><img src="messi.png" alt="Original Messi portrait"><figcaption>Messi original</figcaption></figure>
+          <figure><img src="lion.png" alt="Original lion image for the Messi hybrid"><figcaption>Lion original</figcaption></figure>
+          <figure><img src="messi_lion_hybrid.png" alt="Messi and lion hybrid image"><figcaption>Messi + Lion hybrid</figcaption></figure>
+        </div>
         <div class="project-grid">
-          <article class="project-card">
-            <div class="project-card-body">
-              <h3>Part 2.2: Hybrid Images</h3>
-              <p>Writeup and visualizations to be added.</p>
-            </div>
-          </article>
           <article class="project-card">
             <div class="project-card-body">
               <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>

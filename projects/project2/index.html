@@ -19,9 +19,85 @@
         height: 500px;
       }
 
+      #part-2 .hybrid-pyramid {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 2rem 0;
+        max-width: 980px;
+      }
+
+      #part-2 .hybrid-pyramid-originals,
+      #part-2 .hybrid-pyramid-results {
+        align-items: flex-end;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      #part-2 .hybrid-pyramid-originals figure,
+      #part-2 .hybrid-pyramid-results figure {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin: 0;
+        overflow: hidden;
+        padding: 0.55rem;
+        text-align: center;
+      }
+
+      #part-2 .hybrid-pyramid-originals figure {
+        width: 250px;
+      }
+
+      #part-2 .hybrid-pyramid-originals img {
+        background: #111821;
+        border-radius: 6px;
+        display: block;
+        height: 220px;
+        object-fit: contain;
+        width: 100%;
+      }
+
+      #part-2 .hybrid-pyramid-results img {
+        background: #111821;
+        border-radius: 6px;
+        display: block;
+        height: auto;
+        object-fit: contain;
+      }
+
+      #part-2 .pyramid-large img { width: min(34vw, 340px); }
+      #part-2 .pyramid-medium img { width: min(24vw, 240px); }
+      #part-2 .pyramid-small img { width: min(14vw, 140px); }
+
+      #part-2 .hybrid-pyramid figcaption {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        margin-top: 0.55rem;
+      }
+
+      #part-2 .hybrid-pyramid-arrow {
+        color: var(--gold);
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
       @media (max-width: 700px) {
         #part-2 .final-hybrid-figure img {
           height: 360px;
+        }
+
+        #part-2 .hybrid-pyramid-originals,
+        #part-2 .hybrid-pyramid-results {
+          gap: 0.45rem;
+          width: 100%;
+        }
+
+        #part-2 .hybrid-pyramid-originals figure {
+          width: calc(50% - 0.45rem);
         }
       }
     </style>
@@ -226,26 +302,63 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <p>The images were aligned by selecting two corresponding points in each image, using the eyes as landmarks before filtering.</p>
         </div>
         <h4>Derek + Nutmeg</h4>
-        <div class="source-plate-grid">
-          <figure><img src="DerekPicture.jpg" alt="Original Derek portrait"><figcaption>Derek low-frequency source</figcaption></figure>
-          <figure><img src="nutmeg.jpg" alt="Original Nutmeg image"><figcaption>Nutmeg high-frequency source</figcaption></figure>
-          <figure><img src="nutmeg_derek_hybrid.png" alt="Derek and Nutmeg hybrid image"><figcaption>Derek + Nutmeg hybrid</figcaption></figure>
+        <div class="hybrid-pyramid">
+          <div class="hybrid-pyramid-originals">
+            <figure><img src="DerekPicture.jpg" alt="Original Derek portrait"><figcaption>Derek low-frequency source</figcaption></figure>
+            <figure><img src="nutmeg.jpg" alt="Original Nutmeg image"><figcaption>Nutmeg high-frequency source</figcaption></figure>
+          </div>
+          <div class="hybrid-pyramid-arrow" aria-hidden="true">↓</div>
+          <div class="hybrid-pyramid-results">
+            <figure class="pyramid-large"><img src="nutmeg_derek_hybrid.png" alt="Derek and Nutmeg hybrid shown large"><figcaption>Large</figcaption></figure>
+            <figure class="pyramid-medium"><img src="nutmeg_derek_hybrid.png" alt="Derek and Nutmeg hybrid shown medium"><figcaption>Medium</figcaption></figure>
+            <figure class="pyramid-small"><img src="nutmeg_derek_hybrid.png" alt="Derek and Nutmeg hybrid shown small"><figcaption>Small</figcaption></figure>
+          </div>
         </div>
+        <p><strong>Filter settings:</strong> Nutmeg high-pass <code>σhigh = 3</code>, Derek low-pass <code>σlow = 12</code>, with high-frequency weight <code>alpha = 1.5</code>.</p>
         <h4>Connor + Snow</h4>
         <p>Everyone has told me I looked like Snow, so I thought it would be fun to try this hybrid, and it turned out really well.</p>
-        <div class="source-plate-grid">
-          <figure><img src="connor_smiling.png" alt="Original Connor portrait"><figcaption>Connor high-frequency source</figcaption></figure>
-          <figure><img src="young_snow.jpeg" alt="Original young Snow portrait"><figcaption>Snow low-frequency source</figcaption></figure>
-          <figure><img src="connor_snow_hybrid.png" alt="Connor and Snow hybrid image"><figcaption>Connor + Snow hybrid</figcaption></figure>
+        <div class="hybrid-pyramid">
+          <div class="hybrid-pyramid-originals">
+            <figure><img src="connor_smiling.png" alt="Original Connor portrait"><figcaption>Connor high-frequency source</figcaption></figure>
+            <figure><img src="young_snow.jpeg" alt="Original young Snow portrait"><figcaption>Snow low-frequency source</figcaption></figure>
+          </div>
+          <div class="hybrid-pyramid-arrow" aria-hidden="true">↓</div>
+          <div class="hybrid-pyramid-results">
+            <figure class="pyramid-large"><img src="connor_snow_hybrid.png" alt="Connor and Snow hybrid shown large"><figcaption>Large</figcaption></figure>
+            <figure class="pyramid-medium"><img src="connor_snow_hybrid.png" alt="Connor and Snow hybrid shown medium"><figcaption>Medium</figcaption></figure>
+            <figure class="pyramid-small"><img src="connor_snow_hybrid.png" alt="Connor and Snow hybrid shown small"><figcaption>Small</figcaption></figure>
+          </div>
         </div>
+        <p><strong>Filter settings:</strong> Connor high-pass <code>σhigh = 4</code> and Snow low-pass <code>σlow = 6</code>.</p>
         <h4>Lion + Tiger</h4>
-        <div class="source-plate-grid">
-          <figure><img src="lion.png" alt="Original lion image"><figcaption>Lion low-frequency source</figcaption></figure>
-          <figure><img src="tiger.png" alt="Original tiger image"><figcaption>Tiger high-frequency source</figcaption></figure>
-          <figure><img src="tiger_lion_hybrid.png" alt="Lion and tiger hybrid image"><figcaption>Lion + Tiger hybrid</figcaption></figure>
+        <div class="hybrid-pyramid">
+          <div class="hybrid-pyramid-originals">
+            <figure><img src="lion.png" alt="Original lion image"><figcaption>Lion low-frequency source</figcaption></figure>
+            <figure><img src="tiger.png" alt="Original tiger image"><figcaption>Tiger high-frequency source</figcaption></figure>
+          </div>
+          <div class="hybrid-pyramid-arrow" aria-hidden="true">↓</div>
+          <div class="hybrid-pyramid-results">
+            <figure class="pyramid-large"><img src="tiger_lion_hybrid.png" alt="Lion and tiger hybrid shown large"><figcaption>Large</figcaption></figure>
+            <figure class="pyramid-medium"><img src="tiger_lion_hybrid.png" alt="Lion and tiger hybrid shown medium"><figcaption>Medium</figcaption></figure>
+            <figure class="pyramid-small"><img src="tiger_lion_hybrid.png" alt="Lion and tiger hybrid shown small"><figcaption>Small</figcaption></figure>
+          </div>
         </div>
+        <p><strong>Filter settings:</strong> Tiger high-pass <code>σhigh = 5</code> and Lion low-pass <code>σlow = 7</code>.</p>
         <h4>Lionel Messi + Lion: full process</h4>
         <p>I thought combining Lionel Messi and a lion would be a fun play on words, so I used this pair for the full analysis.</p>
+        <div class="hybrid-pyramid">
+          <div class="hybrid-pyramid-originals">
+            <figure><img src="messi.png" alt="Original Lionel Messi portrait"><figcaption>Messi source</figcaption></figure>
+            <figure><img src="lion.png" alt="Original lion image"><figcaption>Lion source</figcaption></figure>
+          </div>
+          <div class="hybrid-pyramid-arrow" aria-hidden="true">↓</div>
+          <div class="hybrid-pyramid-results">
+            <figure class="pyramid-large"><img src="messi_lion_hybrid.png" alt="Lionel Messi and lion hybrid shown large"><figcaption>Large</figcaption></figure>
+            <figure class="pyramid-medium"><img src="messi_lion_hybrid.png" alt="Lionel Messi and lion hybrid shown medium"><figcaption>Medium</figcaption></figure>
+            <figure class="pyramid-small"><img src="messi_lion_hybrid.png" alt="Lionel Messi and lion hybrid shown small"><figcaption>Small</figcaption></figure>
+          </div>
+        </div>
+        <p><strong>Filter settings:</strong> Messi high-pass <code>σhigh = 6</code> and Lion low-pass <code>σlow = 8</code>.</p>
         <div class="source-plate-grid">
           <figure><img src="messi.png" alt="Original Lionel Messi portrait"><figcaption>Original Messi</figcaption></figure>
           <figure><img src="lion.png" alt="Original lion image"><figcaption>Original lion</figcaption></figure>

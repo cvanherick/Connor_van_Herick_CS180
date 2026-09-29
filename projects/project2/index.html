@@ -404,9 +404,22 @@ next_level = blur_image(previous_level)</code></pre>
           <article class="project-card">
             <div class="project-card-body">
               <h3>Part 2.4: Multiresolution Blending</h3>
-              <p>Writeup and visualizations to be added.</p>
+              <p>I started with a vertical-seam blend of a lion and a tiger. Both images are center-cropped to a shared square canvas, then a left-half step mask selects the lion and the right half selects the tiger. The mask is blurred at every Gaussian-stack level so the final seam changes gradually instead of creating a hard edge.</p>
+              <pre><code>mask = vertical_mask(lion.shape)
+mask_stack = gaussian_stack(mask, 4)
+blended_level = (
+    mask_level * lion_laplacian_level
+    + (1 - mask_level) * tiger_laplacian_level
+)
+blend = sum(blended_laplacian)</code></pre>
             </div>
           </article>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="lion_tiger_prepared_inputs.png" alt="Prepared square lion and tiger inputs for vertical seam blending"><figcaption>Prepared lion and tiger inputs</figcaption></figure>
+          <figure><img src="lion_tiger_vertical_mask.png" alt="Vertical half-image mask for the lion and tiger blend"><figcaption>Vertical seam mask</figcaption></figure>
+          <figure><img src="lion_tiger_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the lion and tiger blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
+          <figure><img src="lion_tiger_blend.png" alt="Final multiresolution blend of a lion and tiger"><figcaption>Final lion/tiger blend</figcaption></figure>
         </div>
       </section>
     </main>

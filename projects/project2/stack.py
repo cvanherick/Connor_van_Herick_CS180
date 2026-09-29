@@ -147,30 +147,35 @@ def save_oraple_blend(orange_laplacian, apple_laplacian, mask_stack, filename):
     return blended_laplacian
 
 
-orange = load_image("orange.jpeg")
-apple = load_image("apple.jpeg")
-orange_gaussian = gaussian_stack(orange, STACK_LEVELS)
-apple_gaussian = gaussian_stack(apple, STACK_LEVELS)
-orange_laplacian = laplacian_stack(orange_gaussian)
-apple_laplacian = laplacian_stack(apple_gaussian)
+def create_oraple_outputs():
+    orange = load_image("orange.jpeg")
+    apple = load_image("apple.jpeg")
+    orange_gaussian = gaussian_stack(orange, STACK_LEVELS)
+    apple_gaussian = gaussian_stack(apple, STACK_LEVELS)
+    orange_laplacian = laplacian_stack(orange_gaussian)
+    apple_laplacian = laplacian_stack(apple_gaussian)
 
-save_gaussian_stack(
-    [("Orange", orange_gaussian), ("Apple", apple_gaussian)],
-    "gaussian_stacks.png",
-)
-save_laplacian_stack(
-    [("Orange", orange_laplacian), ("Apple", apple_laplacian)],
-    "laplacian_stacks.png",
-)
+    save_gaussian_stack(
+        [("Orange", orange_gaussian), ("Apple", apple_gaussian)],
+        "gaussian_stacks.png",
+    )
+    save_laplacian_stack(
+        [("Orange", orange_laplacian), ("Apple", apple_laplacian)],
+        "laplacian_stacks.png",
+    )
 
-mask = np.zeros_like(orange)
-mask[:, :mask.shape[1] // 2, :] = 1
-mask_stack = gaussian_stack(mask, STACK_LEVELS)
-blended_laplacian = save_oraple_blend(
-    orange_laplacian,
-    apple_laplacian,
-    mask_stack,
-    "oraple_laplacian_blend.png",
-)
-oraple = np.clip(sum(blended_laplacian), 0, 1)
-plt.imsave(PROJECT_DIR / "oraple.png", oraple)
+    mask = np.zeros_like(orange)
+    mask[:, :mask.shape[1] // 2, :] = 1
+    mask_stack = gaussian_stack(mask, STACK_LEVELS)
+    blended_laplacian = save_oraple_blend(
+        orange_laplacian,
+        apple_laplacian,
+        mask_stack,
+        "oraple_laplacian_blend.png",
+    )
+    oraple = np.clip(sum(blended_laplacian), 0, 1)
+    plt.imsave(PROJECT_DIR / "oraple.png", oraple)
+
+
+if __name__ == "__main__":
+    create_oraple_outputs()

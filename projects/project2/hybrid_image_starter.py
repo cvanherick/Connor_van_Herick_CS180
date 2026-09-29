@@ -12,7 +12,7 @@ from align_image_code import align_images, match_img_size, rescale_images
 
 PROJECT_DIR = Path(__file__).resolve().parent
 MAX_IMAGE_SIZE = 700
-INTERACTIVE_FULL_ALIGNMENT = os.environ.get("HYBRID_INTERACTIVE_ALIGNMENT", "1") == "1"
+INTERACTIVE_ALIGNMENT = os.environ.get("HYBRID_INTERACTIVE_ALIGNMENT", "1") == "1"
 
 
 def load_image(filename):
@@ -119,12 +119,14 @@ def hybrid_image(
     high_points,
     low_points,
     alpha=1,
+    label="image pair",
 ):
-    high_aligned, low_aligned = align_with_points(
+    high_aligned, low_aligned = align_pair(
         high_image,
         low_image,
         high_points,
         low_points,
+        label,
     )
     hybrid, high_frequency, low_frequency = hybrid_from_aligned(
         high_aligned,
@@ -194,11 +196,12 @@ def save_cutoff_experiment(high_aligned, low_aligned, filename, title):
     plt.close(fig)
 
 
-def align_full_analysis_pair(im1, im2, manual_points):
-    if INTERACTIVE_FULL_ALIGNMENT:
+def align_pair(im1, im2, im1_points, im2_points, label="image pair"):
+    if INTERACTIVE_ALIGNMENT:
+        print(f"Aligning {label}.")
         print("Click two corresponding points in the first image, then the same two points in the second image.")
         return align_images(im1, im2)
-    return align_with_points(im1, im2, manual_points[0], manual_points[1])
+    return align_with_points(im1, im2, im1_points, im2_points)
 
 
 # The point pairs are normalized (x, y) coordinates for the two eyes in each image.
@@ -214,6 +217,7 @@ nutmeg_derek = hybrid_image(
     sigma_low=8,
     high_points=nutmeg_points,
     low_points=derek_points,
+    label="Nutmeg and Derek",
 )
 nutmeg_derek_hybrid, nutmeg_aligned, derek_aligned, nutmeg_high, derek_low = nutmeg_derek
 save_image(nutmeg_aligned, "Nutmeg aligned", "nutmeg_aligned.png")
@@ -244,6 +248,7 @@ connor_snow, _, _, _, _ = hybrid_image(
     sigma_low=6,
     high_points=((0.44, 0.45), (0.57, 0.44)),
     low_points=((0.40, 0.44), (0.62, 0.44)),
+    label="Connor and Snow",
 )
 save_image(connor_snow, "Connor + Snow hybrid", "connor_snow_hybrid.png")
 
@@ -256,16 +261,19 @@ tiger_lion, _, _, _, _ = hybrid_image(
     sigma_low=7,
     high_points=((0.38, 0.42), (0.61, 0.42)),
     low_points=((0.39, 0.50), (0.61, 0.50)),
+    label="Tiger and lion",
 )
 save_image(tiger_lion, "Tiger + Lion hybrid", "tiger_lion_hybrid.png")
 
 messi = load_image("messi.png")
 messi_points = ((0.42, 0.40), (0.53, 0.40))
 lion_points = ((0.39, 0.50), (0.61, 0.50))
-messi_aligned, lion_aligned = align_full_analysis_pair(
+messi_aligned, lion_aligned = align_pair(
     messi,
     lion,
-    (messi_points, lion_points),
+    messi_points,
+    lion_points,
+    label="Messi and lion",
 )
 messi_lion, messi_high, lion_low = hybrid_from_aligned(
     messi_aligned,

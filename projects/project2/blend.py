@@ -42,6 +42,37 @@ def horizontal_mask(shape):
     return mask
 
 
+def upper_semicircle_mask(shape):
+    height, width = shape[:2]
+    y, x = np.mgrid[:height, :width]
+    cx = width / 2
+    cy = height * 0.52
+    rx = width * 0.52
+    ry = height * 0.50
+    semicircle = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
+    semicircle &= y <= cy
+    return np.repeat(semicircle[:, :, None].astype(float), 3, axis=2)
+
+
+def scale_center_crop(image, scale):
+    height, width = image.shape[:2]
+    resized = cv2.resize(
+        image,
+        (round(width * scale), round(height * scale)),
+        interpolation=cv2.INTER_CUBIC,
+    )
+    top = (resized.shape[0] - height) // 2
+    left = (resized.shape[1] - width) // 2
+    return resized[top:top + height, left:left + width]
+
+
+def remove_dark_background(foreground, background):
+    brightness = np.max(foreground, axis=2)
+    alpha = np.clip((brightness - 0.015) / 0.16, 0, 1)
+    alpha = cv2.GaussianBlur(alpha, (0, 0), 3)[:, :, None]
+    return alpha * foreground + (1 - alpha) * background
+
+
 def multiresolution_blend(left_image, right_image, mask):
     left_laplacian = laplacian_stack(gaussian_stack(left_image, STACK_LEVELS))
     right_laplacian = laplacian_stack(gaussian_stack(right_image, STACK_LEVELS))
@@ -156,12 +187,14 @@ plt.imsave(PROJECT_DIR / "lion_tiger_blend.png", lion_tiger)
 
 sunflower = prepare_image("sunflower.png")
 explosion = prepare_image("explosion.png")
-sunflower_mask = horizontal_mask(sunflower.shape)
+explosion_for_blend = scale_center_crop(explosion, 1.35)
+explosion_for_blend = remove_dark_background(explosion_for_blend, sunflower)
+sunflower_mask = upper_semicircle_mask(sunflower.shape)
 sunflower_mask_stack = gaussian_stack(sunflower_mask, STACK_LEVELS)
-explosion_laplacian = laplacian_stack(gaussian_stack(explosion, STACK_LEVELS))
+explosion_laplacian = laplacian_stack(gaussian_stack(explosion_for_blend, STACK_LEVELS))
 flower_laplacian = laplacian_stack(gaussian_stack(sunflower, STACK_LEVELS))
 _, sunflower_explosion = multiresolution_blend(
-    explosion,
+    explosion_for_blend,
     sunflower,
     sunflower_mask,
 )
@@ -173,7 +206,7 @@ save_pair(
     "Prepared sunflower",
     "Prepared explosion",
 )
-save_mask(sunflower_mask, "sunflower_explosion_horizontal_mask.png")
+save_mask(sunflower_mask, "sunflower_explosion_semicircle_mask.png")
 save_blend_process(
     explosion_laplacian,
     flower_laplacian,
@@ -181,6 +214,6 @@ save_blend_process(
     "sunflower_explosion_laplacian_blend.png",
     "Explosion",
     "Sunflower",
-    "Explosion top / sunflower bottom blend",
+    "Explosion in upper semicircle / sunflower background",
 )
 plt.imsave(PROJECT_DIR / "sunflower_explosion_blend.png", sunflower_explosion)

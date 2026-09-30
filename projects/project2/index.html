@@ -85,6 +85,74 @@
         line-height: 1;
       }
 
+      #part-2 .part-two-block {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+        margin-top: 2.5rem;
+        padding: clamp(1.25rem, 3vw, 2.25rem);
+      }
+
+      #part-2 .part-two-block > h3 {
+        border-bottom: 1px solid var(--border);
+        margin-top: 0;
+        padding-bottom: 0.8rem;
+      }
+
+      #part-2 .part-two-block > h4 {
+        margin-top: 2.25rem;
+      }
+
+      #part-2 .analysis-grid,
+      #part-2 .blend-grid {
+        max-width: none;
+        width: 100%;
+      }
+
+      #part-2 .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #part-2 .analysis-grid img {
+        height: auto;
+        max-height: none;
+      }
+
+      #part-2 .blend-example {
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-top: 1.5rem;
+        padding: clamp(1rem, 2.5vw, 1.6rem);
+      }
+
+      #part-2 .blend-example > h4 {
+        margin-top: 0;
+      }
+
+      #part-2 .blend-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 1.25rem;
+      }
+
+      #part-2 .blend-grid img {
+        height: 320px;
+      }
+
+      #part-2 .blend-grid .blend-process,
+      #part-2 .blend-grid .blend-final {
+        grid-column: 1 / -1;
+      }
+
+      #part-2 .blend-grid .blend-process img {
+        height: min(72vh, 720px);
+      }
+
+      #part-2 .blend-grid .blend-final img {
+        height: min(68vh, 620px);
+      }
+
       @media (max-width: 700px) {
         #part-2 .final-hybrid-figure img {
           height: 360px;
@@ -98,6 +166,22 @@
 
         #part-2 .hybrid-pyramid-originals figure {
           width: calc(50% - 0.45rem);
+        }
+
+        #part-2 .blend-grid {
+          grid-template-columns: 1fr;
+        }
+
+        #part-2 .blend-grid .blend-process,
+        #part-2 .blend-grid .blend-final {
+          grid-column: auto;
+        }
+
+        #part-2 .blend-grid img,
+        #part-2 .blend-grid .blend-process img,
+        #part-2 .blend-grid .blend-final img {
+          height: auto;
+          max-height: 520px;
         }
       }
     </style>
@@ -266,6 +350,7 @@ dog_dy = convolve_two_for_loops(camera_image, DoG_y)</code></pre>
         <div class="section-heading">
           <h2 id="part-2-title">Part 2</h2>
         </div>
+        <article class="part-two-block" id="part-2-1">
         <h3>Part 2.1: Image “Sharpening”</h3>
         <div class="writeup-copy">
           <p>An unsharp mask sharpens an image by emphasizing the high-frequency details that are reduced by blur. I first convolve the grayscale image with a 9 × 9 Gaussian filter to create a blurred, low-frequency version. Subtracting this blurred image from the original isolates the high-frequency residual, which contains edges and fine texture. Adding a scaled version of that residual back to the original produces the sharpened image.</p>
@@ -292,6 +377,8 @@ sharpened = np.clip(image + alpha * high_frequency, 0, 255)</code></pre>
           <figure><img src="climber_sharpened_2.png" alt="Climber image sharpened with alpha 2"><figcaption>Sharpened, α = 2</figcaption></figure>
           <figure><img src="climber_sharpened_4.png" alt="Climber image sharpened with alpha 4"><figcaption>Sharpened, α = 4</figcaption></figure>
         </div>
+        </article>
+        <article class="part-two-block" id="part-2-2">
         <h3>Part 2.2: Hybrid Images</h3>
         <div class="writeup-copy">
           <p>A hybrid image combines the low frequencies of one aligned image with the high frequencies of another. I create the low-frequency component by Gaussian-blurring the second image. For the high-frequency component, I subtract a Gaussian-blurred version of the first image from the original. Adding the two filtered components produces an image that changes appearance with viewing distance: nearby, the high-frequency image is more visible; farther away, the low-frequency image dominates.</p>
@@ -380,6 +467,8 @@ hybrid = np.clip(low_frequency + high_frequency, 0, 1)</code></pre>
           <figure><img src="lion_low_fourier.png" alt="Log magnitude Fourier transform of the lion low-pass image"><figcaption>Lion low-pass frequencies</figcaption></figure>
           <figure><img src="messi_lion_hybrid_fourier.png" alt="Log magnitude Fourier transform of the Messi and lion hybrid"><figcaption>Hybrid frequencies</figcaption></figure>
         </div>
+        </article>
+        <article class="part-two-block" id="part-2-3">
         <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
         <div class="writeup-copy">
           <p>A stack keeps every level at the original image dimensions. I built the Gaussian stack by repeatedly applying a 9 × 9 Gaussian filter with <code>sigma = 8</code> without downsampling. Each Laplacian level is the difference between two neighboring Gaussian levels, with the final Gaussian level stored as the low-frequency residual.</p>
@@ -389,58 +478,53 @@ laplacian_levels = laplacian_stack(gaussian_levels)
 # No pyrDown or pyramid_gaussian is used:
 next_level = blur_image(previous_level)</code></pre>
         </div>
-        <div class="source-plate-grid">
+        <div class="source-plate-grid analysis-grid">
           <figure><img src="gaussian_stacks.png" alt="Gaussian stacks for the orange and apple images"><figcaption>Gaussian stacks: all levels have the original dimensions</figcaption></figure>
           <figure><img src="laplacian_stacks.png" alt="Laplacian stacks for the orange and apple images"><figcaption>Laplacian stacks: detail levels and low-frequency residual</figcaption></figure>
         </div>
         <div class="writeup-copy">
           <p>For the Oraple, I used a left-half mask for the apple and a right-half mask for the orange. I blurred the mask at every stack level, combined the corresponding Laplacian levels, and summed the combined stack to reconstruct the final image. Blending at multiple frequencies avoids the hard seam produced by directly joining the two originals.</p>
         </div>
-        <div class="source-plate-grid">
-          <figure><img src="oraple_laplacian_blend.png" alt="Laplacian-stack contributions and combined levels used to create the Oraple"><figcaption>Oraple blend at each Laplacian level</figcaption></figure>
-          <figure><img src="oraple.png" alt="Final reconstructed Oraple made from an orange and an apple"><figcaption>Final reconstructed Oraple</figcaption></figure>
+        <div class="source-plate-grid blend-grid">
+          <figure class="blend-process"><img src="oraple_laplacian_blend.png" alt="Laplacian-stack contributions and combined levels used to create the Oraple"><figcaption>Oraple blend at each Laplacian level</figcaption></figure>
+          <figure class="blend-final"><img src="oraple.png" alt="Final reconstructed Oraple made from an orange and an apple"><figcaption>Final reconstructed Oraple</figcaption></figure>
         </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div class="project-card-body">
-              <h3>Part 2.4: Multiresolution Blending</h3>
-              <p>I started with a vertical-seam blend of a lion and a tiger. Both images are center-cropped to a shared square canvas, then a left-half step mask selects the lion and the right half selects the tiger. The mask is blurred at every Gaussian-stack level so the final seam changes gradually instead of creating a hard edge.</p>
-              <pre><code>mask = vertical_mask(lion.shape)
+        </article>
+
+        <article class="part-two-block" id="part-2-4">
+          <h3>Part 2.4: Multiresolution Blending</h3>
+          <div class="writeup-copy">
+            <p>I combine corresponding Laplacian levels from two images using a Gaussian stack of the mask. The progressively blurred masks distribute the seam across spatial frequencies, producing a smoother transition than direct pixel splicing.</p>
+          </div>
+
+          <section class="blend-example">
+            <h4>Lion + Tiger: vertical seam</h4>
+            <p>Both images are center-cropped to a shared square canvas. A left-half step mask selects the lion and the right half selects the tiger.</p>
+            <pre><code>mask = vertical_mask(lion.shape)
 mask_stack = gaussian_stack(mask, 4)
-blended_level = (
-    mask_level * lion_laplacian_level
-    + (1 - mask_level) * tiger_laplacian_level
-)
-blend = sum(blended_laplacian)</code></pre>
+blend = multiresolution_blend(lion, tiger, mask)</code></pre>
+            <div class="source-plate-grid blend-grid">
+              <figure><img src="lion_tiger_prepared_inputs.png" alt="Prepared square lion and tiger inputs for vertical seam blending"><figcaption>Prepared inputs</figcaption></figure>
+              <figure><img src="lion_tiger_vertical_mask.png" alt="Vertical half-image mask for the lion and tiger blend"><figcaption>Vertical seam mask</figcaption></figure>
+              <figure class="blend-process"><img src="lion_tiger_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the lion and tiger blend"><figcaption>Laplacian-stack process</figcaption></figure>
+              <figure class="blend-final"><img src="lion_tiger_blend.png" alt="Final multiresolution blend of a lion and tiger"><figcaption>Final lion/tiger blend</figcaption></figure>
             </div>
-          </article>
-        </div>
-        <div class="source-plate-grid">
-          <figure><img src="lion_tiger_prepared_inputs.png" alt="Prepared square lion and tiger inputs for vertical seam blending"><figcaption>Prepared lion and tiger inputs</figcaption></figure>
-          <figure><img src="lion_tiger_vertical_mask.png" alt="Vertical half-image mask for the lion and tiger blend"><figcaption>Vertical seam mask</figcaption></figure>
-          <figure><img src="lion_tiger_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the lion and tiger blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
-          <figure><img src="lion_tiger_blend.png" alt="Final multiresolution blend of a lion and tiger"><figcaption>Final lion/tiger blend</figcaption></figure>
-        </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div class="project-card-body">
-              <h3>Semicircle blend: explosion and sunflower</h3>
-              <p>I used the standalone explosion and sunflower as the two baseline images. I enlarged the explosion and selected it with a broad upper semicircle approximately the size of the flower’s top half. The sunflower remains visible outside the semicircle and throughout the lower half.</p>
-              <pre><code>explosion = scale_center_crop(explosion, 1.35)
+          </section>
+
+          <section class="blend-example">
+            <h4>Explosion + Sunflower: curved seam</h4>
+            <p>The enlarged explosion fully covers the upper half, so no sunflower petals show through there. A wide lower semicircle extends the explosion into the center while preserving the sunflower around the lower curved boundary.</p>
+            <pre><code>explosion = scale_center_crop(explosion, 1.35)
 mask = upper_semicircle_mask(sunflower.shape)
-mask_stack = gaussian_stack(mask, 4)
-blend = multiresolution_blend(
-    explosion, sunflower, mask
-)</code></pre>
+blend = multiresolution_blend(explosion, sunflower, mask)</code></pre>
+            <div class="source-plate-grid blend-grid">
+              <figure><img src="sunflower_explosion_prepared_inputs.png" alt="Prepared sunflower and explosion inputs"><figcaption>Prepared inputs</figcaption></figure>
+              <figure><img src="sunflower_explosion_semicircle_mask.png" alt="Mask covering the full upper half with a curved lower semicircle"><figcaption>Upper-half semicircle mask</figcaption></figure>
+              <figure class="blend-process"><img src="sunflower_explosion_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the sunflower and explosion blend"><figcaption>Laplacian-stack process</figcaption></figure>
+              <figure class="blend-final"><img src="sunflower_explosion_blend.png" alt="Final blend with an opaque explosion across the top half and sunflower below"><figcaption>Explosion above, sunflower below</figcaption></figure>
             </div>
-          </article>
-        </div>
-        <div class="source-plate-grid">
-          <figure><img src="sunflower_explosion_prepared_inputs.png" alt="Prepared sunflower and explosion inputs"><figcaption>Prepared sunflower and explosion inputs</figcaption></figure>
-          <figure><img src="sunflower_explosion_semicircle_mask.png" alt="Large upper semicircle mask approximately matching the top half of the sunflower"><figcaption>Large upper semicircle mask</figcaption></figure>
-          <figure><img src="sunflower_explosion_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the sunflower and explosion blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
-          <figure><img src="sunflower_explosion_blend.png" alt="Final blend with an enlarged explosion in the flower's upper semicircle"><figcaption>Explosion in the upper flower semicircle</figcaption></figure>
-        </div>
+          </section>
+        </article>
       </section>
     </main>
 

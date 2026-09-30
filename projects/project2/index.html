@@ -512,18 +512,27 @@ blend = multiresolution_blend(lion, tiger, mask)</code></pre>
 
           <section class="blend-example">
             <h4>Explosion + Sunflower: curved seam</h4>
-            <p>I enlarged the standalone explosion and placed it inside a wide upper semicircle that covers the full flower head. The explosion keeps its own dark background; the sunflower appears only outside the curved mask and below it.</p>
+            <p>I enlarged the standalone explosion and gave its lower edge an upward arch, revealing the sunflower’s center beneath the curve. The explosion keeps its own dark background, while the sunflower remains visible below the arch and around its outer edges.</p>
             <pre><code>explosion = scale_center_crop(explosion, 1.8)
 mask = upper_semicircle_mask(sunflower.shape)
 blend = multiresolution_blend(explosion, sunflower, mask)</code></pre>
             <div class="source-plate-grid blend-grid">
               <figure><img src="sunflower_explosion_prepared_inputs.png" alt="Prepared sunflower and explosion inputs"><figcaption>Prepared inputs</figcaption></figure>
-              <figure><img src="sunflower_explosion_semicircle_mask.png" alt="Mask covering the full upper half with a curved lower semicircle"><figcaption>Upper-half semicircle mask</figcaption></figure>
+              <figure><img src="sunflower_explosion_semicircle_mask.png" alt="Mask with an upward arch in its lower edge to reveal the sunflower center"><figcaption>Upward-curving mask</figcaption></figure>
               <figure class="blend-process"><img src="sunflower_explosion_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the sunflower and explosion blend"><figcaption>Laplacian-stack process</figcaption></figure>
-              <figure class="blend-final"><img src="sunflower_explosion_blend.png" alt="Final blend with an opaque explosion across the top half and sunflower below"><figcaption>Explosion above, sunflower below</figcaption></figure>
+              <figure class="blend-final"><img src="sunflower_explosion_blend.png" alt="Explosion with an upward-curving lower edge revealing the sunflower center"><figcaption>Explosion arching above the sunflower center</figcaption></figure>
             </div>
           </section>
         </article>
+      </section>
+
+      <section class="section writeup-section" aria-labelledby="reflection-title">
+        <div class="section-heading">
+          <h2 id="reflection-title">What I Learned</h2>
+        </div>
+        <div class="writeup-copy">
+          <p>The most interesting part of the project for me was learning how easy it is to manipulate human perception using computer-generated content. Although we were doing it on a small scale, it made me consider how powerful current AI tools are in creating deepfakes and convincing people that falsified images are real. I thought that the merged high- and low-frequency images were super fun, and I will create more of them in the future!</p>
+        </div>
       </section>
     </main>
 

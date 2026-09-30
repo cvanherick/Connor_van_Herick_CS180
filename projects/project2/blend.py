@@ -47,8 +47,8 @@ def upper_semicircle_mask(shape):
     y, x = np.mgrid[:height, :width]
     cx = width / 2
     cy = height * 0.50
-    rx = width * 0.72
-    rise = height * 0.18
+    rx = width * 0.50
+    rise = height * 0.24
     normalized_x = np.clip((x - cx) / rx, -1, 1)
     boundary = cy - rise * np.sqrt(1 - normalized_x ** 2)
     mask = y <= boundary

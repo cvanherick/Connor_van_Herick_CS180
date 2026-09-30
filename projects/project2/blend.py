@@ -46,13 +46,13 @@ def upper_semicircle_mask(shape):
     height, width = shape[:2]
     y, x = np.mgrid[:height, :width]
     cx = width / 2
-    cy = height * 0.50
+    cy = height * 0.48
     rx = width * 0.72
-    ry = height * 0.30
+    ry = height * 0.10
     top_half = y <= cy
-    lower_semicircle = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
-    lower_semicircle &= y > cy
-    mask = top_half | lower_semicircle
+    shallow_semicircle = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
+    shallow_semicircle &= y > cy
+    mask = top_half | shallow_semicircle
     return np.repeat(mask[:, :, None].astype(float), 3, axis=2)
 
 

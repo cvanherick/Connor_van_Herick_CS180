@@ -513,8 +513,8 @@ blend = multiresolution_blend(lion, tiger, mask)</code></pre>
 
           <section class="blend-example">
             <h4>Explosion + Sunflower: curved seam</h4>
-            <p>The enlarged explosion fully covers the upper half, so no sunflower petals show through there. A wide lower semicircle extends the explosion into the center while preserving the sunflower around the lower curved boundary.</p>
-            <pre><code>explosion = scale_center_crop(explosion, 1.35)
+            <p>I enlarged the standalone explosion and placed it inside a wide upper semicircle that covers the full flower head. The explosion keeps its own dark background; the sunflower appears only outside the curved mask and below it.</p>
+            <pre><code>explosion = scale_center_crop(explosion, 1.8)
 mask = upper_semicircle_mask(sunflower.shape)
 blend = multiresolution_blend(explosion, sunflower, mask)</code></pre>
             <div class="source-plate-grid blend-grid">

@@ -46,9 +46,9 @@ def upper_semicircle_mask(shape):
     height, width = shape[:2]
     y, x = np.mgrid[:height, :width]
     cx = width / 2
-    cy = height * 0.48
-    rx = width * 0.55
-    ry = height * 0.18
+    cy = height * 0.50
+    rx = width * 0.72
+    ry = height * 0.30
     top_half = y <= cy
     lower_semicircle = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
     lower_semicircle &= y > cy
@@ -182,7 +182,7 @@ plt.imsave(PROJECT_DIR / "lion_tiger_blend.png", lion_tiger)
 
 sunflower = prepare_image("sunflower.png")
 explosion = prepare_image("explosion.png")
-explosion_for_blend = scale_center_crop(explosion, 1.35)
+explosion_for_blend = scale_center_crop(explosion, 1.8)
 sunflower_mask = upper_semicircle_mask(sunflower.shape)
 sunflower_mask_stack = gaussian_stack(sunflower_mask, STACK_LEVELS)
 explosion_laplacian = laplacian_stack(gaussian_stack(explosion_for_blend, STACK_LEVELS))

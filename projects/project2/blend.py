@@ -36,6 +36,26 @@ def vertical_mask(shape):
     return mask
 
 
+def semicircle_mask(shape, center=(0.5, 0.60), radius=(0.52, 0.54)):
+    height, width = shape[:2]
+    y, x = np.mgrid[:height, :width]
+    cx = center[0] * width
+    cy = center[1] * height
+    rx = radius[0] * width
+    ry = radius[1] * height
+    upper_semicircle = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1
+    upper_semicircle &= y <= cy
+    return np.repeat(upper_semicircle[:, :, None].astype(float), 3, axis=2)
+
+
+def remove_dark_background(foreground, background):
+    """Keep bright explosion pixels and use the sunflower behind dark pixels."""
+    brightness = np.max(foreground, axis=2)
+    alpha = np.clip((brightness - 0.015) / 0.16, 0, 1)
+    alpha = cv2.GaussianBlur(alpha, (0, 0), 3)[:, :, None]
+    return alpha * foreground + (1 - alpha) * background
+
+
 def multiresolution_blend(left_image, right_image, mask):
     left_laplacian = laplacian_stack(gaussian_stack(left_image, STACK_LEVELS))
     right_laplacian = laplacian_stack(gaussian_stack(right_image, STACK_LEVELS))
@@ -52,12 +72,12 @@ def multiresolution_blend(left_image, right_image, mask):
     return blended_laplacian, np.clip(sum(blended_laplacian), 0, 1)
 
 
-def save_pair(left_image, right_image, filename):
+def save_pair(left_image, right_image, filename, left_title, right_title):
     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
     for axis, image, title in zip(
         axes,
         (left_image, right_image),
-        ("Prepared lion", "Prepared tiger"),
+        (left_title, right_title),
     ):
         axis.imshow(np.clip(image, 0, 1))
         axis.set_title(title)
@@ -71,7 +91,15 @@ def save_mask(mask, filename):
     plt.imsave(PROJECT_DIR / filename, mask[:, :, 0], cmap="gray", vmin=0, vmax=1)
 
 
-def save_blend_process(left_laplacian, right_laplacian, mask_stack, filename):
+def save_blend_process(
+    left_laplacian,
+    right_laplacian,
+    mask_stack,
+    filename,
+    left_title,
+    right_title,
+    figure_title,
+):
     fig, axes = plt.subplots(len(left_laplacian), 3, figsize=(14, 18))
     for level, (left_level, right_level, mask_level) in enumerate(
         zip(left_laplacian, right_laplacian, mask_stack)
@@ -103,10 +131,10 @@ def save_blend_process(left_laplacian, right_laplacian, mask_stack, filename):
             axes[level, column].axis("off")
         axes[level, 0].set_ylabel(label, rotation=90, size=11)
 
-    axes[0, 0].set_title("Lion contribution")
-    axes[0, 1].set_title("Tiger contribution")
+    axes[0, 0].set_title(f"{left_title} contribution")
+    axes[0, 1].set_title(f"{right_title} contribution")
     axes[0, 2].set_title("Combined level")
-    fig.suptitle("Lion/Tiger multiresolution blend")
+    fig.suptitle(figure_title)
     fig.tight_layout()
     fig.savefig(PROJECT_DIR / filename, dpi=180, bbox_inches="tight")
     plt.close(fig)
@@ -120,12 +148,54 @@ lion_laplacian = laplacian_stack(gaussian_stack(lion, STACK_LEVELS))
 tiger_laplacian = laplacian_stack(gaussian_stack(tiger, STACK_LEVELS))
 _, lion_tiger = multiresolution_blend(lion, tiger, mask)
 
-save_pair(lion, tiger, "lion_tiger_prepared_inputs.png")
+save_pair(
+    lion,
+    tiger,
+    "lion_tiger_prepared_inputs.png",
+    "Prepared lion",
+    "Prepared tiger",
+)
 save_mask(mask, "lion_tiger_vertical_mask.png")
 save_blend_process(
     lion_laplacian,
     tiger_laplacian,
     mask_stack,
     "lion_tiger_laplacian_blend.png",
+    "Lion",
+    "Tiger",
+    "Lion/Tiger multiresolution blend",
 )
 plt.imsave(PROJECT_DIR / "lion_tiger_blend.png", lion_tiger)
+
+
+sunflower = prepare_image("sunflower.png")
+explosion = prepare_image("explosion.png")
+explosion = remove_dark_background(explosion, sunflower)
+sunflower_mask = semicircle_mask(sunflower.shape)
+sunflower_mask_stack = gaussian_stack(sunflower_mask, STACK_LEVELS)
+explosion_laplacian = laplacian_stack(gaussian_stack(explosion, STACK_LEVELS))
+flower_laplacian = laplacian_stack(gaussian_stack(sunflower, STACK_LEVELS))
+_, sunflower_explosion = multiresolution_blend(
+    explosion,
+    sunflower,
+    sunflower_mask,
+)
+
+save_pair(
+    sunflower,
+    explosion,
+    "sunflower_explosion_prepared_inputs.png",
+    "Prepared sunflower",
+    "Prepared explosion",
+)
+save_mask(sunflower_mask, "sunflower_explosion_semicircle_mask.png")
+save_blend_process(
+    explosion_laplacian,
+    flower_laplacian,
+    sunflower_mask_stack,
+    "sunflower_explosion_laplacian_blend.png",
+    "Explosion",
+    "Sunflower",
+    "Sunflower/explosion semicircle blend",
+)
+plt.imsave(PROJECT_DIR / "sunflower_explosion_blend.png", sunflower_explosion)

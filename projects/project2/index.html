@@ -421,6 +421,25 @@ blend = sum(blended_laplacian)</code></pre>
           <figure><img src="lion_tiger_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the lion and tiger blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
           <figure><img src="lion_tiger_blend.png" alt="Final multiresolution blend of a lion and tiger"><figcaption>Final lion/tiger blend</figcaption></figure>
         </div>
+        <div class="project-grid">
+          <article class="project-card">
+            <div class="project-card-body">
+              <h3>Irregular mask: sunflower and explosion</h3>
+              <p>For a non-linear mask, I used the sunflower’s petal ring to define an upper semicircle. The explosion replaces the upper flower region, while the original sunflower remains below the curved boundary. I also used the sunflower behind the dark background pixels of the explosion so the inserted region does not become a rectangular black patch.</p>
+              <pre><code>mask = semicircle_mask(sunflower.shape)
+mask_stack = gaussian_stack(mask, 4)
+blend = multiresolution_blend(
+    explosion, sunflower, mask
+)</code></pre>
+            </div>
+          </article>
+        </div>
+        <div class="source-plate-grid">
+          <figure><img src="sunflower_explosion_prepared_inputs.png" alt="Prepared sunflower and explosion inputs"><figcaption>Prepared sunflower and explosion inputs</figcaption></figure>
+          <figure><img src="sunflower_explosion_semicircle_mask.png" alt="Semicircle mask following the upper petal region of the sunflower"><figcaption>Semicircle petal mask</figcaption></figure>
+          <figure><img src="sunflower_explosion_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the sunflower and explosion blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
+          <figure><img src="sunflower_explosion_blend.png" alt="Final sunflower with an explosion blended into the upper semicircle"><figcaption>Final sunflower/explosion blend</figcaption></figure>
+        </div>
       </section>
     </main>
 

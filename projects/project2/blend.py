@@ -48,6 +48,44 @@ def semicircle_mask(shape, center=(0.5, 0.60), radius=(0.52, 0.54)):
     return np.repeat(upper_semicircle[:, :, None].astype(float), 3, axis=2)
 
 
+def petal_trace_mask(shape):
+    """Fill the area above a traced, wavy boundary following the petal ring."""
+    height, width = shape[:2]
+    trace = np.array([
+        (0.00, 0.50),
+        (0.07, 0.53),
+        (0.14, 0.47),
+        (0.21, 0.53),
+        (0.29, 0.47),
+        (0.37, 0.52),
+        (0.45, 0.47),
+        (0.53, 0.52),
+        (0.61, 0.47),
+        (0.69, 0.53),
+        (0.77, 0.47),
+        (0.84, 0.53),
+        (0.92, 0.47),
+        (1.00, 0.50),
+    ])
+    boundary = [(round(x * (width - 1)), round(y * (height - 1))) for x, y in trace]
+    polygon = [(0, 0), (width - 1, 0)] + list(reversed(boundary))
+    mask = np.zeros((height, width), dtype=np.uint8)
+    cv2.fillPoly(mask, [np.array(polygon, dtype=np.int32)], 1)
+    return np.repeat(mask[:, :, None].astype(float), 3, axis=2)
+
+
+def scale_center_crop(image, scale):
+    height, width = image.shape[:2]
+    resized = cv2.resize(
+        image,
+        (round(width * scale), round(height * scale)),
+        interpolation=cv2.INTER_CUBIC,
+    )
+    top = (resized.shape[0] - height) // 2
+    left = (resized.shape[1] - width) // 2
+    return resized[top:top + height, left:left + width]
+
+
 def remove_dark_background(foreground, background):
     """Keep bright explosion pixels and use the sunflower behind dark pixels."""
     brightness = np.max(foreground, axis=2)
@@ -170,8 +208,8 @@ plt.imsave(PROJECT_DIR / "lion_tiger_blend.png", lion_tiger)
 
 sunflower = prepare_image("sunflower.png")
 explosion = prepare_image("explosion.png")
-explosion = remove_dark_background(explosion, sunflower)
-sunflower_mask = semicircle_mask(sunflower.shape)
+explosion = scale_center_crop(explosion, 1.30)
+sunflower_mask = petal_trace_mask(sunflower.shape)
 sunflower_mask_stack = gaussian_stack(sunflower_mask, STACK_LEVELS)
 explosion_laplacian = laplacian_stack(gaussian_stack(explosion, STACK_LEVELS))
 flower_laplacian = laplacian_stack(gaussian_stack(sunflower, STACK_LEVELS))
@@ -188,7 +226,7 @@ save_pair(
     "Prepared sunflower",
     "Prepared explosion",
 )
-save_mask(sunflower_mask, "sunflower_explosion_semicircle_mask.png")
+save_mask(sunflower_mask, "sunflower_explosion_petal_mask.png")
 save_blend_process(
     explosion_laplacian,
     flower_laplacian,

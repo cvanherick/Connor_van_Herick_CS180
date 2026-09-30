@@ -424,9 +424,9 @@ blend = sum(blended_laplacian)</code></pre>
         <div class="project-grid">
           <article class="project-card">
             <div class="project-card-body">
-              <h3>Irregular mask: sunflower and explosion</h3>
-              <p>For a non-linear mask, I traced a larger wavy boundary across the sunflower’s petal ring. The enlarged explosion fills the upper region from the top edge and can extend beyond the flower’s outer boundary, while the original sunflower remains below the traced curve.</p>
-              <pre><code>mask = petal_trace_mask(sunflower.shape)
+              <h3>Horizontal blend: explosion and sunflower</h3>
+              <p>I used the standalone explosion and sunflower as the two baseline images. A horizontal half-image mask selects the top half of the explosion and the bottom half of the sunflower. Blurring the mask at each stack level softens the transition across the center seam.</p>
+              <pre><code>mask = horizontal_mask(sunflower.shape)
 mask_stack = gaussian_stack(mask, 4)
 blend = multiresolution_blend(
     explosion, sunflower, mask
@@ -436,9 +436,9 @@ blend = multiresolution_blend(
         </div>
         <div class="source-plate-grid">
           <figure><img src="sunflower_explosion_prepared_inputs.png" alt="Prepared sunflower and explosion inputs"><figcaption>Prepared sunflower and explosion inputs</figcaption></figure>
-          <figure><img src="sunflower_explosion_petal_mask.png" alt="Larger wavy mask traced from the sunflower petal region"><figcaption>Expanded petal-trace mask</figcaption></figure>
+          <figure><img src="sunflower_explosion_horizontal_mask.png" alt="Horizontal mask selecting the upper half for the explosion"><figcaption>Horizontal half-image mask</figcaption></figure>
           <figure><img src="sunflower_explosion_laplacian_blend.png" alt="Laplacian stack contributions and combined levels for the sunflower and explosion blend"><figcaption>Laplacian-stack blending process</figcaption></figure>
-          <figure><img src="sunflower_explosion_blend.png" alt="Final sunflower with an explosion blended into the upper semicircle"><figcaption>Final sunflower/explosion blend</figcaption></figure>
+          <figure><img src="sunflower_explosion_blend.png" alt="Final blend with the explosion on top and sunflower on the bottom"><figcaption>Explosion top, sunflower bottom</figcaption></figure>
         </div>
       </section>
     </main>

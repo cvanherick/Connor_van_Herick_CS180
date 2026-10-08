@@ -276,12 +276,13 @@
           <p class="p3-note">The subjects, hairstyles, poses, and framing still vary, but all five results converge on polished portrait-style photographs. Guidance changes the generated content as well as its clarity; it does not simply sharpen the earlier images.</p>
         </section>
         <section id="section-3-1" aria-labelledby="section-3-1-title">
-          <h3 id="section-3-1-title">3.1 · Image Editing</h3>
-          <p class="p3-note">Each grid compares an original photograph with the generated results at <i>t</i> = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50. The originals and time labels are preserved in each result grid.</p>
+          <h3 id="section-3-1-title">3.1 · Image-to-Image Editing</h3>
+          <p class="p3-note">To edit an existing image, I interpolate it with noise and then denoise from a chosen starting time using the prompt “a high quality photo.” Inspired by SDEdit, this lets the model reinterpret the input while moving it toward a natural-looking image. Lower starting times retain less of the input and allow larger changes; higher starting times preserve more of its structure.</p>
+          <p class="p3-note">Each grid shows the original input followed by edits at starting times <i>t</i> = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50, read left to right across the top row and then the bottom row. Each <i>t</i> label is the starting time for a separate edit, not a checkpoint along one denoising run. The Campanile is followed by my two additional test-image results: a dog and a forest.</p>
           <h4>Campanile</h4>
           <figure class="p3-wide-figure">
             <img src="assets/editing_campanile.png" width="1593" height="811" loading="lazy" alt="Original Campanile photograph and seven generated results labeled t equals 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50">
-            <figcaption>Campanile: the original is at the upper left, followed by results in increasing time order.</figcaption>
+            <figcaption>Campanile: low starting times produce smooth vertical objects against blue. The belfry arches reappear at t = 0.14, while t = 0.50 restores much of the tower’s texture and clock detail.</figcaption>
           </figure>
           <h4>Dog</h4>
           <figure class="p3-wide-figure">
@@ -293,6 +294,22 @@
             <img src="assets/editing_forest.png" width="1593" height="811" loading="lazy" alt="Original sideways forest photograph and seven generated results labeled t equals 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50">
             <figcaption>Forest: the grid preserves the orientation of the supplied original and results for a direct comparison.</figcaption>
           </figure>
+          <section id="section-3-1-drawings" aria-labelledby="section-3-1-drawings-title">
+            <h4 id="section-3-1-drawings-title">Editing Hand-Drawn and Web Images</h4>
+            <p class="p3-note">These additional experiments use a fantasy illustration and two line drawings with the same prompt and seven starting times. The generic photo condition can produce photographic reinterpretations at low starting times, but it may also replace the subject entirely. At higher starting times, the original composition and drawing style are more recognizable.</p>
+            <figure class="p3-wide-figure">
+              <img src="assets/editing_drawing_rider.png" width="1593" height="811" loading="lazy" alt="Original blue-toned fantasy rider scene and seven generated results at t equals 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50">
+              <figcaption>Fantasy rider: the original scene and generated variations, with the rider and tree most recognizable at t = 0.50.</figcaption>
+            </figure>
+            <figure class="p3-wide-figure">
+              <img src="assets/editing_drawing_calvin_hobbes.png" width="1593" height="811" loading="lazy" alt="Original Calvin and Hobbes wagon drawing and seven generated results at t equals 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50">
+              <figcaption>Calvin and Hobbes: the original line drawing and generated variations across the seven time settings.</figcaption>
+            </figure>
+            <figure class="p3-wide-figure">
+              <img src="assets/editing_drawing_pig.png" width="1593" height="811" loading="lazy" alt="Original red-line pig drawing on pink paper and seven generated results at t equals 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, and 0.50">
+              <figcaption>Pig sketch: several outputs lose the drawing almost entirely, while t = 0.50 retains its main shapes.</figcaption>
+            </figure>
+          </section>
         </section>
       </section>
     </main>

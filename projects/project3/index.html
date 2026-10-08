@@ -215,7 +215,7 @@
         </section>
         <section id="section-1-6" aria-labelledby="section-1-6-title">
           <h3 id="section-1-6-title">1.6 · Generating Images from Noise</h3>
-          <p class="p3-note">For these generations, I used the −6969 adjustment to the random noise. The five outputs below retain the seed labels from my results: 180 through 184.</p>
+          <p class="p3-note">For these generations, I applied a −6769 adjustment to the random noise, as in Section 2.1. The five outputs below retain the seed labels from my results: 180 through 184.</p>
           <div class="p3-figure-grid">
             <figure>
               <svg viewBox="10 28 374 374" width="374" height="374" role="img" aria-label="Seed 180 generation with ghosted facial and hand details"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
@@ -247,6 +247,7 @@
           <h3 id="section-2-1-title">2.1 · Classifier-Free Guidance (CFG)</h3>
           <p class="p3-note">To strengthen text conditioning, classifier-free guidance combines the model’s velocity predictions for “a high quality photo” and the empty-string prompt at the same image and time. I use <code>v_cfg = v_c + w * (v_c - v_u)</code>, where <code>v_c</code> is the conditional prediction and <code>v_u</code> is the unconditional prediction. In this convention, <i>w</i> = 0 gives ordinary conditional sampling.</p>
           <p class="p3-note">Prompt: “a high quality photo” · Guidance weight: <i>w</i> = 7 · Euler step size: <i>h</i> = 0.02 · Seed labels: 180–184.</p>
+          <p class="p3-note">I applied the same −6769 adjustment to the random noise as in Section 1.6.</p>
           <div class="p3-figure-grid">
             <figure>
               <svg viewBox="10 28 374 374" width="374" height="374" role="img" aria-label="CFG seed 180: front-facing portrait in a light blue shirt"><image href="assets/cfg_generations_seeds_180_184.png" width="1602" height="811" /></svg>

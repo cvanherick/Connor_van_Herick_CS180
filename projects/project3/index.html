@@ -47,6 +47,10 @@
         max-width: 1400px;
       }
 
+      .p3-single-figure {
+        max-width: 620px;
+      }
+
       .p3-note {
         color: var(--muted);
         max-width: 900px;
@@ -62,6 +66,7 @@
         <a href="#section-1-1">1.1</a>
         <a href="#section-1-2">1.2</a>
         <a href="#section-1-3">1.3</a>
+        <a href="#section-1-4">1.4</a>
       </nav>
     </header>
 
@@ -104,6 +109,20 @@
             <figure><img src="assets/denoise_t_0_25.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.25"><figcaption>One-step estimate · t = 0.25</figcaption></figure>
             <figure><img src="assets/denoise_t_0_5.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.5"><figcaption>One-step estimate · t = 0.5</figcaption></figure>
             <figure><img src="assets/denoise_t_0_75.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.75"><figcaption>One-step estimate · t = 0.75</figcaption></figure>
+          </div>
+        </section>
+
+        <section id="section-1-4" aria-labelledby="section-1-4-title">
+          <h3 id="section-1-4-title">1.4 · Visualizing Velocity</h3>
+          <p class="p3-note">For each saved noisy input, the predicted update is compared with the ground-truth update computed from the known clean image and noise sample. The RGB RMS error map highlights where the two updates differ most. Both update visualizations use a shared symmetric color scale, and the error maps share a linear display range across time points.</p>
+          <figure class="p3-wide-figure p3-single-figure">
+            <img src="assets/cardinal_original.png" alt="Original cardinal photograph used for the velocity comparison">
+            <figcaption>Original image, shown once for the Section 1.4 comparisons.</figcaption>
+          </figure>
+          <div class="p3-figure-grid">
+            <figure><img src="assets/velocity_t_0_25.png" alt="At t equals 0.25: noisy input, predicted update, ground-truth update, and RGB RMS error heatmap"><figcaption>Predicted versus ground-truth update · t = 0.25</figcaption></figure>
+            <figure><img src="assets/velocity_t_0_5.png" alt="At t equals 0.5: noisy input, predicted update, ground-truth update, and RGB RMS error heatmap"><figcaption>Predicted versus ground-truth update · t = 0.50</figcaption></figure>
+            <figure><img src="assets/velocity_t_0_75.png" alt="At t equals 0.75: noisy input, predicted update, ground-truth update, and RGB RMS error heatmap"><figcaption>Predicted versus ground-truth update · t = 0.75</figcaption></figure>
           </div>
         </section>
       </section>

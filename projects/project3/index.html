@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Project 3 Part A: noise interpolation, Gaussian blur, and one-step denoising.">
+    <meta name="description" content="Project 3 Part A: noise interpolation, denoising, and image generation from noise.">
     <title>Project 3: Flow Matching and Denoising | CS 180 Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,6 +105,7 @@
         <a href="#section-1-3">1.3</a>
         <a href="#section-1-4">1.4</a>
         <a href="#section-1-5">1.5</a>
+        <a href="#section-1-6">1.6</a>
       </nav>
     </header>
 
@@ -117,9 +118,9 @@
 
       <section class="section writeup-section" id="part-a" aria-labelledby="part-a-title">
         <div class="section-heading">
-          <h2 id="part-a-title">Part A: Denoising</h2>
+          <h2 id="part-a-title">Part A: Denoising and Generation</h2>
         </div>
-        <p class="p3-note">These experiments follow one cardinal photograph from a clean image through noise interpolation, Gaussian blur, and one-step denoising with a pretrained flow model.</p>
+        <p class="p3-note">These experiments follow one cardinal photograph through noise interpolation and denoising with a pretrained flow model, then explore generating new images from random noise.</p>
 
         <section id="section-1-1" aria-labelledby="section-1-1-title">
           <h3 id="section-1-1-title">1.1 · Constructing Noisy Training Inputs</h3>
@@ -210,6 +211,35 @@
               <figcaption>Iterative denoising · 25 updates</figcaption>
             </figure>
           </div>
+        </section>
+        <section id="section-1-6" aria-labelledby="section-1-6-title">
+          <h3 id="section-1-6-title">1.6 · Generating Images from Noise</h3>
+          <p class="p3-note">For these generations, I used the −6969 adjustment to the random noise. The five outputs below retain the seed labels from my results: 180 through 184.</p>
+          <div class="p3-figure-grid">
+            <figure>
+              <svg viewBox="10 28 374 374" width="374" height="374" role="img" aria-label="Seed 180 generation with ghosted facial and hand details"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
+              <figcaption>Seed 180</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="410 28 374 374" width="374" height="374" role="img" aria-label="Seed 181 generation of a front-facing portrait in a dark turtleneck"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
+              <figcaption>Seed 181</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="810 28 374 374" width="374" height="374" role="img" aria-label="Seed 182 generation of a heavily blurred figure and outstretched hand"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
+              <figcaption>Seed 182</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="1210 28 374 374" width="374" height="374" role="img" aria-label="Seed 183 generation of a smiling front-facing portrait"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
+              <figcaption>Seed 183</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="10 428 374 374" width="374" height="374" role="img" aria-label="Seed 184 generation of a back-facing figure with distorted body proportions"><image href="assets/noise_generations_seeds_180_184.png" width="1602" height="811" /></svg>
+              <figcaption>Seed 184</figcaption>
+            </figure>
+          </div>
+          <h4>Observations</h4>
+          <p class="p3-note">The outputs vary substantially in subject, pose, framing, and background. Seeds 181 and 183 produce the clearest, most coherent portraits, with recognizable facial features and relatively consistent proportions. Seed 180 has ghosted facial and hand details, seed 182 is heavily blurred with unclear scene structure, and seed 184 shows distorted body proportions.</p>
+          <p class="p3-note">Changing the starting noise produces very different images, but it does not guarantee consistent realism. All five samples depict people, while their sharpness and anatomical consistency vary noticeably.</p>
         </section>
       </section>
     </main>

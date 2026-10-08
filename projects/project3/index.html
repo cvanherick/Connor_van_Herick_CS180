@@ -67,6 +67,7 @@
         <a href="#section-1-2">1.2</a>
         <a href="#section-1-3">1.3</a>
         <a href="#section-1-4">1.4</a>
+        <a href="#section-1-5">1.5</a>
       </nav>
     </header>
 
@@ -97,7 +98,7 @@
           <p class="p3-note">The same noisy image is blurred at three Gaussian scales. Larger sigma removes more high-frequency detail and produces a smoother estimate.</p>
           <div class="p3-figure-grid">
             <figure><img src="assets/blur_sigma_8.png" alt="Noisy cardinal image and Gaussian blur with sigma 8"><figcaption>Strong smoothing · σ = 8</figcaption></figure>
-            <figure><img src="assets/blur_sigma_2.png" alt="Noisy cardinal image and Gaussian blur with sigma 2"><figcaption>Moderate smoothing · σ = 2</figcaption></figure>
+            <figure id="blur-sigma-2"><img src="assets/blur_sigma_2.png" alt="Noisy cardinal image at t equals 0.5 and its Gaussian blur with sigma 2"><figcaption>Moderate smoothing · σ = 2</figcaption></figure>
             <figure><img src="assets/blur_sigma_1.png" alt="Noisy cardinal image and Gaussian blur with sigma 1"><figcaption>Light smoothing · σ = 1</figcaption></figure>
           </div>
         </section>
@@ -107,7 +108,7 @@
           <p class="p3-note">Using the text condition “a high quality photo,” the pretrained flow model predicts velocity at each noisy input. A single integration step estimates the clean endpoint; the model output is treated as velocity, not as noise.</p>
           <div class="p3-figure-grid">
             <figure><img src="assets/denoise_t_0_25.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.25"><figcaption>One-step estimate · t = 0.25</figcaption></figure>
-            <figure><img src="assets/denoise_t_0_5.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.5"><figcaption>One-step estimate · t = 0.5</figcaption></figure>
+            <figure id="denoise-t-0-5"><img src="assets/denoise_t_0_5.png" alt="Original, noisy input at t equals 0.5, and one-step denoising estimate"><figcaption>One-step estimate · t = 0.5</figcaption></figure>
             <figure><img src="assets/denoise_t_0_75.png" alt="Original, noisy input, and one-step denoising estimate at t equals 0.75"><figcaption>One-step estimate · t = 0.75</figcaption></figure>
           </div>
         </section>
@@ -124,6 +125,17 @@
             <figure><img src="assets/velocity_t_0_5.png" alt="At t equals 0.5: noisy input, predicted update, ground-truth update, and RGB RMS error heatmap"><figcaption>Predicted versus ground-truth update · t = 0.50</figcaption></figure>
             <figure><img src="assets/velocity_t_0_75.png" alt="At t equals 0.75: noisy input, predicted update, ground-truth update, and RGB RMS error heatmap"><figcaption>Predicted versus ground-truth update · t = 0.75</figcaption></figure>
           </div>
+        </section>
+
+        <section id="section-1-5" aria-labelledby="section-1-5-title">
+          <h3 id="section-1-5-title">1.5 · Iterative Denoising</h3>
+          <p class="p3-note">Starting from the saved noisy input at <i>t</i> = 0.50, the sequence shows the denoising trajectory through its labeled time points to the final image at <i>t</i> = 1.00.</p>
+          <figure class="p3-wide-figure">
+            <img src="assets/multistep_trajectory_t_0_5.png" alt="Labeled denoising trajectory from t equals 0.50 through t equals 1.00">
+            <figcaption>Iterative denoising trajectory, beginning at <i>t</i> = 0.50 and ending at <i>t</i> = 1.00.</figcaption>
+          </figure>
+          <h4>Comparison using the same noisy input</h4>
+          <p class="p3-note">The last frame above is the iterative result. Compare it with the <a href="#section-1-4">original image</a>, the <a href="#denoise-t-0-5">one-step estimate at <i>t</i> = 0.50</a>, and the <a href="#blur-sigma-2">Gaussian blur at σ = 2</a>. Both earlier results use the same <i>t</i> = 0.50 noisy cardinal input.</p>
         </section>
       </section>
     </main>

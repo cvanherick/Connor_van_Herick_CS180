@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=homepage-previews-1">
-    <script src="assets/home.js?v=homepage-previews-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=homepage-project3-2">
+    <script src="assets/home.js?v=homepage-project3-2" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -82,7 +82,17 @@
           </article>
           <article class="project-card project-card-demo">
             <div class="project-card-preview project3-preview" aria-hidden="true">
-              <img src="projects/project3/assets/denoise_t_0_5.png" alt="">
+              <img class="p3-preview-photo" src="projects/project3/assets/cardinal_original.png" alt="" loading="lazy">
+              <svg class="p3-preview-noise" width="100%" height="100%">
+                <filter id="p3-noise-texture" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="12" />
+                  <feColorMatrix type="saturate" values="2" />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#p3-noise-texture)" />
+              </svg>
+              <span class="p3-preview-scan"></span>
+              <span class="p3-preview-badge">Noise → image</span>
+              <span class="p3-preview-progress"></span>
             </div>
             <div class="project-card-body">
               <div class="project-number">Project 3</div>

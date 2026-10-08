@@ -47,6 +47,12 @@
         max-width: 1400px;
       }
 
+      .p3-wide-figure img {
+        display: block;
+        height: auto;
+        width: 100%;
+      }
+
       .p3-single-figure {
         max-width: 620px;
       }
@@ -54,6 +60,37 @@
       .p3-note {
         color: var(--muted);
         max-width: 900px;
+      }
+
+      .p3-checkpoints {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .p3-comparison {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .p3-figure-grid svg {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        display: block;
+        height: auto;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      @media (max-width: 680px) {
+        .p3-checkpoints,
+        .p3-comparison {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 420px) {
+        .p3-checkpoints,
+        .p3-comparison {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -129,13 +166,50 @@
 
         <section id="section-1-5" aria-labelledby="section-1-5-title">
           <h3 id="section-1-5-title">1.5 · Iterative Denoising</h3>
-          <p class="p3-note">Starting from the saved noisy input at <i>t</i> = 0.50, the sequence shows the denoising trajectory through its labeled time points to the final image at <i>t</i> = 1.00.</p>
-          <figure class="p3-wide-figure">
-            <img src="assets/multistep_trajectory_t_0_5.png" alt="Labeled denoising trajectory from t equals 0.50 through t equals 1.00">
-            <figcaption>Iterative denoising trajectory, beginning at <i>t</i> = 0.50 and ending at <i>t</i> = 1.00.</figcaption>
-          </figure>
+          <p class="p3-note">Starting from the saved noisy input at <i>t</i> = 0.50, these checkpoints show the initial state, every fifth update, and the final image after 25 updates at <i>t</i> = 1.00.</p>
+          <div class="p3-figure-grid p3-checkpoints">
+            <figure>
+              <svg viewBox="10 28 374 374" width="374" height="374" role="img" aria-label="Initial noisy image, update 0, t equals 0.50"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Initial state · Update 0 · t = 0.50</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="810 428 374 374" width="374" height="374" role="img" aria-label="Denoising update 5, t equals 0.60"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Update 5 · t = 0.60</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="410 1228 374 374" width="374" height="374" role="img" aria-label="Denoising update 10, t equals 0.70"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Update 10 · t = 0.70</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="10 2028 374 374" width="374" height="374" role="img" aria-label="Denoising update 15, t equals 0.80"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Update 15 · t = 0.80</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="810 2428 374 374" width="374" height="374" role="img" aria-label="Denoising update 20, t equals 0.90"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Update 20 · t = 0.90</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="410 3228 374 374" width="374" height="374" role="img" aria-label="Final denoised image, update 25, t equals 1.00"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Final image · Update 25 · t = 1.00</figcaption>
+            </figure>
+          </div>
           <h4>Comparison using the same noisy input</h4>
-          <p class="p3-note">The last frame above is the iterative result. Compare it with the <a href="#section-1-4">original image</a>, the <a href="#denoise-t-0-5">one-step estimate at <i>t</i> = 0.50</a>, and the <a href="#blur-sigma-2">Gaussian blur at σ = 2</a>. Both earlier results use the same <i>t</i> = 0.50 noisy cardinal input.</p>
+          <p class="p3-note">The three denoising results below start from the same <i>t</i> = 0.50 noisy cardinal input. The original image is included as a reference.</p>
+          <div class="p3-figure-grid p3-comparison">
+            <figure><img src="assets/cardinal_original.png" alt="Original cardinal photograph"><figcaption>Original image</figcaption></figure>
+            <figure>
+              <svg viewBox="410 28 374 374" width="374" height="374" role="img" aria-label="Gaussian blur result for the t equals 0.50 input, sigma equals 2"><image href="assets/blur_sigma_2.png" width="793" height="411" /></svg>
+              <figcaption>Gaussian blur · σ = 2</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="810 28 374 374" width="374" height="374" role="img" aria-label="One-step denoising result from the t equals 0.50 input"><image href="assets/denoise_t_0_5.png" width="1193" height="411" /></svg>
+              <figcaption>One-step denoising</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="410 3228 374 374" width="374" height="374" role="img" aria-label="Final iterative denoising result after 25 updates"><image href="assets/multistep_trajectory_t_0_5.png" width="1202" height="3611" /></svg>
+              <figcaption>Iterative denoising · 25 updates</figcaption>
+            </figure>
+          </div>
         </section>
       </section>
     </main>

@@ -61,6 +61,33 @@
         max-width: 793px;
       }
 
+      .p3-hybrid-figure {
+        max-width: 793px;
+      }
+
+      .p3-hybrid-views {
+        align-items: flex-end;
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .p3-hybrid-large {
+        flex: 1;
+        max-width: 512px;
+        min-width: 0;
+      }
+
+      .p3-hybrid-small {
+        flex: 0 0 96px;
+        width: 96px;
+      }
+
+      .p3-hybrid-views p {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin: 0.5rem 0;
+      }
+
       .p3-note {
         color: var(--muted);
         max-width: 900px;
@@ -91,6 +118,19 @@
       }
 
       @media (max-width: 420px) {
+        .p3-hybrid-views {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .p3-hybrid-large {
+          width: 100%;
+        }
+
+        .p3-hybrid-small {
+          flex-basis: auto;
+        }
+
         .p3-checkpoints,
         .p3-comparison {
           grid-template-columns: 1fr;
@@ -114,6 +154,7 @@
         <a href="#section-3-1">3.1</a>
         <a href="#section-3-2">3.2</a>
         <a href="#section-3-3">3.3</a>
+        <a href="#section-3-4">3.4</a>
       </nav>
     </header>
 
@@ -372,6 +413,34 @@
           </figure>
           <h4>Observations</h4>
           <p class="p3-note">The happy-old-man pair gives a clear change in facial expression when rotated, although the upside-down face still retains some elderly features. The lion and horse are both recognizable, but features from the other orientation remain visible. The ship and skyscraper share strong vertical lines, while the heart stays prominent in both views of the explosion pair. The dogs and sunset are more abstract: the orange color ties the two prompts together, but the scene details are less distinct. These results show both the potential of shared shapes and the difficulty of making two equally convincing interpretations.</p>
+        </section>
+        <section id="section-3-4" aria-labelledby="section-3-4-title">
+          <h3 id="section-3-4-title">3.4 · Hybrid Images</h3>
+          <p class="p3-note">These hybrids are intended to reveal different subjects up close and from a distance. Each result is shown at a large size and as a small preview to make the two viewing scales easy to compare. Both previews use the same image, without changes to its brightness or colors.</p>
+          <h4>Lion from a distance · Dog up close</h4>
+          <figure class="p3-wide-figure p3-hybrid-figure">
+            <div class="p3-hybrid-views">
+              <div class="p3-hybrid-large"><img src="assets/hybrid_lion_dog.png" width="512" height="512" loading="lazy" alt="Large hybrid showing a golden dog face within a lion-like mane"><p>Up close · Dog</p></div>
+              <div class="p3-hybrid-small"><img src="assets/hybrid_lion_dog.png" width="512" height="512" loading="lazy" alt="Small preview of the lion and dog hybrid intended to reveal a lion from a distance"><p>Distance preview · Lion</p></div>
+            </div>
+            <figcaption>Intended pairing: the lion’s broad silhouette at a distance and the dog’s facial details up close.</figcaption>
+          </figure>
+          <h4>Rose from a distance · Explosion up close</h4>
+          <figure class="p3-wide-figure p3-hybrid-figure">
+            <div class="p3-hybrid-views">
+              <div class="p3-hybrid-large"><img src="assets/hybrid_rose_explosion.png" width="512" height="512" loading="lazy" alt="Large dark red hybrid with fine explosion-like textures in a flower-shaped form"><p>Up close · Explosion</p></div>
+              <div class="p3-hybrid-small"><img src="assets/hybrid_rose_explosion.png" width="512" height="512" loading="lazy" alt="Small preview of the rose and explosion hybrid intended to reveal a rose from a distance"><p>Distance preview · Rose</p></div>
+            </div>
+            <figcaption>Intended pairing: a rose at a distance and explosion-like detail up close. The supplied result is dark; it is displayed without brightening.</figcaption>
+          </figure>
+          <h4>Mountain from a distance · Temple up close</h4>
+          <figure class="p3-wide-figure p3-hybrid-figure">
+            <div class="p3-hybrid-views">
+              <div class="p3-hybrid-large"><img src="assets/hybrid_mountain_temple.png" width="512" height="512" loading="lazy" alt="Large blue and white hybrid with temple spires and architectural details inside a mountain-like shape"><p>Up close · Temple</p></div>
+              <div class="p3-hybrid-small"><img src="assets/hybrid_mountain_temple.png" width="512" height="512" loading="lazy" alt="Small preview of the mountain and temple hybrid intended to reveal a mountain from a distance"><p>Distance preview · Mountain</p></div>
+            </div>
+            <figcaption>Intended pairing: the mountain’s overall shape at a distance and the temple’s spires and architectural details up close.</figcaption>
+          </figure>
         </section>
       </section>
     </main>

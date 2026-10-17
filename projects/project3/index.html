@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Project 3 Part A: noise interpolation, denoising, and conditional image generation with classifier-free guidance.">
+    <meta name="description" content="Project 3: pretrained flow-model experiments in Part A and MNIST denoising and flow matching from scratch in Part B.">
     <title>Project 3: Flow Matching and Denoising | CS 180 Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,6 +59,10 @@
 
       .p3-anagram-figure {
         max-width: 793px;
+      }
+
+      .p3-loss-figure {
+        max-width: 855px;
       }
 
       .p3-hybrid-figure {
@@ -159,12 +163,13 @@
         <a href="#section-3-2">3.2</a>
         <a href="#section-3-3">3.3</a>
         <a href="#section-3-4">3.4</a>
+        <a href="#part-b">Part B</a>
       </nav>
     </header>
 
     <main>
       <section class="project-hero" id="overview" aria-labelledby="project-title">
-        <p class="eyebrow">Project 3 · Part A</p>
+        <p class="eyebrow">Project 3 · Parts A &amp; B</p>
         <h1 id="project-title">Flow Matching and Denoising</h1>
         <p class="project-meta">CS 180 Computational Photography</p>
       </section>
@@ -443,6 +448,36 @@
             </div>
             <figcaption>Eagle and skull hybrid, shown at two viewing scales.</figcaption>
           </figure>
+        </section>
+      </section>
+      <section class="section writeup-section" id="part-b" aria-labelledby="part-b-title">
+        <div class="section-heading">
+          <h2 id="part-b-title">Part B: Flow Matching from Scratch</h2>
+        </div>
+        <h3>1 · Training a Single-Step Denoising UNet</h3>
+        <section id="part-b-1-2" aria-labelledby="part-b-1-2-title">
+          <h4 id="part-b-1-2-title">1.2 · Noising MNIST Digits</h4>
+          <p class="p3-note">Adding Gaussian noise, z = x + σε, progressively obscures the digit as σ increases.</p>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_noising.png" width="1489" height="274" loading="lazy" alt="The same handwritten digit 5 with Gaussian noise levels 0, 0.2, 0.4, 0.6, 0.8, and 1.0">
+            <figcaption>Noise levels shown: σ = 0, 0.2, 0.4, 0.6, 0.8, and 1.0.</figcaption>
+          </figure>
+        </section>
+        <section id="part-b-1-2-1" aria-labelledby="part-b-1-2-1-title">
+          <h4 id="part-b-1-2-1-title">1.2.1 · Training the Denoiser</h4>
+          <figure class="p3-wide-figure p3-loss-figure">
+            <img src="assets/part_b_denoiser_loss.png" width="855" height="470" loading="lazy" alt="UNet training MSE drops rapidly from about 0.11 and gradually levels off near 0.008 over roughly 1175 training steps">
+            <figcaption>Training MSE over optimization steps.</figcaption>
+          </figure>
+          <p class="p3-note">The loss falls sharply at first, then improves more gradually and levels off near 0.008.</p>
+        </section>
+        <section id="part-b-1-2-2" aria-labelledby="part-b-1-2-2-title">
+          <h4 id="part-b-1-2-2-title">1.2.2 · Out-of-Distribution Testing</h4>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_ood_denoising.png" width="1389" height="990" loading="lazy" alt="Five rows of MNIST digits 7, 2, 1, 0, and 4, each showing the original and denoised results at sigma 0, 0.2, 0.5, 0.8, and 1.0">
+            <figcaption>Each row keeps the same digit: original, then denoised results at σ = 0, 0.2, 0.5, 0.8, and 1.0.</figcaption>
+          </figure>
+          <p class="p3-note">Digits remain recognizable through σ = 0.5. At σ = 0.8 and 1.0, extra strokes and distorted shapes appear, making several digits ambiguous.</p>
         </section>
       </section>
     </main>

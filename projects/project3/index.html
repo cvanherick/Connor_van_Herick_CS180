@@ -479,6 +479,18 @@
           </figure>
           <p class="p3-note">Digits remain recognizable through σ = 0.5. At σ = 0.8 and 1.0, extra strokes and distorted shapes appear, making several digits ambiguous.</p>
         </section>
+        <section id="part-b-1-2-3" aria-labelledby="part-b-1-2-3-title">
+          <h4 id="part-b-1-2-3-title">1.2.3 · Denoising Pure Noise</h4>
+          <figure class="p3-wide-figure p3-loss-figure">
+            <img src="assets/part_b_pure_noise_loss.png" width="855" height="393" loading="lazy" alt="Pure Gaussian noise to MNIST training loss: batch MSE and smoothed MSE drop quickly before leveling off near 0.067">
+            <figcaption>Pure-noise training: batch loss and smoothed loss over optimization steps.</figcaption>
+          </figure>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_pure_noise_epochs_1_5.png" width="1489" height="464" loading="lazy" alt="Reference MNIST digits in the top row, nearly identical blurred oval outputs after epoch 1 in the middle row, and nearly identical overlapping digit shapes after epoch 5 in the bottom row">
+            <figcaption>Top: reference digits. Middle: outputs after epoch 1. Bottom: outputs after epoch 5.</figcaption>
+          </figure>
+          <p class="p3-note">The outputs are almost identical across noise inputs: blurred ovals at epoch 1 and overlapping digit-like strokes at epoch 5. Because independent pure noise provides no information about the target digit, minimizing MSE favors the mean training image. This blends features from digits 0–9 instead of generating distinct digits, consistent with the loss plateau near 0.067.</p>
+        </section>
       </section>
     </main>
 

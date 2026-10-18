@@ -491,6 +491,23 @@
           </figure>
           <p class="p3-note">The outputs are almost identical across noise inputs: blurred ovals at epoch 1 and overlapping digit-like strokes at epoch 5. Because independent pure noise provides no information about the target digit, minimizing MSE favors the mean training image. This blends features from digits 0–9 instead of generating distinct digits, consistent with the loss plateau near 0.067.</p>
         </section>
+        <h3>2 · Training a Flow Matching Model</h3>
+        <section id="part-b-2-5" aria-labelledby="part-b-2-5-title">
+          <h4 id="part-b-2-5-title">2.5 · Training the Class-Conditioned UNet</h4>
+          <figure class="p3-wide-figure p3-loss-figure">
+            <img src="assets/part_b_class_conditioned_loss.png" width="989" height="490" loading="lazy" alt="Class-conditioned flow matching training MSE on a logarithmic scale: raw scheduled-learning-rate loss and its smoothed trend decrease over about 9400 training steps">
+            <figcaption>Class-conditioned flow matching with a learning-rate schedule. Raw loss and smoothed trend are shown on a logarithmic scale.</figcaption>
+          </figure>
+          <p class="p3-note">The loss drops rapidly early in training, then improves gradually to about 0.08. The smoothed trend continues downward despite fluctuations in the raw batch loss.</p>
+        </section>
+        <section id="part-b-2-6" aria-labelledby="part-b-2-6-title">
+          <h4 id="part-b-2-6-title">2.6 · Sampling from the Class-Conditioned UNet</h4>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_class_samples_epoch_1_lr_comparison.png" width="1989" height="575" loading="lazy" alt="Epoch 1 class-conditioned MNIST samples: scheduled learning rate initially 0.01 on the left and constant learning rate 0.001 on the right, each with four examples for digit classes 0 through 9">
+            <figcaption>Epoch 1 · Left: scheduled learning rate, initially 0.01. Right: constant learning rate, 0.001. Each panel has four samples per digit class, with columns labeled 0–9.</figcaption>
+          </figure>
+          <p class="p3-note">For the no-scheduler experiment, the learning rate is held at 0.001 rather than starting at 0.01. At epoch 1, both models produce digit-like strokes, but many samples are malformed or ambiguous. These early results alone do not establish whether the constant-rate model matches the scheduled model’s final quality.</p>
+        </section>
       </section>
     </main>
 

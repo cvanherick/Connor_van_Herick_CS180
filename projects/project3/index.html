@@ -506,7 +506,15 @@
             <img src="assets/part_b_class_samples_epoch_1_lr_comparison.png" width="1989" height="575" loading="lazy" alt="Epoch 1 class-conditioned MNIST samples: scheduled learning rate initially 0.01 on the left and constant learning rate 0.001 on the right, each with four examples for digit classes 0 through 9">
             <figcaption>Epoch 1 · Left: scheduled learning rate, initially 0.01. Right: constant learning rate, 0.001. Each panel has four samples per digit class, with columns labeled 0–9.</figcaption>
           </figure>
-          <p class="p3-note">For the no-scheduler experiment, the learning rate is held at 0.001 rather than starting at 0.01. At epoch 1, both models produce digit-like strokes, but many samples are malformed or ambiguous. These early results alone do not establish whether the constant-rate model matches the scheduled model’s final quality.</p>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_class_samples_epoch_5_lr_comparison.png" width="1989" height="575" loading="lazy" alt="Epoch 5 class-conditioned MNIST samples comparing scheduled and constant learning rates, with four examples per digit class 0 through 9 in each panel">
+            <figcaption>Epoch 5 · Scheduled learning rate (left) versus constant learning rate of 0.001 (right).</figcaption>
+          </figure>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_class_samples_epoch_10_lr_comparison.png" width="1989" height="575" loading="lazy" alt="Epoch 10 class-conditioned MNIST samples comparing scheduled and constant learning rates, with four examples per digit class 0 through 9 in each panel">
+            <figcaption>Epoch 10 · Scheduled learning rate (left) versus constant learning rate of 0.001 (right).</figcaption>
+          </figure>
+          <p class="p3-note">Without the scheduler, I use a lower, constant learning rate of 0.001 instead of starting at 0.01. Both models improve substantially from epoch 1 to epoch 5, producing recognizable digits across the requested classes. By epoch 10, both retain variation in stroke shape and thickness, and the constant-rate results look broadly comparable to the scheduled results in these grids.</p>
         </section>
       </section>
     </main>

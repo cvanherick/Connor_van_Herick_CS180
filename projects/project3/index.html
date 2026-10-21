@@ -458,12 +458,17 @@
             <figcaption>Training MSE over optimization steps.</figcaption>
           </figure>
           <p class="p3-note">The loss falls sharply at first, then improves more gradually and levels off near 0.008.</p>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_denoising_epochs_1_5.png" width="1495" height="627" loading="lazy" alt="Held-out MNIST test digits shown in four rows: originals, noisy inputs at sigma 0.5, denoised outputs after epoch 1, and denoised outputs after epoch 5">
+            <figcaption>Held-out test set · Original digits, noisy inputs (σ = 0.5), epoch 1 outputs, and epoch 5 outputs, from top to bottom.</figcaption>
+          </figure>
+          <p class="p3-note">Most digits are recognizable after one epoch. By epoch 5, several strokes look cleaner and more defined, while some fine details remain smoothed.</p>
         </section>
         <section id="part-b-1-2-2" aria-labelledby="part-b-1-2-2-title">
           <h4 id="part-b-1-2-2-title">1.2.2 · Out-of-Distribution Testing</h4>
           <figure class="p3-wide-figure">
-            <img src="assets/part_b_ood_denoising.png" width="1389" height="990" loading="lazy" alt="Five rows of MNIST digits 7, 2, 1, 0, and 4, each showing the original and denoised results at sigma 0, 0.2, 0.5, 0.8, and 1.0">
-            <figcaption>Each row keeps the same digit: original, then denoised results at σ = 0, 0.2, 0.5, 0.8, and 1.0.</figcaption>
+            <img src="assets/part_b_ood_denoising_all_levels.png" width="1487" height="994" loading="lazy" alt="Five rows of MNIST digits 7, 2, 1, 0, and 4, each showing the original and denoised results at sigma 0, 0.2, 0.4, 0.5, 0.6, 0.8, and 1.0">
+            <figcaption>Each row keeps the same digit: original, then denoised results at σ = 0, 0.2, 0.4, 0.5, 0.6, 0.8, and 1.0.</figcaption>
           </figure>
           <p class="p3-note">Digits remain recognizable through σ = 0.5. At σ = 0.8 and 1.0, extra strokes and distorted shapes appear, making several digits ambiguous.</p>
         </section>

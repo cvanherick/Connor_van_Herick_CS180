@@ -480,6 +480,22 @@
           <p class="p3-note">The outputs are almost identical across noise inputs: blurred ovals at epoch 1 and overlapping digit-like strokes at epoch 5. Because independent pure noise provides no information about the target digit, minimizing MSE favors the mean training image. This blends features from digits 0–9 instead of generating distinct digits, consistent with the loss plateau near 0.067.</p>
         </section>
         <h3>2 · Training a Flow Matching Model</h3>
+        <section id="part-b-2-2" aria-labelledby="part-b-2-2-title">
+          <h4 id="part-b-2-2-title">2.2 · Training the Time-Conditioned UNet</h4>
+          <figure class="p3-wide-figure p3-loss-figure">
+            <img src="assets/part_b_time_conditioned_loss.png" width="989" height="490" loading="lazy" alt="Time-conditioned flow matching training MSE and smoothed trend decrease from above 1.1 to about 0.1 over roughly 2350 training steps">
+            <figcaption>Time-conditioned flow matching: raw training MSE and smoothed trend.</figcaption>
+          </figure>
+          <p class="p3-note">The loss drops steeply early in training, then decreases more gradually toward 0.1.</p>
+        </section>
+        <section id="part-b-2-3" aria-labelledby="part-b-2-3-title">
+          <h4 id="part-b-2-3-title">2.3 · Sampling from the Time-Conditioned UNet</h4>
+          <figure class="p3-wide-figure">
+            <img src="assets/part_b_time_conditioned_samples_epochs_1_5_10.png" width="1497" height="483" loading="lazy" alt="Three rows of time-conditioned MNIST samples after epochs 1, 5, and 10: fragmented strokes in early rows become more recognizable digit-like shapes by epoch 10">
+            <figcaption>Time-only generation after epochs 1, 5, and 10, from top to bottom.</figcaption>
+          </figure>
+          <p class="p3-note">At epochs 1 and 5, many samples contain disconnected or ambiguous strokes. By epoch 10, more coherent loops and digit shapes emerge, although some outputs remain malformed. The results are less consistently legible than the class-conditioned samples in Section 2.6.</p>
+        </section>
         <section id="part-b-2-5" aria-labelledby="part-b-2-5-title">
           <h4 id="part-b-2-5-title">2.5 · Training the Class-Conditioned UNet</h4>
           <figure class="p3-wide-figure p3-loss-figure">

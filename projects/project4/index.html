@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Project 4 Part A: overlapping photographs, least-squares homography recovery, and inverse image warping with nearest-neighbor and bilinear interpolation.">
+    <meta name="description" content="Project 4 Part A: overlapping photographs, least-squares homographies, inverse image warping, and three feather-blended mosaics.">
     <title>Project 4: Image Warping and Mosaicing | CS 180 Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,7 @@
         <a href="#a1">A.1 · Photos</a>
         <a href="#a2">A.2 · Homographies</a>
         <a href="#a3">A.3 · Warping</a>
+        <a href="#a4">A.4 · Mosaics</a>
       </nav>
     </header>
     <main>
@@ -43,7 +44,7 @@
         <p class="eyebrow">Project 4 · Part A</p>
         <h1 id="project-title">Image Warping and Mosaicing</h1>
         <p class="project-meta">CS 180 Computational Photography</p>
-        <p class="project-hero-copy">From overlapping photographs to projective alignment: selecting correspondences, recovering homographies, and resampling images.</p>
+        <p class="project-hero-copy">From overlapping photographs to projective alignment: selecting correspondences, recovering homographies, warping, and blending mosaics.</p>
       </section>
 
       <section class="section writeup-section" id="a1" aria-labelledby="a1-title">
@@ -163,6 +164,35 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         </div>
         <p class="p4-note">Both methods produce the same projective geometry. Their sampling differences are subtle at this display scale; interpolation does not correct inaccurate point matches or parallax. The speed comparison above describes computational work, not measured runtimes.</p>
         <p class="p4-note p4-status">The examples above demonstrate registration between photographs. Separate fronto-parallel rectification examples of two rectangular objects are not included in the current results.</p>
+      </section>
+
+      <section class="section writeup-section" id="a4" aria-labelledby="a4-title">
+        <div class="section-heading"><h2 id="a4-title">A.4 · Blend Images into a Mosaic</h2></div>
+        <p class="p4-note">I map image 1 into image 2’s coordinates with its recovered homography, place both images on a canvas large enough for their projected corners, and inverse-warp each image with bilinear sampling. A validity mask distinguishes image pixels from empty canvas pixels. In the overlap, each pixel is weighted by its distance from that image’s valid boundary; the normalized weighted sum fades one photograph into the other. Black areas are outside both images.</p>
+        <article aria-labelledby="hawaii-mosaic-title">
+          <h3 id="hawaii-mosaic-title">Hawaii</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/hawaii-1.jpg"><img src="assets/hawaii-1.jpg" loading="lazy" alt="Hawaii mosaic source photograph 1"></a><figcaption>Source 1 · Hawaii1.JPG</figcaption></figure>
+            <figure><a href="assets/hawaii-2.jpg"><img src="assets/hawaii-2.jpg" loading="lazy" alt="Hawaii mosaic source photograph 2"></a><figcaption>Source 2 · Hawaii2.JPG</figcaption></figure>
+          </div>
+          <figure><a href="assets/hawaii-mosaic.jpg"><img src="assets/hawaii-mosaic.jpg" loading="lazy" alt="Feather-blended Hawaii mosaic joining both coastal photographs"></a><figcaption>Feather-blended mosaic · the mountain ridge and coastline continue across the overlap.</figcaption></figure>
+        </article>
+        <article aria-labelledby="bedroom-mosaic-title">
+          <h3 id="bedroom-mosaic-title">Bedroom</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/bedroom-1.jpg"><img src="assets/bedroom-1.jpg" loading="lazy" alt="Bedroom mosaic source photograph 1"></a><figcaption>Source 1 · Bedroom1.jpg</figcaption></figure>
+            <figure><a href="assets/bedroom-2.jpg"><img src="assets/bedroom-2.jpg" loading="lazy" alt="Bedroom mosaic source photograph 2"></a><figcaption>Source 2 · Bedroom2.jpg</figcaption></figure>
+          </div>
+          <figure><a href="assets/bedroom-mosaic.jpg"><img src="assets/bedroom-mosaic.jpg" loading="lazy" alt="Feather-blended Bedroom mosaic spanning the closet and window"></a><figcaption>Feather-blended mosaic · the closet, bed, and window appear in one view.</figcaption></figure>
+        </article>
+        <article aria-labelledby="kitchen-mosaic-title">
+          <h3 id="kitchen-mosaic-title">Kitchen</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/kitchen-1.jpg"><img src="assets/kitchen-1.jpg" loading="lazy" alt="Kitchen mosaic source photograph 1"></a><figcaption>Source 1 · Kitchen1.jpg</figcaption></figure>
+            <figure><a href="assets/kitchen-2.jpg"><img src="assets/kitchen-2.jpg" loading="lazy" alt="Kitchen mosaic source photograph 2"></a><figcaption>Source 2 · Kitchen2.jpg</figcaption></figure>
+          </div>
+          <figure><a href="assets/kitchen-mosaic.jpg"><img src="assets/kitchen-mosaic.jpg" loading="lazy" alt="Feather-blended Kitchen mosaic spanning the sink and hallway"></a><figcaption>Feather-blended mosaic · the countertop and cabinets extend into the adjacent hallway view.</figcaption></figure>
+        </article>
       </section>
     </main>
     <footer class="project-footer"><a href="../../">← Back to all projects</a></footer>

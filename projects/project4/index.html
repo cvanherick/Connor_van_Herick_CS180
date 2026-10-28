@@ -25,6 +25,8 @@
       .p4-table { border-collapse: collapse; width: 100%; }
       .p4-table th, .p4-table td { border-bottom: 1px solid var(--border); padding: 0.8rem; text-align: left; vertical-align: top; }
       .p4-status { border-left: 3px solid var(--border); padding-left: 1rem; }
+      .p4-extra-warp { margin: 2rem 0; }
+      .p4-extra-warp summary { cursor: pointer; font-weight: 700; }
       @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } }
       @media print { .project4-page figure, .project4-page pre { break-inside: avoid; } }
     </style>
@@ -152,23 +154,39 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
           <a href="assets/kitchen-warp-comparison.jpg"><img src="assets/kitchen-warp-comparison.jpg" loading="lazy" alt="Kitchen comparison: original image 1, nearest-neighbor inverse warp, and bilinear inverse warp"></a>
           <figcaption>Kitchen · Kitchen1.jpg warped into the coordinate system of Kitchen2.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
         </figure>
+        <details class="p4-extra-warp">
+          <summary>Reverse-direction warps · three more comparisons</summary>
+          <figure>
+            <a href="assets/hawaii-reverse-warp-comparison.jpg"><img src="assets/hawaii-reverse-warp-comparison.jpg" loading="lazy" alt="Hawaii image 2 original, nearest-neighbor warp to image 1, and bilinear warp to image 1"></a>
+            <figcaption>Hawaii · Hawaii2.JPG warped toward Hawaii1.JPG. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/bedroom-reverse-warp-comparison.jpg"><img src="assets/bedroom-reverse-warp-comparison.jpg" loading="lazy" alt="Bedroom image 2 original, nearest-neighbor warp to image 1, and bilinear warp to image 1"></a>
+            <figcaption>Bedroom · Bedroom2.jpg warped toward Bedroom1.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/kitchen-reverse-warp-comparison.jpg"><img src="assets/kitchen-reverse-warp-comparison.jpg" loading="lazy" alt="Kitchen image 2 original, nearest-neighbor warp to image 1, and bilinear warp to image 1"></a>
+            <figcaption>Kitchen · Kitchen2.jpg warped toward Kitchen1.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+          </figure>
+        </details>
         <h3>Interpolation trade-offs</h3>
         <div class="p4-table-wrap">
           <table class="p4-table">
             <thead><tr><th>Method</th><th>Sampling work</th><th>Image quality</th></tr></thead>
             <tbody>
-              <tr><td>Nearest neighbor</td><td>One source pixel per output sample; less interpolation work.</td><td>Preserves individual source values but can introduce jagged edges and aliasing.</td></tr>
-              <tr><td>Bilinear</td><td>Four source pixels and a weighted average; more interpolation work.</td><td>Smoother edges, with some softening of fine detail.</td></tr>
+              <tr><td>Nearest neighbor</td><td>Samples one pixel per output pixel, making it faster.</td><td>Can produce jagged edges and aliasing.</td></tr>
+              <tr><td>Bilinear</td><td>Uses a weighted average of four neighboring pixels, requiring more computation.</td><td>Produces smoother results but can slightly blur fine details.</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="p4-note">Both methods produce the same projective geometry. Their sampling differences are subtle at this display scale; interpolation does not correct inaccurate point matches or parallax. The speed comparison above describes computational work, not measured runtimes.</p>
-        <p class="p4-note p4-status">The examples above demonstrate registration between photographs. Separate fronto-parallel rectification examples of two rectangular objects are not included in the current results.</p>
+        <p class="p4-note">Both interpolation methods use the same homography, so the underlying geometry is identical. The main difference is how pixel values are calculated. In my examples, the visual differences are relatively small, although bilinear interpolation generally produces smoother results.</p>
+        <p class="p4-note p4-status">These examples align one photograph with another. The assignment also asks for two examples that make a rectangular object front-facing; those rectifications are not present in the saved results.</p>
       </section>
 
       <section class="section writeup-section" id="a4" aria-labelledby="a4-title">
         <div class="section-heading"><h2 id="a4-title">A.4 · Blend Images into a Mosaic</h2></div>
-        <p class="p4-note">I map image 1 into image 2’s coordinates with its recovered homography, place both images on a canvas large enough for their projected corners, and inverse-warp each image with bilinear sampling. A validity mask distinguishes image pixels from empty canvas pixels. In the overlap, each pixel is weighted by its distance from that image’s valid boundary; the normalized weighted sum fades one photograph into the other. Black areas are outside both images.</p>
+        <p class="p4-note">I first warp image 1 into image 2's coordinate system using the calculated homography. I then create a canvas large enough to fit both images and use inverse warping with bilinear interpolation to map the pixels. I also create masks to keep track of which pixels are valid in each image.</p>
+        <p class="p4-note">For the overlapping regions, I use distance-based weighting to blend the images together. Pixels closer to the edge of an image receive less weight, which creates a smoother transition between the two images. Any black regions correspond to areas where neither image has valid pixels.</p>
         <article aria-labelledby="hawaii-mosaic-title">
           <h3 id="hawaii-mosaic-title">Hawaii</h3>
           <div class="p4-pair">

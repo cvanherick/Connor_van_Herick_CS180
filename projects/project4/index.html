@@ -24,7 +24,6 @@
       .p4-table-wrap { overflow-x: auto; }
       .p4-table { border-collapse: collapse; width: 100%; }
       .p4-table th, .p4-table td { border-bottom: 1px solid var(--border); padding: 0.8rem; text-align: left; vertical-align: top; }
-      .p4-status { border-left: 3px solid var(--border); padding-left: 1rem; }
       .p4-extra-warp { margin: 2rem 0; }
       .p4-extra-warp summary { cursor: pointer; font-weight: 700; }
       @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } }
@@ -169,6 +168,16 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
             <figcaption>Kitchen · Kitchen2.jpg warped toward Kitchen1.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
           </figure>
         </details>
+        <h3>Rectification examples</h3>
+        <p class="p4-note">I selected four corners of each rectangular object and mapped them to an 800 × 800 front-facing square. The same homography was sampled with both interpolation methods. Left: original photograph with selected corners; middle: nearest neighbor; right: bilinear.</p>
+        <figure>
+          <a href="assets/bedroom-rectification.jpg"><img src="assets/bedroom-rectification.jpg" loading="lazy" alt="Bedroom whiteboard: selected four corners on the original photograph, nearest-neighbor rectification, and bilinear rectification"></a>
+          <figcaption>Bedroom1.jpg · Rectifying the whiteboard.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/kitchen-rectification.jpg"><img src="assets/kitchen-rectification.jpg" loading="lazy" alt="Kitchen microwave: selected four corners on the original photograph, nearest-neighbor rectification, and bilinear rectification"></a>
+          <figcaption>Kitchen1.jpg · Rectifying the microwave face.</figcaption>
+        </figure>
         <h3>Interpolation trade-offs</h3>
         <div class="p4-table-wrap">
           <table class="p4-table">
@@ -180,7 +189,6 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
           </table>
         </div>
         <p class="p4-note">Both interpolation methods use the same homography, so the underlying geometry is identical. The main difference is how pixel values are calculated. In my examples, the visual differences are relatively small, although bilinear interpolation generally produces smoother results.</p>
-        <p class="p4-note p4-status">These examples align one photograph with another. The assignment also asks for two examples that make a rectangular object front-facing; those rectifications are not present in the saved results.</p>
       </section>
 
       <section class="section writeup-section" id="a4" aria-labelledby="a4-title">

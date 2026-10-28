@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Project 4 Part A: overlapping photographs, least-squares homography recovery, and inverse image warping with nearest-neighbor and bilinear interpolation.">
+    <title>Project 4: Image Warping and Mosaicing | CS 180 Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+      .project4-page figure { margin: 1.5rem 0; }
+      .project4-page figure img { display: block; height: auto; width: 100%; }
+      .project4-page figure a { display: block; }
+      .project4-page figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.65rem; }
+      .project4-page article + article { margin-top: 3rem; }
+      .p4-pair { display: grid; gap: 1.25rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .p4-pair figure { margin: 0; }
+      .p4-pair img { aspect-ratio: 4 / 3; object-fit: contain; background: #111; }
+      .p4-note { color: var(--muted); max-width: 900px; }
+      .project4-page pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; font-size: 0.88rem; line-height: 1.8; overflow-x: auto; padding: 1rem; }
+      .p4-downloads { font-size: 0.9rem; }
+      .p4-table-wrap { overflow-x: auto; }
+      .p4-table { border-collapse: collapse; width: 100%; }
+      .p4-table th, .p4-table td { border-bottom: 1px solid var(--border); padding: 0.8rem; text-align: left; vertical-align: top; }
+      .p4-status { border-left: 3px solid var(--border); padding-left: 1rem; }
+      @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } }
+      @media print { .project4-page figure, .project4-page pre { break-inside: avoid; } }
+    </style>
+  </head>
+  <body class="project4-page">
+    <header class="site-header">
+      <a class="brand" href="../../">CS 180</a>
+      <nav class="nav" aria-label="Project navigation">
+        <a href="#a1">A.1 · Photos</a>
+        <a href="#a2">A.2 · Homographies</a>
+        <a href="#a3">A.3 · Warping</a>
+      </nav>
+    </header>
+    <main>
+      <section class="project-hero" aria-labelledby="project-title">
+        <p class="eyebrow">Project 4 · Part A</p>
+        <h1 id="project-title">Image Warping and Mosaicing</h1>
+        <p class="project-meta">CS 180 Computational Photography</p>
+        <p class="project-hero-copy">From overlapping photographs to projective alignment: selecting correspondences, recovering homographies, and resampling images.</p>
+      </section>
+
+      <section class="section writeup-section" id="a1" aria-labelledby="a1-title">
+        <div class="section-heading"><h2 id="a1-title">A.1 · Shoot and Digitize Pictures</h2></div>
+        <p class="p4-note">These three photo pairs share overlapping scene features that can be matched to estimate a projective transformation.</p>
+        <article aria-labelledby="hawaii-sources">
+          <h3 id="hawaii-sources">Hawaii</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/hawaii-1.jpg"><img src="assets/hawaii-1.jpg" loading="lazy" alt="Hawaii source photograph 1"></a><figcaption>Hawaii1.JPG</figcaption></figure>
+            <figure><a href="assets/hawaii-2.jpg"><img src="assets/hawaii-2.jpg" loading="lazy" alt="Hawaii source photograph 2"></a><figcaption>Hawaii2.JPG</figcaption></figure>
+          </div>
+          <p class="p4-note">Overlapping coastal views with shared ridgelines, trees, and buildings.</p>
+        </article>
+        <article aria-labelledby="bedroom-sources">
+          <h3 id="bedroom-sources">Bedroom</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/bedroom-1.jpg"><img src="assets/bedroom-1.jpg" loading="lazy" alt="Bedroom source photograph 1"></a><figcaption>Bedroom1.jpg</figcaption></figure>
+            <figure><a href="assets/bedroom-2.jpg"><img src="assets/bedroom-2.jpg" loading="lazy" alt="Bedroom source photograph 2"></a><figcaption>Bedroom2.jpg</figcaption></figure>
+          </div>
+          <p class="p4-note">Overlapping room views with shared closet, window, and furniture details.</p>
+        </article>
+        <article aria-labelledby="kitchen-sources">
+          <h3 id="kitchen-sources">Kitchen</h3>
+          <div class="p4-pair">
+            <figure><a href="assets/kitchen-1.jpg"><img src="assets/kitchen-1.jpg" loading="lazy" alt="Kitchen source photograph 1"></a><figcaption>Kitchen1.jpg</figcaption></figure>
+            <figure><a href="assets/kitchen-2.jpg"><img src="assets/kitchen-2.jpg" loading="lazy" alt="Kitchen source photograph 2"></a><figcaption>Kitchen2.jpg</figcaption></figure>
+          </div>
+          <p class="p4-note">Overlapping kitchen views with shared cabinets, appliances, and countertop details.</p>
+        </article>
+      </section>
+
+      <section class="section writeup-section" id="a2" aria-labelledby="a2-title">
+        <div class="section-heading"><h2 id="a2-title">A.2 · Recover Homographies</h2></div>
+        <p class="p4-note">For each pair, I manually select ten corresponding points. A 3 × 3 homography maps image 1 coordinates (x, y) to image 2 coordinates (u, v), with h₃₃ fixed to 1.</p>
+        <pre><code>u = (h11 x + h12 y + h13) / (h31 x + h32 y + 1)
+v = (h21 x + h22 y + h23) / (h31 x + h32 y + 1)
+
+For each match (x, y) → (u, v):
+[x y 1 0 0 0 -ux -uy] h = u
+[0 0 0 x y 1 -vx -vy] h = v
+
+h = [h11 h12 h13 h21 h22 h23 h31 h32]ᵀ
+Ah = b;  A ∈ R^(20×8), b ∈ R^20
+h = numpy.linalg.lstsq(A, b, rcond=None)[0]</code></pre>
+        <p class="p4-note">Ten matches give an overdetermined system with twenty equations and eight unknowns. Least squares minimizes the squared algebraic residual. The matrices and point downloads below use the original image coordinates; the website previews are resized for display.</p>
+        <article aria-labelledby="hawaii-homography">
+          <h3 id="hawaii-homography">Hawaii · Image 1 → Image 2</h3>
+          <figure>
+            <a href="assets/hawaii-correspondences.jpg"><img src="assets/hawaii-correspondences.jpg" loading="lazy" alt="Ten numbered corresponding points in Hawaii1.JPG and Hawaii2.JPG"></a>
+            <figcaption>Matching numbers identify the same scene feature in both photographs.</figcaption>
+          </figure>
+          <pre aria-label="Hawaii recovered homography"><code>[ 7.4039148227e-01  -6.6599454613e-02   2.9909653307e+03 ]
+[-8.4735119675e-02   8.2851296578e-01   3.8042532423e+02 ]
+[-3.6306807600e-05  -2.6681031968e-05   1.0000000000e+00 ]</code></pre>
+          <p class="p4-downloads">Saved data: <a href="assets/hawaii-correspondences.csv">point coordinates</a> · <a href="assets/hawaii-A.csv">A matrix</a> · <a href="assets/hawaii-b.csv">b vector</a> · <a href="assets/hawaii-homography.txt">homography</a></p>
+        </article>
+        <article aria-labelledby="bedroom-homography">
+          <h3 id="bedroom-homography">Bedroom · Image 1 → Image 2</h3>
+          <figure>
+            <a href="assets/bedroom-correspondences.jpg"><img src="assets/bedroom-correspondences.jpg" loading="lazy" alt="Ten numbered corresponding points in Bedroom1.jpg and Bedroom2.jpg"></a>
+            <figcaption>Matching numbers identify the same scene feature in both photographs.</figcaption>
+          </figure>
+          <pre aria-label="Bedroom recovered homography"><code>[ 1.8555513999e+00  -4.4553509378e-02  -3.1952919743e+03 ]
+[ 3.7233939277e-01   1.6262975716e+00  -1.2592926367e+03 ]
+[ 2.1744301540e-04   1.4558091020e-05   1.0000000000e+00 ]</code></pre>
+          <p class="p4-downloads">Saved data: <a href="assets/bedroom-correspondences.csv">point coordinates</a> · <a href="assets/bedroom-A.csv">A matrix</a> · <a href="assets/bedroom-b.csv">b vector</a> · <a href="assets/bedroom-homography.txt">homography</a></p>
+        </article>
+        <article aria-labelledby="kitchen-homography">
+          <h3 id="kitchen-homography">Kitchen · Image 1 → Image 2</h3>
+          <figure>
+            <a href="assets/kitchen-correspondences.jpg"><img src="assets/kitchen-correspondences.jpg" loading="lazy" alt="Ten numbered corresponding points in Kitchen1.jpg and Kitchen2.jpg"></a>
+            <figcaption>Matching numbers identify the same scene feature in both photographs.</figcaption>
+          </figure>
+          <pre aria-label="Kitchen recovered homography"><code>[ 1.7500473493e+00  -1.3932748748e-01  -2.1874744239e+03 ]
+[ 3.5403453426e-01   1.3535988465e+00  -7.6018213169e+02 ]
+[ 1.9496961299e-04  -4.5949227857e-05   1.0000000000e+00 ]</code></pre>
+          <p class="p4-downloads">Saved data: <a href="assets/kitchen-correspondences.csv">point coordinates</a> · <a href="assets/kitchen-A.csv">A matrix</a> · <a href="assets/kitchen-b.csv">b vector</a> · <a href="assets/kitchen-homography.txt">homography</a></p>
+        </article>
+      </section>
+
+      <section class="section writeup-section" id="a3" aria-labelledby="a3-title">
+        <div class="section-heading"><h2 id="a3-title">A.3 · Warp the Images</h2></div>
+        <p class="p4-note">Both implementations use inverse warping. I transform the source image’s four corners to determine the output bounds, then map each output pixel back through H⁻¹. Coordinates outside the source image remain black.</p>
+        <pre><code>[xs, ys, w]ᵀ = H⁻¹ [xout, yout, 1]ᵀ
+(x, y) = (xs / w, ys / w)
+
+Nearest neighbor: sample at (round(x), round(y)).
+
+Bilinear: x0 = floor(x), y0 = floor(y)
+dx = x - x0; dy = y - y0
+I(x, y) = (1-dx)(1-dy) I[y0, x0]
+        + dx(1-dy) I[y0, x0+1]
+        + (1-dx)dy I[y0+1, x0]
+        + dx dy I[y0+1, x0+1]</code></pre>
+        <p class="p4-note">At the final source row or column, neighbor indices are clamped to the image boundary. Nearest-neighbor and bilinear interpolation are implemented directly in <code>warpImageNearestNeighbor</code> and <code>warpImageBilinear</code>.</p>
+        <figure>
+          <a href="assets/hawaii-warp-comparison.jpg"><img src="assets/hawaii-warp-comparison.jpg" loading="lazy" alt="Hawaii comparison: original image 1, nearest-neighbor inverse warp, and bilinear inverse warp"></a>
+          <figcaption>Hawaii · Hawaii1.JPG warped into the coordinate system of Hawaii2.JPG. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/bedroom-warp-comparison.jpg"><img src="assets/bedroom-warp-comparison.jpg" loading="lazy" alt="Bedroom comparison: original image 1, nearest-neighbor inverse warp, and bilinear inverse warp"></a>
+          <figcaption>Bedroom · Bedroom1.jpg warped into the coordinate system of Bedroom2.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/kitchen-warp-comparison.jpg"><img src="assets/kitchen-warp-comparison.jpg" loading="lazy" alt="Kitchen comparison: original image 1, nearest-neighbor inverse warp, and bilinear inverse warp"></a>
+          <figcaption>Kitchen · Kitchen1.jpg warped into the coordinate system of Kitchen2.jpg. Left: original; middle: nearest neighbor; right: bilinear.</figcaption>
+        </figure>
+        <h3>Interpolation trade-offs</h3>
+        <div class="p4-table-wrap">
+          <table class="p4-table">
+            <thead><tr><th>Method</th><th>Sampling work</th><th>Image quality</th></tr></thead>
+            <tbody>
+              <tr><td>Nearest neighbor</td><td>One source pixel per output sample; less interpolation work.</td><td>Preserves individual source values but can introduce jagged edges and aliasing.</td></tr>
+              <tr><td>Bilinear</td><td>Four source pixels and a weighted average; more interpolation work.</td><td>Smoother edges, with some softening of fine detail.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="p4-note">Both methods produce the same projective geometry. Their sampling differences are subtle at this display scale; interpolation does not correct inaccurate point matches or parallax. The speed comparison above describes computational work, not measured runtimes.</p>
+        <p class="p4-note p4-status">The examples above demonstrate registration between photographs. Separate fronto-parallel rectification examples of two rectangular objects are not included in the current results.</p>
+      </section>
+    </main>
+    <footer class="project-footer"><a href="../../">← Back to all projects</a></footer>
+  </body>
+</html>
+

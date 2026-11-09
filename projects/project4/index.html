@@ -18,6 +18,8 @@
       .p4-pair { display: grid; gap: 1.25rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .p4-pair figure { margin: 0; }
       .p4-pair img { aspect-ratio: 4 / 3; object-fit: contain; background: #111; }
+      .p4-mosaic-compare { margin: 1.5rem 0; }
+      .p4-mosaic-compare img { aspect-ratio: auto; }
       .p4-note { color: var(--muted); max-width: 900px; }
       .project4-page pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; font-size: 0.88rem; line-height: 1.8; overflow-x: auto; padding: 1rem; }
       .p4-downloads { font-size: 0.9rem; }
@@ -256,9 +258,9 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         <div class="section-heading"><h2 id="b4-title">B.4 · RANSAC for Robust Homography</h2></div>
         <p class="p4-note">For each pair, four-point RANSAC samples candidate homographies for 2,000 iterations and counts matches within a 4-pixel reprojection error. I recompute the homography from the best inlier set, then use the Part A warping and blending procedure to make an automatic mosaic.</p>
         <p class="p4-note">The three comparisons below place the manually stitched Part A result beside the automatically stitched Part B result. The automatic alignment is close to the manual alignment in each scene, with small differences at the image boundaries and overlaps.</p>
-        <article aria-labelledby="b4-hawaii"><h3 id="b4-hawaii">Hawaii</h3><figure><a href="assets/b-hawaii-comparison.jpg"><img src="assets/b-hawaii-comparison.jpg" loading="lazy" alt="Hawaii manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-hawaii-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
-        <article aria-labelledby="b4-bedroom"><h3 id="b4-bedroom">Bedroom</h3><figure><a href="assets/b-bedroom-comparison.jpg"><img src="assets/b-bedroom-comparison.jpg" loading="lazy" alt="Bedroom manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-bedroom-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
-        <article aria-labelledby="b4-kitchen"><h3 id="b4-kitchen">Kitchen</h3><figure><a href="assets/b-kitchen-comparison.jpg"><img src="assets/b-kitchen-comparison.jpg" loading="lazy" alt="Kitchen manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-kitchen-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
+        <article aria-labelledby="b4-hawaii"><h3 id="b4-hawaii">Hawaii</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/hawaii-mosaic.jpg"><img src="assets/hawaii-mosaic.jpg" loading="lazy" alt="Manually stitched Hawaii mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-hawaii-mosaic.jpg"><img src="assets/b-hawaii-mosaic.jpg" loading="lazy" alt="Automatically stitched Hawaii mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
+        <article aria-labelledby="b4-bedroom"><h3 id="b4-bedroom">Bedroom</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/bedroom-mosaic.jpg"><img src="assets/bedroom-mosaic.jpg" loading="lazy" alt="Manually stitched Bedroom mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-bedroom-mosaic.jpg"><img src="assets/b-bedroom-mosaic.jpg" loading="lazy" alt="Automatically stitched Bedroom mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
+        <article aria-labelledby="b4-kitchen"><h3 id="b4-kitchen">Kitchen</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/kitchen-mosaic.jpg"><img src="assets/kitchen-mosaic.jpg" loading="lazy" alt="Manually stitched Kitchen mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-kitchen-mosaic.jpg"><img src="assets/b-kitchen-mosaic.jpg" loading="lazy" alt="Automatically stitched Kitchen mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
       </section>
 
     </main>

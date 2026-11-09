@@ -1380,9 +1380,127 @@ html[data-theme="dark"] {
   100% { opacity: 0; transform: scaleX(1); }
 }
 
+.project4-preview {
+  background: #172736;
+  isolation: isolate;
+}
+
+.project4-preview::before {
+  background: linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px),
+              linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+  content: "";
+  inset: 0;
+  opacity: 0.45;
+  position: absolute;
+}
+
+.project4-preview .p4-source {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.36);
+  height: 82%;
+  object-fit: cover;
+  top: 9%;
+  width: 57%;
+}
+
+.project4-preview .p4-source-left {
+  inset: 9% auto auto 1%;
+  object-position: 34% center;
+  transform: perspective(700px) rotateY(8deg) rotate(-3deg) translateX(-8%) scale(0.94);
+}
+
+.project4-preview .p4-source-right {
+  inset: 9% 1% auto auto;
+  object-position: 67% center;
+  transform: perspective(700px) rotateY(-8deg) rotate(3deg) translateX(8%) scale(0.94);
+}
+
+.project4-preview .p4-preview-mosaic {
+  clip-path: inset(0 100% 0 0);
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.28);
+}
+
+.p4-preview-scan {
+  background: #f8d977;
+  box-shadow: 0 0 12px 4px rgba(248, 217, 119, 0.65);
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 2px;
+  z-index: 2;
+}
+
+.p4-preview-label {
+  background: rgba(12, 18, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  bottom: 0.9rem;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  left: 0.9rem;
+  padding: 0.4rem 0.7rem;
+  position: absolute;
+  z-index: 3;
+}
+
+.project-card-demo:hover .p4-source-left,
+.project-card-demo:focus-within .p4-source-left {
+  animation: p4-align-left 3.4s ease-in-out both;
+}
+
+.project-card-demo:hover .p4-source-right,
+.project-card-demo:focus-within .p4-source-right {
+  animation: p4-align-right 3.4s ease-in-out both;
+}
+
+.project-card-demo:hover .p4-preview-mosaic,
+.project-card-demo:focus-within .p4-preview-mosaic {
+  animation: p4-mosaic-reveal 3.4s ease-in-out both;
+}
+
+.project-card-demo:hover .p4-preview-scan,
+.project-card-demo:focus-within .p4-preview-scan {
+  animation: p4-stitch-scan 3.4s ease-in-out both;
+}
+
+@keyframes p4-align-left {
+  0% { opacity: 1; transform: perspective(700px) rotateY(8deg) rotate(-3deg) translateX(-8%) scale(0.94); }
+  48%, 65% { opacity: 1; transform: perspective(700px) rotateY(0) rotate(0) translateX(12%) scale(1.02); }
+  85%, 100% { opacity: 0; transform: perspective(700px) rotateY(0) rotate(0) translateX(12%) scale(1.02); }
+}
+
+@keyframes p4-align-right {
+  0% { opacity: 1; transform: perspective(700px) rotateY(-8deg) rotate(3deg) translateX(8%) scale(0.94); }
+  48%, 65% { opacity: 1; transform: perspective(700px) rotateY(0) rotate(0) translateX(-12%) scale(1.02); }
+  85%, 100% { opacity: 0; transform: perspective(700px) rotateY(0) rotate(0) translateX(-12%) scale(1.02); }
+}
+
+@keyframes p4-mosaic-reveal {
+  0%, 55% { clip-path: inset(0 100% 0 0); opacity: 0; transform: scale(1.28); }
+  60% { clip-path: inset(0 100% 0 0); opacity: 1; }
+  100% { clip-path: inset(0); opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes p4-stitch-scan {
+  0%, 55% { left: 0; opacity: 0; }
+  60% { left: 0; opacity: 1; }
+  96% { left: 100%; opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
 @media (hover: none) {
   .project1-preview .preview-final { opacity: 1; }
   .project1-preview .rgb-layer { opacity: 0; }
+  .project4-preview .p4-source,
+  .project4-preview .p4-preview-scan { display: none; }
+  .project4-preview .p4-preview-mosaic { animation: none !important; clip-path: none; opacity: 1; transform: scale(1.25); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1401,6 +1519,18 @@ html[data-theme="dark"] {
   .project3-preview.is-denoising .p3-preview-scan,
   .project3-preview.is-denoising .p3-preview-progress {
     animation: none;
+  }
+
+  .project4-preview .p4-source,
+  .project4-preview .p4-preview-scan {
+    display: none;
+  }
+
+  .project4-preview .p4-preview-mosaic {
+    animation: none !important;
+    clip-path: none;
+    opacity: 1;
+    transform: scale(1.25);
   }
 }
 

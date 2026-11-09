@@ -31,9 +31,21 @@
       .project4-page .writeup-section { scroll-margin-top: 95px; }
       .p4-part-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; margin: 1rem 0 2rem; }
       .p4-part-links a { color: var(--teal); font-weight: 700; }
-      .p4-part-intro { background: var(--panel); }
-      @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } }
-      @media print { .project4-page figure, .project4-page pre { break-inside: avoid; } }
+      .p4-part-intro { background: linear-gradient(135deg, #e9f3ee, #fffdf8 78%); border: 1px solid rgba(15, 125, 126, 0.2); border-radius: 18px; box-shadow: 0 12px 34px rgba(17, 24, 33, 0.06); margin-top: 3.5rem; padding: clamp(2rem, 4vw, 3.5rem); }
+      .p4-part-intro .section-heading { margin-bottom: 1.25rem; }
+      .p4-part-intro h2 { font-size: clamp(2.25rem, 4vw, 3.6rem); }
+      .p4-part-intro .p4-part-links { margin: 1.75rem 0 0; }
+      .p4-part-intro .p4-part-links a { background: rgba(255, 255, 255, 0.78); border: 1px solid rgba(15, 125, 126, 0.18); border-radius: 999px; padding: 0.55rem 0.85rem; text-decoration: none; }
+      .p4-part-intro .p4-part-links a:hover { background: #fff; border-color: var(--teal); }
+      .p4-part-b-section { padding-block: clamp(3.5rem, 6vw, 5rem); }
+      .p4-part-b-section .section-heading { border-left: 4px solid var(--gold); margin-bottom: 1.5rem; padding-left: 1.1rem; }
+      .p4-part-b-section h2 { font-size: clamp(2.2rem, 4vw, 3.25rem); line-height: 1.08; }
+      .p4-part-b-section figure { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 28px rgba(17, 24, 33, 0.06); overflow: hidden; padding: 0.65rem; }
+      .p4-part-b-section figure img { border-radius: 8px; }
+      .p4-part-b-section figcaption { padding: 0 0.35rem 0.2rem; }
+      .p4-mosaic-compare figcaption { color: var(--ink); font-weight: 700; }
+      @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } .p4-part-intro { margin-top: 1.5rem; } .p4-part-b-section figure { padding: 0.4rem; } }
+      @media print { .project4-page figure, .project4-page pre { break-inside: avoid; } .p4-part-b-section figure, .p4-part-intro { box-shadow: none; } }
     </style>
   </head>
   <body class="project4-page">
@@ -230,7 +242,7 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         <nav class="p4-part-links" aria-label="Part B sections"><a href="#b1">B.1 · Corners</a><a href="#b2">B.2 · Descriptors</a><a href="#b3">B.3 · Matching</a><a href="#b4">B.4 · RANSAC and mosaics</a></nav>
       </section>
 
-      <section class="section writeup-section" id="b1" aria-labelledby="b1-title">
+      <section class="section writeup-section p4-part-b-section" id="b1" aria-labelledby="b1-title">
         <div class="section-heading"><h2 id="b1-title">B.1 · Harris Corner Detection and ANMS</h2></div>
         <p class="p4-note">The left column in each figure shows the detected Harris corners on both input images. Adaptive non-maximal suppression ranks each point by its distance to a sufficiently stronger corner and retains 250 spatially spread points per image, shown at right.</p>
         <figure><a href="assets/b-hawaii-corners.jpg"><img src="assets/b-hawaii-corners.jpg" loading="lazy" alt="Hawaii pair with all Harris corners on the left and 250 ANMS-selected corners on the right for both photos"></a><figcaption>Hawaii · Harris detections and ANMS selections for both images.</figcaption></figure>
@@ -238,7 +250,7 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         <figure><a href="assets/b-kitchen-corners.jpg"><img src="assets/b-kitchen-corners.jpg" loading="lazy" alt="Kitchen pair with all Harris corners and 250 ANMS-selected corners overlaid on each photo"></a><figcaption>Kitchen · Harris detections and ANMS selections for both images.</figcaption></figure>
       </section>
 
-      <section class="section writeup-section" id="b2" aria-labelledby="b2-title">
+      <section class="section writeup-section p4-part-b-section" id="b2" aria-labelledby="b2-title">
         <div class="section-heading"><h2 id="b2-title">B.2 · Feature Descriptor Extraction</h2></div>
         <p class="p4-note">At each retained corner, I blur a 40 × 40 grayscale patch, sample every fifth pixel to obtain an axis-aligned 8 × 8 descriptor, then subtract its mean and divide by its standard deviation. Each row below shows six normalized features from one image.</p>
         <figure><a href="assets/b-hawaii-descriptors.jpg"><img src="assets/b-hawaii-descriptors.jpg" loading="lazy" alt="Twelve normalized eight by eight feature descriptors from the two Hawaii images"></a><figcaption>Hawaii · Six descriptors from image A and six from image B.</figcaption></figure>
@@ -246,7 +258,7 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         <figure><a href="assets/b-kitchen-descriptors.jpg"><img src="assets/b-kitchen-descriptors.jpg" loading="lazy" alt="Twelve normalized eight by eight feature descriptors from the two Kitchen images"></a><figcaption>Kitchen · Six descriptors from each image.</figcaption></figure>
       </section>
 
-      <section class="section writeup-section" id="b3" aria-labelledby="b3-title">
+      <section class="section writeup-section p4-part-b-section" id="b3" aria-labelledby="b3-title">
         <div class="section-heading"><h2 id="b3-title">B.3 · Feature Matching</h2></div>
         <p class="p4-note">I compare descriptor distances and accept a match when the nearest-neighbor distance divided by the second-nearest distance is below 0.6. Each figure shows those matches above and the RANSAC inliers below.</p>
         <figure><a href="assets/b-hawaii-matches.jpg"><img src="assets/b-hawaii-matches.jpg" loading="lazy" alt="Hawaii feature matches between the photo pair and the RANSAC inlier subset"></a><figcaption>Hawaii · 56 ratio-test matches; 36 RANSAC inliers.</figcaption></figure>
@@ -254,13 +266,14 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
         <figure><a href="assets/b-kitchen-matches.jpg"><img src="assets/b-kitchen-matches.jpg" loading="lazy" alt="Kitchen feature matches between the photo pair and the RANSAC inlier subset"></a><figcaption>Kitchen · 65 ratio-test matches; 36 RANSAC inliers.</figcaption></figure>
       </section>
 
-      <section class="section writeup-section" id="b4" aria-labelledby="b4-title">
+      <section class="section writeup-section p4-part-b-section" id="b4" aria-labelledby="b4-title">
         <div class="section-heading"><h2 id="b4-title">B.4 · RANSAC for Robust Homography</h2></div>
         <p class="p4-note">For each pair, four-point RANSAC samples candidate homographies for 2,000 iterations and counts matches within a 4-pixel reprojection error. I recompute the homography from the best inlier set, then use the Part A warping and blending procedure to make an automatic mosaic.</p>
         <p class="p4-note">The three comparisons below place the manually stitched Part A result beside the automatically stitched Part B result. The automatic alignment is close to the manual alignment in each scene, with small differences at the image boundaries and overlaps.</p>
         <article aria-labelledby="b4-hawaii"><h3 id="b4-hawaii">Hawaii</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/hawaii-mosaic.jpg"><img src="assets/hawaii-mosaic.jpg" loading="lazy" alt="Manually stitched Hawaii mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-hawaii-mosaic.jpg"><img src="assets/b-hawaii-mosaic.jpg" loading="lazy" alt="Automatically stitched Hawaii mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
         <article aria-labelledby="b4-bedroom"><h3 id="b4-bedroom">Bedroom</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/bedroom-mosaic.jpg"><img src="assets/bedroom-mosaic.jpg" loading="lazy" alt="Manually stitched Bedroom mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-bedroom-mosaic.jpg"><img src="assets/b-bedroom-mosaic.jpg" loading="lazy" alt="Automatically stitched Bedroom mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
         <article aria-labelledby="b4-kitchen"><h3 id="b4-kitchen">Kitchen</h3><div class="p4-pair p4-mosaic-compare"><figure><a href="assets/kitchen-mosaic.jpg"><img src="assets/kitchen-mosaic.jpg" loading="lazy" alt="Manually stitched Kitchen mosaic from Part A"></a><figcaption>Manual · Part A</figcaption></figure><figure><a href="assets/b-kitchen-mosaic.jpg"><img src="assets/b-kitchen-mosaic.jpg" loading="lazy" alt="Automatically stitched Kitchen mosaic from Part B"></a><figcaption>Automatic · Part B</figcaption></figure></div></article>
+        <p class="p4-note">The automatic mosaics performed noticeably better, with less blur in the overlapping regions than the manually stitched results.</p>
       </section>
 
     </main>

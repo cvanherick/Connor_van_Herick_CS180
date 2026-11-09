@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Project 4 Part A: overlapping photographs, least-squares homographies, inverse image warping, and three feather-blended mosaics.">
+    <meta name="description" content="Project 4 Parts A and B: manual mosaics and automatic image stitching with Harris corners, ANMS, feature matching, and RANSAC.">
     <title>Project 4: Image Warping and Mosaicing | CS 180 Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +26,10 @@
       .p4-table th, .p4-table td { border-bottom: 1px solid var(--border); padding: 0.8rem; text-align: left; vertical-align: top; }
       .p4-extra-warp { margin: 2rem 0; }
       .p4-extra-warp summary { cursor: pointer; font-weight: 700; }
+      .project4-page .writeup-section { scroll-margin-top: 95px; }
+      .p4-part-links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; margin: 1rem 0 2rem; }
+      .p4-part-links a { color: var(--teal); font-weight: 700; }
+      .p4-part-intro { background: var(--panel); }
       @media (max-width: 680px) { .p4-pair { grid-template-columns: 1fr; } }
       @media print { .project4-page figure, .project4-page pre { break-inside: avoid; } }
     </style>
@@ -34,22 +38,21 @@
     <header class="site-header">
       <a class="brand" href="../../">CS 180</a>
       <nav class="nav" aria-label="Project navigation">
-        <a href="#a1">A.1 · Photos</a>
-        <a href="#a2">A.2 · Homographies</a>
-        <a href="#a3">A.3 · Warping</a>
-        <a href="#a4">A.4 · Mosaics</a>
+        <a href="#a1">Part A</a>
+        <a href="#part-b">Part B</a>
       </nav>
     </header>
     <main>
       <section class="project-hero" aria-labelledby="project-title">
-        <p class="eyebrow">Project 4 · Part A</p>
+        <p class="eyebrow">Project 4 · Parts A and B</p>
         <h1 id="project-title">Image Warping and Mosaicing</h1>
         <p class="project-meta">CS 180 Computational Photography</p>
-        <p class="project-hero-copy">From overlapping photographs to projective alignment: selecting correspondences, recovering homographies, warping, and blending mosaics.</p>
+        <p class="project-hero-copy">From manually aligned panoramas to automatic stitching with corners, feature descriptors, and robust homographies.</p>
       </section>
 
       <section class="section writeup-section" id="a1" aria-labelledby="a1-title">
         <div class="section-heading"><h2 id="a1-title">A.1 · Shoot and Digitize Pictures</h2></div>
+        <nav class="p4-part-links" aria-label="Part A sections"><a href="#a2">A.2 · Homographies</a><a href="#a3">A.3 · Warping</a><a href="#a4">A.4 · Mosaics</a></nav>
         <p class="p4-note">These three photo pairs share overlapping scene features that can be matched to estimate a projective transformation.</p>
         <article aria-labelledby="hawaii-sources">
           <h3 id="hawaii-sources">Hawaii</h3>
@@ -76,7 +79,6 @@
           <p class="p4-note">Overlapping kitchen views with shared cabinets, appliances, and countertop details.</p>
         </article>
       </section>
-
       <section class="section writeup-section" id="a2" aria-labelledby="a2-title">
         <div class="section-heading"><h2 id="a2-title">A.2 · Recover Homographies</h2></div>
         <p class="p4-note">For each pair, I manually select ten corresponding points. A 3 × 3 homography maps image 1 coordinates (x, y) to image 2 coordinates (u, v), with h₃₃ fixed to 1.</p>
@@ -220,6 +222,45 @@ I(x, y) = (1-dx)(1-dy) I[y0, x0]
           <figure><a href="assets/kitchen-mosaic.jpg"><img src="assets/kitchen-mosaic.jpg" loading="lazy" alt="Feather-blended Kitchen mosaic spanning the sink and hallway"></a><figcaption>Feather-blended mosaic · the countertop and cabinets extend into the adjacent hallway view.</figcaption></figure>
         </article>
       </section>
+      <section class="section writeup-section p4-part-intro" id="part-b" aria-labelledby="part-b-title">
+        <div class="section-heading"><h2 id="part-b-title">Part B · Automatic Image Stitching</h2></div>
+        <p class="p4-note">I use the same Hawaii, Bedroom, and Kitchen pairs from Part A. Harris corners and ANMS select feature locations; normalized patches provide descriptors; ratio-test matches and four-point RANSAC estimate each homography.</p>
+        <nav class="p4-part-links" aria-label="Part B sections"><a href="#b1">B.1 · Corners</a><a href="#b2">B.2 · Descriptors</a><a href="#b3">B.3 · Matching</a><a href="#b4">B.4 · RANSAC and mosaics</a></nav>
+      </section>
+
+      <section class="section writeup-section" id="b1" aria-labelledby="b1-title">
+        <div class="section-heading"><h2 id="b1-title">B.1 · Harris Corner Detection and ANMS</h2></div>
+        <p class="p4-note">The left column in each figure shows the detected Harris corners on both input images. Adaptive non-maximal suppression ranks each point by its distance to a sufficiently stronger corner and retains 250 spatially spread points per image, shown at right.</p>
+        <figure><a href="assets/b-hawaii-corners.jpg"><img src="assets/b-hawaii-corners.jpg" loading="lazy" alt="Hawaii pair with all Harris corners on the left and 250 ANMS-selected corners on the right for both photos"></a><figcaption>Hawaii · Harris detections and ANMS selections for both images.</figcaption></figure>
+        <figure><a href="assets/b-bedroom-corners.jpg"><img src="assets/b-bedroom-corners.jpg" loading="lazy" alt="Bedroom pair with all Harris corners and 250 ANMS-selected corners overlaid on each photo"></a><figcaption>Bedroom · Harris detections and ANMS selections for both images.</figcaption></figure>
+        <figure><a href="assets/b-kitchen-corners.jpg"><img src="assets/b-kitchen-corners.jpg" loading="lazy" alt="Kitchen pair with all Harris corners and 250 ANMS-selected corners overlaid on each photo"></a><figcaption>Kitchen · Harris detections and ANMS selections for both images.</figcaption></figure>
+      </section>
+
+      <section class="section writeup-section" id="b2" aria-labelledby="b2-title">
+        <div class="section-heading"><h2 id="b2-title">B.2 · Feature Descriptor Extraction</h2></div>
+        <p class="p4-note">At each retained corner, I blur a 40 × 40 grayscale patch, sample every fifth pixel to obtain an axis-aligned 8 × 8 descriptor, then subtract its mean and divide by its standard deviation. Each row below shows six normalized features from one image.</p>
+        <figure><a href="assets/b-hawaii-descriptors.jpg"><img src="assets/b-hawaii-descriptors.jpg" loading="lazy" alt="Twelve normalized eight by eight feature descriptors from the two Hawaii images"></a><figcaption>Hawaii · Six descriptors from image A and six from image B.</figcaption></figure>
+        <figure><a href="assets/b-bedroom-descriptors.jpg"><img src="assets/b-bedroom-descriptors.jpg" loading="lazy" alt="Twelve normalized eight by eight feature descriptors from the two Bedroom images"></a><figcaption>Bedroom · Six descriptors from each image.</figcaption></figure>
+        <figure><a href="assets/b-kitchen-descriptors.jpg"><img src="assets/b-kitchen-descriptors.jpg" loading="lazy" alt="Twelve normalized eight by eight feature descriptors from the two Kitchen images"></a><figcaption>Kitchen · Six descriptors from each image.</figcaption></figure>
+      </section>
+
+      <section class="section writeup-section" id="b3" aria-labelledby="b3-title">
+        <div class="section-heading"><h2 id="b3-title">B.3 · Feature Matching</h2></div>
+        <p class="p4-note">I compare descriptor distances and accept a match when the nearest-neighbor distance divided by the second-nearest distance is below 0.6. Each figure shows those matches above and the RANSAC inliers below.</p>
+        <figure><a href="assets/b-hawaii-matches.jpg"><img src="assets/b-hawaii-matches.jpg" loading="lazy" alt="Hawaii feature matches between the photo pair and the RANSAC inlier subset"></a><figcaption>Hawaii · 56 ratio-test matches; 36 RANSAC inliers.</figcaption></figure>
+        <figure><a href="assets/b-bedroom-matches.jpg"><img src="assets/b-bedroom-matches.jpg" loading="lazy" alt="Bedroom feature matches between the photo pair and the RANSAC inlier subset"></a><figcaption>Bedroom · 36 ratio-test matches; 18 RANSAC inliers.</figcaption></figure>
+        <figure><a href="assets/b-kitchen-matches.jpg"><img src="assets/b-kitchen-matches.jpg" loading="lazy" alt="Kitchen feature matches between the photo pair and the RANSAC inlier subset"></a><figcaption>Kitchen · 65 ratio-test matches; 36 RANSAC inliers.</figcaption></figure>
+      </section>
+
+      <section class="section writeup-section" id="b4" aria-labelledby="b4-title">
+        <div class="section-heading"><h2 id="b4-title">B.4 · RANSAC for Robust Homography</h2></div>
+        <p class="p4-note">For each pair, four-point RANSAC samples candidate homographies for 2,000 iterations and counts matches within a 4-pixel reprojection error. I recompute the homography from the best inlier set, then use the Part A warping and blending procedure to make an automatic mosaic.</p>
+        <p class="p4-note">The three comparisons below place the manually stitched Part A result beside the automatically stitched Part B result. The automatic alignment is close to the manual alignment in each scene, with small differences at the image boundaries and overlaps.</p>
+        <article aria-labelledby="b4-hawaii"><h3 id="b4-hawaii">Hawaii</h3><figure><a href="assets/b-hawaii-comparison.jpg"><img src="assets/b-hawaii-comparison.jpg" loading="lazy" alt="Hawaii manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-hawaii-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
+        <article aria-labelledby="b4-bedroom"><h3 id="b4-bedroom">Bedroom</h3><figure><a href="assets/b-bedroom-comparison.jpg"><img src="assets/b-bedroom-comparison.jpg" loading="lazy" alt="Bedroom manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-bedroom-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
+        <article aria-labelledby="b4-kitchen"><h3 id="b4-kitchen">Kitchen</h3><figure><a href="assets/b-kitchen-comparison.jpg"><img src="assets/b-kitchen-comparison.jpg" loading="lazy" alt="Kitchen manual mosaic from Part A beside automatically stitched mosaic from Part B"></a><figcaption>Manual versus automatic stitching · <a href="assets/b-kitchen-mosaic.jpg">View automatic mosaic</a>.</figcaption></figure></article>
+      </section>
+
     </main>
     <footer class="project-footer"><a href="../../">← Back to all projects</a></footer>
   </body>
